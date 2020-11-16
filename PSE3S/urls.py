@@ -16,10 +16,12 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from clocking.views import landing_page
+from account import urls as account_urls
 from clocking import urls as clocking_urls
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', landing_page, name='index'),
+    url(r'^account/', include(account_urls)),
     url(r'^clocking/', include(clocking_urls)),
 ]

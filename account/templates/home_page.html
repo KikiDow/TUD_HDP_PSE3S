@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-info text-white">
+  <div class="container">
+      <div class="row justify-content-center">
+        <h1 class="display-4">Home</h1>
+      </div>
+    </div>
+</div>
+    <p>Welcome {{ user }}</p>
+    <hr/>
+    <table>
+        <tr><td><strong>Username: </strong></td><td>{{ user.username }}</td></tr>
+        <tr><td><strong>Email: </strong></td><td>{{ user.email }}</td></tr>
+        <tr><td><strong>Validator: </strong></td><td>{{ user.is_staff }}</td></tr>
+        <tr><td><strong>Last Login: </strong></td><td>{{ user.last_login }}</td></tr>
+    </table>
+{% endblock %}
