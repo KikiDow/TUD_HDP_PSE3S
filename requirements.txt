@@ -5,6 +5,10 @@ botocore==1.19.12
 colorama==0.4.3
 decorator==4.4.2
 Django==1.11
+django-currentuser==0.2.1
+django-filter==2.2.0
+django-filters-clone==0.2.1
+django-forms-bootstrap==3.1.0
 docutils==0.15.2
 git-remote-codecommit==1.15.1
 ikp3db==1.4.1
@@ -20,6 +24,7 @@ parso==0.1.1
 pbr==5.5.1
 pexpect==4.8.0
 pickleshare==0.7.5
+Pillow==5.1.0
 prompt-toolkit==3.0.8
 ptyprocess==0.6.0
 pyasn1==0.4.8
