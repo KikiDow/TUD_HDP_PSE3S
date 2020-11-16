@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_forms_bootstrap',
     'django_filters',
     'account',
+    'clocking',
 ]
 
 MIDDLEWARE = [
