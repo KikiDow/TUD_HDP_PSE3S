@@ -33,7 +33,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav justify-content-end">
                     <li class="nav-item">
-                        <a class="nav-link" href="#"> Home </a>
+                        <a class="nav-link" href="{% url 'home_page' %}"> Home </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#"> Exchange Noticeboard </a>
@@ -45,7 +45,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="#"> Abscences </a>
                             <a class="dropdown-item" href="#"> Annual Leave </a>
-                            <a class="dropdown-item" href="#"> Clockings </a>
+                            <a class="dropdown-item" href="{% url 'clocking_page' %}"> Clockings </a>
                             <a class="dropdown-item" href="#"> Exchanges </a>
                             <a class="dropdown-item" href="#"> Overtime </a>
                             <a class="dropdown-item" href="#"> Personal Details </a>

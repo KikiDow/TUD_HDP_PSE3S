@@ -15,4 +15,6 @@
         <tr><td><strong>Validator: </strong></td><td>{{ user.is_staff }}</td></tr>
         <tr><td><strong>Last Login: </strong></td><td>{{ user.last_login }}</td></tr>
     </table>
+<hr/>
+ <a href="{% url 'clocking_page' %}"> Clockings </a>
 {% endblock %}
