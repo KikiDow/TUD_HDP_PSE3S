@@ -117,8 +117,24 @@ USE_L10N = True
 
 USE_TZ = True
 
+#GLOBAL VARIABLES:
+#Global Start Date for generating rosters and quarters
+GLOBAL_START_DATE = datetime.datetime(2020, 9, 26)
+
+#Constant Variable: Yearly Annual Leave Allowance
+ANNUAL_LEAVE_YEARLY_ALLOWANCE = 250.00
+
+#Constant Variable: Quarterly Overtime Commitment
+QUARTERLY_OVERTIME_HOURS = 90.0
+
+#Constant Variables - Cash value for Breakfast, Dinner, Tea and Plain clothes allowances.
+BREAKFAST_ALLOWANCE = 9.50
+DINNER_ALLOWANCE = 15.00
+TEA_ALLOWANCE = 11.50
+PLAIN_CLOTHES_ALLOWANCE = 7.50
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-
 STATIC_URL = '/static/'
+
+MESSAGE_STORAGE = "django.contrib.messages.storage.session.SessionStorage"
