@@ -1,0 +1,36 @@
+/* ------------------------------------------ FOOTER -------------------- */
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  height: 5vh;
+  width: 100%;
+  color: white;
+  text-align: center;
+}
+
+/* ------------------------------------------ MAIN CONTENT BLOCK -------- */
+.main-block {
+    background-color: #E6E2E1;
+    margin-top: 20px;
+    margin-bottom: 7vh;
+    min-height: 60vh;
+}
+
+/* ------------------------------------------ JUMBOTRON ------------------ */
+.jumbotron {
+  margin-top: 2vh;
+  padding-top: 3vh;
+  padding-bottom: 3vh;
+}
+
+/* ------------------------------------------ CARD ON LANDING PAGE ------- */
+.card-body {
+  padding-top: 1vh;
+  padding-bottom: 1vh;
+}
+
+.card {
+  margin-bottom: 2vh;
+}
+
