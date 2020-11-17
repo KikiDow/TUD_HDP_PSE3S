@@ -70,6 +70,6 @@ class Roster(models.Model):
         
     def __str__(self):
         if self.roster_due_on == False:
-            return str(self.roster_shift_date) + " : " + str(self.roster_shift_label)
+            return str(self.roster_officer_id.username) + " : " + str(self.roster_shift_date) + " : " + str(self.roster_shift_label)
         else:
-            return str(self.roster_shift_date) + " : " + str(self.roster_shift)
+            return str(self.roster_officer_id.username) + " : " + str(self.roster_shift_date) + " : " + str(self.roster_shift)
