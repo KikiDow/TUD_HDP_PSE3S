@@ -2,8 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 import datetime
-from .models import Quarter
-# models from line above: to be restored once models created and migrated: Shift, RosterSideA, RosterSideB, Roster
+from .models import Quarter, Shift, RosterSideA, RosterSideB, Roster
 from django.contrib import messages
 from.utils import findRosterStartPoint, rosterPointerCheck
 from account.models import Account
@@ -47,5 +46,42 @@ def generate_quarters(request):
         
     if counter == 9:
         messages.success(request, "You have successfully generated new quarters.")
+    
+    return redirect('home_page')
+
+@login_required()
+def generate_roster(request, pk):
+    '''
+    This view creates a roster for a newly created user.
+    '''
+    roster_start_point = findRosterStartPoint()
+    roster_pointer = roster_start_point
+    date_pointer = datetime.date.today()
+    one_day_delta = datetime.timedelta(days=1)
+    officer_for_roster_being_generated = get_object_or_404(Account, pk=pk)
+    officer_for_roster_being_generated_id = officer_for_roster_being_generated.pk
+    officers_roster_side = officer_for_roster_being_generated.roster_side
+    while_counter = 0
+    while(while_counter < 731):
+        roster_pointer = rosterPointerCheck(roster_pointer)
+        
+        if officers_roster_side == "A":
+            schedule_pointer = RosterSideA.objects.get(ros_a_shift_cycle_number=roster_pointer) #check syntax
+            label_for_shift_on_that_day = schedule_pointer.ros_a_shift_label
+            shift_for_that_day = Shift.objects.get(shift_label=label_for_shift_on_that_day)
+            dueOn_or_dueOff = schedule_pointer.ros_a_due_on
+        else:
+            schedule_pointer = RosterSideB.objects.get(ros_b_shift_cycle_number=roster_pointer)
+            label_for_shift_on_that_day = schedule_pointer.ros_b_shift_label
+            shift_for_that_day = Shift.objects.get(shift_label=label_for_shift_on_that_day)
+            dueOn_or_dueOff = schedule_pointer.ros_b_due_on
+        
+        new_roster_record = Roster(roster_officer_id=officer_for_roster_being_generated, roster_shift_label=label_for_shift_on_that_day, roster_shift=shift_for_that_day, roster_shift_date=date_pointer, roster_due_on=dueOn_or_dueOff)
+        new_roster_record.save()
+        print(new_roster_record)
+        roster_pointer += 1
+        date_pointer = date_pointer + one_day_delta
+        while_counter = Roster.objects.filter(roster_officer_id=officer_for_roster_being_generated.pk).count()
+        print(while_counter)
     
     return redirect('home_page')
