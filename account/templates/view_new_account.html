@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-info text-white">
+  <div class="container">
+      <div class="row justify-content-center">
+        <h1 class="display-4">Create New Account</h1>
+      </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <table class="table table-bordered">
+                <tbody>
+                    <tr>
+                        <td><strong>Username: </strong></td><td>{{ newly_created_account.username }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Email: </strong></td><td>{{ newly_created_account.email }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Validator: </strong></td><td>{{ newly_created_account.is_staff }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Firstname: </strong></td><td>{{ newly_created_account.firstname }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Surname: </strong></td><td>{{ newly_created_account.lastname }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Roster Side: </strong></td><td>{{ newly_created_account.roster_side }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+{% if user.is_staff %}
+<div class="container" style="padding-bottom:5px;">
+    <div class="row justify-content-center">
+        <a class="btn btn-info col-xl-3 col-lg-3 col-md-6 col-sm-12 col-xs-12" style="margin-left:2px; margin-right:2px; margin-top:2px; margin-bottom:2px;" href="{% url 'edit_new_account' newly_created_account.id %}">Edit Account</a>
+        <a class="btn btn-info col-xl-3 col-lg-3 col-md-6 col-sm-12 col-xs-12" style="margin-left:2px; margin-right:2px margin-top:2px; margin-bottom:2px;;" href="{% url 'delete_account' newly_created_account.id %}"> Delete </a>
+        <a class="btn btn-info col-xl-3 col-lg-3 col-md-6 col-sm-12 col-xs-12" style="margin-left:2px; margin-right:2px margin-top:2px; margin-bottom:2px;;" href="#">Generate Roster</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

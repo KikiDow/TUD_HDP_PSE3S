@@ -46,4 +46,15 @@
         </div>
     </div>
 </div>
+{% if user.is_staff %}
+<div class="container">
+  <div class="row justify-content-center">
+        <div class="card bg-dark col-xl-3 col-lg-3 col-md-6 col-sm-12 col-xs-12 d-flex justify-content-center" style="margin-left:3px; margin-right:3px;">
+          <div class="card-body d-flex justify-content-center">
+            <a class="btn btn-info btn-lg"  href="{% url 'registration' %}"><i class=""></i> Register New User </a>
+          </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
