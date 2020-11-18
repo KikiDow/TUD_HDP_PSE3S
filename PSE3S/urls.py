@@ -18,6 +18,7 @@ from django.contrib import admin
 from clocking.views import landing_page
 from account import urls as account_urls
 from clocking import urls as clocking_urls
+from abscences import urls as abscences_urls
 import notifications.urls
 
 urlpatterns = [
@@ -26,4 +27,5 @@ urlpatterns = [
     url(r'^account/', include(account_urls)),
     url(r'^clocking/', include(clocking_urls)),
     url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
+    url(r'^abscences/', include(abscences_urls)),
 ]
