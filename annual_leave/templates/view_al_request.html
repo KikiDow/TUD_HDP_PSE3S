@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-info text-white">
+  <div class="container">
+      <div class="row justify-content-center">
+        <h1 class="display-4">View Leave Request</h1>
+      </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <!-- LEAVE REQUEST -->
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <!-- BUTTON TO EDIT LEAVE -->
+        </div>
+        <div class="col-md-6 col-sm-12 col-xs-12">
+            <!-- BUTTON TO DELETE REQUEST -->
+        </div>
+    </div>
+    {% if user.is_staff %}
+    <div class="row justify-content-center">
+        <!-- BUTTON TO GRANT LEAVE  -->
+    </div>
+    <div class="row justify-content-center">
+        <!-- BUTTON TO REJECT LEAVE  -->
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -35,6 +35,7 @@ def annual_leave_page(request):
     
     return render(request, "annual_leave.html", {'upcoming_leave': upcoming_leave, 'previous_leave': previous_leave, 'length_previous_leave': length_previous_leave, 'length_upcoming_leave': length_upcoming_leave, 'off_current_leave_total': off_current_leave_total})
 
+# BLOCK LEAVE
 @login_required()
 def block_leave_request(request):
     '''
@@ -78,3 +79,61 @@ def block_leave_request(request):
     else:
         block_leave_form = AnnualLeaveRequestForm()
     return render(request, "submit_block_leave.html", {'block_leave_form': block_leave_form})
+    
+@login_required()
+def view_annual_leave_request(request, pk):
+    '''
+    This view renders a specific annual leave request.
+    '''
+    annual_leave_req = get_object_or_404(AnnualLeaveRequest, pk=pk)
+    applicants_leave_balance = annual_leave_req.al_request_officer_id.current_leave_total
+    annual_leave_req.save()
+    return render(request, "view_al_request.html", {'annual_leave_req': annual_leave_req, 'applicants_leave_balance': applicants_leave_balance})
+    
+#SHORT TERM LEAVE
+@login_required()
+def short_term_leave_request(request):
+    '''
+    This view manages a short term annual leave request. It contain server side validation.
+    '''
+    if request.method == "POST":
+        short_term_leave_form = ShortTermAnnualLeaveRequestForm(request.POST, request.FILES)
+        if short_term_leave_form.is_valid():
+            #Place the user id into the foreign key field placeholder for the officer requesting leave. 
+            short_term_leave_form.instance.st_annual_leave_request_officer_id = request.user
+            #The next four lines of code instantiates the variables that will be used to check if the officer has enough leave remaining to make the request.  
+            start_time_date_leave_amount_check = datetime.datetime.combine(short_term_leave_form.instance.st_leave_date, short_term_leave_form.instance.st_leave_start_time)
+            finish_time_date_leave_amount_check = datetime.datetime.combine(short_term_leave_form.instance.st_leave_date, short_term_leave_form.instance.st_leave_finish_time)
+            leave_check_difference_as_delta = start_time_date_leave_amount_check - finish_time_date_leave_amount_check
+            leave_amount_requested = getLeaveAmount(leave_check_difference_as_delta)
+            officers_leave_remaining = request.user.current_leave_total
+            #Server side validation to ensure leave request is logical and that officer has enough leave remaining.
+            if short_term_leave_form.instance.st_leave_start_time > short_term_leave_form.instance.st_leave_finish_time:
+                messages.error(request, "The start time must be before the finish time.")
+                return render(request, "submit_st_leave.html", {'short_term_leave_form': short_term_leave_form})
+            elif leave_amount_requested > officers_leave_remaining:
+                messages.error(request, "You do not have enough leave remaining to request this much leave.")
+                return render(request, "submit_st_leave.html", {'short_term_leave_form': short_term_leave_form})
+            else:
+                st_leave_request = short_term_leave_form.save()
+                start_time_date = datetime.datetime.combine(st_leave_request.st_leave_date, st_leave_request.st_leave_start_time)
+                finish_time_date = datetime.datetime.combine(st_leave_request.st_leave_date, st_leave_request.st_leave_finish_time)
+                difference_as_delta = finish_time_date - start_time_date
+                #print(st_leave_request.st_leave_amount)
+                st_leave_request.st_leave_amount = getLeaveAmount(difference_as_delta)
+                st_leave_request.save() #ISSUE
+                messages.success(request, 'You have successfully submitted a short term leave request.')
+                return redirect(view_st_leave_request, st_leave_request.pk)
+    else:
+        short_term_leave_form = ShortTermAnnualLeaveRequestForm()
+    return render(request, "submit_st_leave.html", {'short_term_leave_form': short_term_leave_form})
+    
+@login_required()
+def view_st_leave_request(request, pk):
+    '''
+    This view retieve a specified short term leave request.
+    '''
+    st_leave_req = get_object_or_404(ShortTermAnnualLeaveRequest, pk=pk)
+    applicants_leave_balance = st_leave_req.st_annual_leave_request_officer_id.current_leave_total
+    #st_leave_req.save()
+    return render(request, "view_st_leave_request.html", {'st_leave_req': st_leave_req, 'applicants_leave_balance': applicants_leave_balance})
