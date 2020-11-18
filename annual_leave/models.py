@@ -14,7 +14,7 @@ class AnnualLeaveRequest(models.Model):
         return self.al_request_officer_id
         
     def __str__(self):
-        return str(self.al_request_officer_id) + " - " + str(self.leave_request_start_date)
+        return str(self.al_request_officer_id) + ": leave request from " + str(self.leave_request_start_date) + " to " + str(self.leave_request_last_date)
     
     
 class AnnualLeaveCarriedOver(models.Model):
