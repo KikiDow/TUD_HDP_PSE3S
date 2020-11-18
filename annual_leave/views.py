@@ -90,6 +90,34 @@ def view_annual_leave_request(request, pk):
     annual_leave_req.save()
     return render(request, "view_al_request.html", {'annual_leave_req': annual_leave_req, 'applicants_leave_balance': applicants_leave_balance})
     
+@login_required()
+def delete_block_leave_request(request, pk):
+    '''
+    This view in combination with conditional content on the view annual leave request page allows a user to delete one of their 
+    block leave requests.
+    '''
+    block_leave_request_for_deletion = AnnualLeaveRequest.objects.get(pk=pk)
+    block_leave_request_for_deletion.delete()
+    messages.success(request, "You have successfully deleted this block leave request.")
+    return redirect('annual_leave_page')
+    
+@login_required()
+def edit_block_leave_request(request, pk):
+    '''
+    This view along with conditional content allows a user to edit a block leave request prior to it being checked by a 
+    validator. Thsi view handles the server side validation.
+    '''
+    bl_request_for_editing = get_object_or_404(AnnualLeaveRequest, pk=pk) if pk else None
+    if request.method == "POST":
+        edit_bl_request_form = AnnualLeaveRequestForm(request.POST, request.FILES, instance=bl_request_for_editing)
+        if edit_bl_request_form.is_valid():
+            bl_request_for_editing = edit_bl_request_form.save()
+            messages.success(request, 'You have successfully made changes to this annual leave request.')
+            return redirect(view_annual_leave_request, bl_request_for_editing.pk)
+    else:
+        edit_bl_request_form = AnnualLeaveRequestForm(instance=bl_request_for_editing)
+    return render(request, "edit_al_request.html", {'bl_request_for_editing': bl_request_for_editing, 'edit_bl_request_form': edit_bl_request_form})
+
 #SHORT TERM LEAVE
 @login_required()
 def short_term_leave_request(request):
