@@ -31,7 +31,7 @@ class UnCertifiedSickLeave(models.Model):
         return self.usl_date
         
     def __str__(self):
-        return str(self.usl_officer_id) + " : " + str(self.usl_date)
+        return str(self.usl_officer_id) + " taken U.S.L. on " + str(self.usl_date)
         
 class ForceMajeure(models.Model):
     fm_officer_id = models.ForeignKey(Account, related_name='fm_officer_id', on_delete=models.CASCADE)
@@ -46,7 +46,7 @@ class ForceMajeure(models.Model):
         return self.fm_date
         
     def __str__(self):
-        return str(self.fm_officer_id) + " : " + str(self.fm_date)
+        return str(self.fm_officer_id) + " took F.M. on " + str(self.fm_date)
         
 class CertifiedSickPerYear(models.Model):
     yearly_csl_officer_id = models.ForeignKey(Account, related_name='yearly_csl_officer_id', on_delete=models.CASCADE)
@@ -57,7 +57,7 @@ class CertifiedSickPerYear(models.Model):
         return self.csl_year
         
     def __str__(self):
-        return str(self.yearly_csl_officer_id) + " : " + str(self.csl_year)
+        return str(self.yearly_csl_officer_id) + " has taken " + str(self.number_csl_for_year) + " certified sick days in " + str(self.csl_year)
         
 class UnCertifiedSickPerYear(models.Model):
     yearly_usl_officer_id = models.ForeignKey(Account, related_name='yearly_usl_officer_id', on_delete=models.CASCADE)
@@ -68,7 +68,7 @@ class UnCertifiedSickPerYear(models.Model):
         return self.usl_year
         
     def __str__(self):
-        return str(self.yearly_usl_officer_id) + " : " + str(self.usl_year)
+        return str(self.yearly_usl_officer_id) + " has taken " + str(self.number_usl_for_year) + " uncertified sick days in " + str(self.usl_year)
         
 class ForceMajeurePerYear(models.Model):
     yearly_fm_officer_id = models.ForeignKey(Account, related_name='yearly_fm_officer_id', on_delete=models.CASCADE)
@@ -79,4 +79,4 @@ class ForceMajeurePerYear(models.Model):
         return self.fm_year
         
     def __str__(self):
-        return str(self.yearly_fm_officer_id) + " : " + str(self.fm_year)
+        return str(self.yearly_fm_officer_id) + " has taken " + str(self.number_fm_for_year) + " force majeure days in " + str(self.fm_year)
