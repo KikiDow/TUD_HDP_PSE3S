@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 import datetime
-from .models import Quarter, Shift, RosterSideA, RosterSideB, Roster
+from .models import Quarter, Shift, RosterSideA, RosterSideB, Roster, PersonalDetails
+from .forms import PersonalDetailsForm
 from django.contrib import messages
 from.utils import findRosterStartPoint, rosterPointerCheck
 from account.models import Account
@@ -96,3 +97,23 @@ def generate_roster(request, pk):
     
     messages.success(request, "Roster created for new account.")
     return redirect('home_page')
+    
+@login_required()
+def view_personal_details(request):
+    '''
+    This view allows the user to view their personal details. It checks whether the user has yet created the personal details and then initialised the context variables approporiately.
+    '''
+    user = request.user
+    personal_details_check = PersonalDetails.objects.filter(officer=user)
+
+    if personal_details_check.exists():
+        personal_details = PersonalDetails.objects.get(officer=user)
+        info_message = ""
+        personal_details_exist = True
+    else:
+        info_message = "You have not yet filled out any personal details. Please create new details below."
+        personal_details_exist = False
+        personal_details = None
+        
+    args = {'personal_details': personal_details, 'info_message': info_message, 'personal_details_exist': personal_details_exist}
+    return render(request, "view_personal_details.html", args)
