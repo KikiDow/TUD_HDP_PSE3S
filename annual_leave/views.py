@@ -165,3 +165,31 @@ def view_st_leave_request(request, pk):
     applicants_leave_balance = st_leave_req.st_annual_leave_request_officer_id.current_leave_total
     #st_leave_req.save()
     return render(request, "view_st_leave_request.html", {'st_leave_req': st_leave_req, 'applicants_leave_balance': applicants_leave_balance})
+    
+@login_required()
+def delete_short_term_leave_request(request, pk):
+    '''
+    This view along with conditional content on the view_st_leave_request.html template allows a user to delete a 
+    short term leave request.
+    '''
+    st_leave_request_for_deletion = ShortTermAnnualLeaveRequest.objects.get(pk=pk)
+    st_leave_request_for_deletion.delete()
+    messages.success(request, "You have successfully deleted this short term leave request.")
+    return redirect('annual_leave_page')
+    
+@login_required()
+def edit_short_term_leave_request(request, pk):
+    '''
+    This view along with conditional content in the view_st_leave_request.html template allows a user to edit a 
+    short term leave request prior to being checked by a validator.
+    '''
+    st_request_for_editing = get_object_or_404(ShortTermAnnualLeaveRequest, pk=pk) if pk else None
+    if request.method == "POST":
+        edit_st_request_form = ShortTermAnnualLeaveRequestForm(request.POST, request.FILES, instance=st_request_for_editing)
+        if edit_st_request_form.is_valid():
+            st_request_for_editing = edit_st_request_form.save()
+            messages.success(request, 'You have successfully made changes to this short term leave request.')
+            return redirect(view_st_leave_request, st_request_for_editing.pk)
+    else:
+        edit_st_request_form = ShortTermAnnualLeaveRequestForm(instance=st_request_for_editing)
+    return render(request, "edit_st_request.html", {'st_request_for_editing': st_request_for_editing, 'edit_st_request_form': edit_st_request_form})

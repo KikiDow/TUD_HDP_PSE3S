@@ -13,10 +13,10 @@
     </div>
     <div class="row">
         <div class="col-md-6 col-sm-12 col-xs-12">
-            <!-- BUTTON TO EDIT LEAVE -->
+            <a class="btn btn-info" href="{% url 'edit_short_term_leave_request' st_leave_req.id %}"> Edit Request </a>
         </div>
         <div class="col-md-6 col-sm-12 col-xs-12">
-            <!-- BUTTON TO DELETE REQUEST -->
+            <a class="btn btn-info" href="{% url 'delete_short_term_leave_request' st_leave_req.id %}"> Delete Request </a>
         </div>
     </div>
     {% if user.is_staff %}
