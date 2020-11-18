@@ -104,16 +104,57 @@ def view_personal_details(request):
     This view allows the user to view their personal details. It checks whether the user has yet created the personal details and then initialised the context variables approporiately.
     '''
     user = request.user
-    personal_details_check = PersonalDetails.objects.filter(officer=user)
+    personal_details_check = PersonalDetails.objects.filter(officer_pd=user)
 
     if personal_details_check.exists():
-        personal_details = PersonalDetails.objects.get(officer=user)
+        personal_details = PersonalDetails.objects.get(officer_pd=user)
         info_message = ""
         personal_details_exist = True
     else:
-        info_message = "You have not yet filled out any personal details. Please create new details below."
+        info_message = "You have not yet filled out any personal details. Select the button below to begin."
         personal_details_exist = False
         personal_details = None
         
     args = {'personal_details': personal_details, 'info_message': info_message, 'personal_details_exist': personal_details_exist}
     return render(request, "view_personal_details.html", args)
+    
+@login_required()
+def create_personal_details(request):
+    '''
+    This view present the personal details form to the user allwing them to create their personal details.
+    '''
+    if request.method == "POST":
+        create_personal_details_form = PersonalDetailsForm(request.POST, request.FILES)
+        if create_personal_details_form.is_valid():
+            create_personal_details_form.instance.officer_pd = request.user
+            personal_details = create_personal_details_form.save()
+            messages.success(request, 'You have successfully filled out your personal details.')
+            
+            args = {'personal_details': personal_details}
+            return redirect(view_personal_details)
+    else:
+        create_personal_details_form = PersonalDetailsForm()
+        
+    return render(request, "create_personal_details.html", {'create_personal_details_form': create_personal_details_form})
+    
+@login_required()
+def edit_personal_details(request, pk):
+    """
+    This view allows the user to update any changes in their personal details.
+    """
+    personal_details = get_object_or_404(PersonalDetails, pk=pk) if pk else None
+    user = request.user
+    if request.method == "POST":
+        edit_personal_details_form = PersonalDetailsForm(request.POST, request.FILES, instance=personal_details)
+        if edit_personal_details_form.is_valid():
+            edit_personal_details_form.instance.officer_pd = request.user
+            personal_details = edit_personal_details_form.save()
+            messages.success(request, 'You have successfully updated your personal details.')
+
+            return redirect(view_personal_details)
+    else:
+        edit_personal_details_form = PersonalDetailsForm(instance=personal_details)
+        
+
+    return render(request, "edit_personal_details.html", {'personal_details': personal_details, 'edit_personal_details_form': edit_personal_details_form})
+    
