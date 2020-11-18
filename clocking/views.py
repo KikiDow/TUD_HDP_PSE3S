@@ -94,4 +94,5 @@ def generate_roster(request, pk):
         while_counter = Roster.objects.filter(roster_officer_id=officer_for_roster_being_generated.pk).count()
         print(while_counter)
     
+    messages.success(request, "Roster created for new account.")
     return redirect('home_page')
