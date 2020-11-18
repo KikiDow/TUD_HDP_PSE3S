@@ -1,0 +1,27 @@
+{% extends 'base.html'%}
+{% load notifications_tags %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-info text-white">
+  <div class="container">
+      <div class="row justify-content-center">
+        <h1 class="display-4">My Notifications</h1>
+      </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+            <div class="col-md-12">
+            {% if unread_count %}
+                You have <strong> {{ unread_count }} </strong> unread notifications.
+            {% endif %}
+            </div>
+            <div class="col-md-12">
+                <ul class="list-group justify-content-center">
+                    {% for notification in notifications %}
+                        <li class="list-group-item list-group-item-dark">{{ notification }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+    </div>
+</div>
+{% endblock %}

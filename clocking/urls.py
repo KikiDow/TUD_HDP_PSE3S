@@ -1,5 +1,5 @@
 from django.conf.urls import url, include
-from .views import landing_page, clocking_page, generate_quarters, generate_roster, view_personal_details, create_personal_details, edit_personal_details
+from .views import landing_page, clocking_page, generate_quarters, generate_roster, view_personal_details, create_personal_details, edit_personal_details, my_notifications
 
 urlpatterns = [
     url(r'^$', landing_page, name='index'),
@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^view_personal_details/$', view_personal_details, name='view_personal_details'),
     url(r'^create_personal_details/$', create_personal_details, name='create_personal_details'),
     url(r'^(?P<pk>\d+)/edit_personal_details/$', edit_personal_details, name='edit_personal_details'),
+    url(r'^notifications$', my_notifications, name='my_notifications'),
 ]

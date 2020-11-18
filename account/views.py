@@ -8,6 +8,7 @@ from .models import Account
 #from overtime.utils import getCurrentQtr
 from django_currentuser.middleware import get_current_user, get_current_authenticated_user
 from account.forms import RegistrationForm, AccountAuthenticationForm
+from notifications.signals import notify
 
 # Create your views here.
 def logout_view(request):
@@ -61,8 +62,9 @@ def registration(request):
             email = reg_form.cleaned_data.get('email')
             raw_password = reg_form.cleaned_data.get('password1')
             account = authenticate(email=email, password=raw_password)
-            messages.success(request, "You have successfully registered a new user.")
             new_account = Account.objects.get(email=email)
+            notify.send(request.user, recipient=new_account, verb="Can you please fill in your personal details as soon as possible.")
+            messages.success(request, "You have successfully registered a new user.")
             #current_qtr = getCurrentQtr()
             #new_ot_per_qtr = OvertimePerQtr(ot_per_qtr_off_id=new_account, ot_per_qtr_qtr_id=current_qtr)
             #new_ot_per_qtr.save()

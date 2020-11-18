@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_filters',
     'account',
     'clocking',
+    'notifications',
 ]
 
 MIDDLEWARE = [

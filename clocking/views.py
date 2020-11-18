@@ -7,6 +7,8 @@ from .forms import PersonalDetailsForm
 from django.contrib import messages
 from.utils import findRosterStartPoint, rosterPointerCheck
 from account.models import Account
+from notifications.signals import notify
+from notifications.models import Notification
 # Create your views here.
 
 def landing_page(request):
@@ -101,7 +103,8 @@ def generate_roster(request, pk):
 @login_required()
 def view_personal_details(request):
     '''
-    This view allows the user to view their personal details. It checks whether the user has yet created the personal details and then initialised the context variables approporiately.
+    This view allows the user to view their personal details. It checks whether the user has yet created the 
+    personal details and then initialised the context variables approporiately.
     '''
     user = request.user
     personal_details_check = PersonalDetails.objects.filter(officer_pd=user)
@@ -158,3 +161,12 @@ def edit_personal_details(request, pk):
 
     return render(request, "edit_personal_details.html", {'personal_details': personal_details, 'edit_personal_details_form': edit_personal_details_form})
     
+@login_required()    
+def my_notifications(request):
+    """
+    This view will render the notifications page showing the user their unread notifications.
+    """
+
+    user = request.user.id
+    notifications = Notification.objects.unread().filter(recipient=user).order_by('-timestamp')
+    return render(request, "notifications.html", {'notifications': notifications})
