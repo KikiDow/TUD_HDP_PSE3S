@@ -68,15 +68,25 @@ def generate_roster(request, pk):
         if officers_roster_side == "A":
             schedule_pointer = RosterSideA.objects.get(ros_a_shift_cycle_number=roster_pointer) #check syntax
             label_for_shift_on_that_day = schedule_pointer.ros_a_shift_label
-            shift_for_that_day = Shift.objects.get(shift_label=label_for_shift_on_that_day)
-            dueOn_or_dueOff = schedule_pointer.ros_a_due_on
+            if label_for_shift_on_that_day == "Off":
+                dueOn_or_dueOff = schedule_pointer.ros_a_due_on
+            else:
+                shift_for_that_day = Shift.objects.get(shift_label=label_for_shift_on_that_day)
+                dueOn_or_dueOff = schedule_pointer.ros_a_due_on
         else:
             schedule_pointer = RosterSideB.objects.get(ros_b_shift_cycle_number=roster_pointer)
             label_for_shift_on_that_day = schedule_pointer.ros_b_shift_label
-            shift_for_that_day = Shift.objects.get(shift_label=label_for_shift_on_that_day)
-            dueOn_or_dueOff = schedule_pointer.ros_b_due_on
+            if label_for_shift_on_that_day == "Off":
+                dueOn_or_dueOff = schedule_pointer.ros_b_due_on
+            else:
+                shift_for_that_day = Shift.objects.get(shift_label=label_for_shift_on_that_day)
+                dueOn_or_dueOff = schedule_pointer.ros_b_due_on
         
-        new_roster_record = Roster(roster_officer_id=officer_for_roster_being_generated, roster_shift_label=label_for_shift_on_that_day, roster_shift=shift_for_that_day, roster_shift_date=date_pointer, roster_due_on=dueOn_or_dueOff)
+        if label_for_shift_on_that_day == "Off":
+            new_roster_record = Roster(roster_officer_id=officer_for_roster_being_generated, roster_shift_label=label_for_shift_on_that_day, roster_shift_date=date_pointer, roster_due_on=dueOn_or_dueOff)
+        else:
+            new_roster_record = Roster(roster_officer_id=officer_for_roster_being_generated, roster_shift_label=label_for_shift_on_that_day, roster_shift=shift_for_that_day, roster_shift_date=date_pointer, roster_due_on=dueOn_or_dueOff)
+        
         new_roster_record.save()
         print(new_roster_record)
         roster_pointer += 1

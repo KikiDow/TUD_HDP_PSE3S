@@ -126,7 +126,8 @@ USE_TZ = True
 
 #GLOBAL VARIABLES:
 #Global Start Date for generating rosters and quarters
-GLOBAL_START_DATE = datetime.datetime(2020, 9, 26)
+#GLOBAL_START_DATE = datetime.datetime(2020, 9, 26)
+GLOBAL_START_DATE = datetime.date(2020, 9, 26)
 
 #Constant Variable: Yearly Annual Leave Allowance
 ANNUAL_LEAVE_YEARLY_ALLOWANCE = 250.00

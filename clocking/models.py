@@ -61,7 +61,7 @@ class Roster(models.Model):
     		C = 'C'
     		
     roster_shift_label = models.CharField(max_length=2, choices=ShiftChoices.choices(), default='None')
-    roster_shift = models.ForeignKey(Shift, related_name='roster_shift', on_delete=models.CASCADE)
+    roster_shift = models.ForeignKey(Shift, related_name='roster_shift', on_delete=models.CASCADE, blank=True, null=True)
     roster_shift_date = models.DateField(blank=False, null=False)
     roster_due_on = models.BooleanField()
     
