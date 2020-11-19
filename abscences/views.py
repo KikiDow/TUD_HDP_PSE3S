@@ -202,3 +202,22 @@ def view_my_sick_leave(request):
     len_my_fm = len(my_fm)
     return render(request, "my_sick_leave.html", {'my_csl': my_csl, 'my_usl': my_usl, 'my_fm': my_fm, 'len_my_csl': len_my_csl, 'len_my_usl': len_my_usl, 'len_my_fm': len_my_fm})
     
+@login_required()
+def accept_csl(request, pk):
+    csl_being_accepted = CertifiedSickLeave.objects.get(pk=pk)
+    csl_being_accepted.csl_checked_by_validator = True
+    csl_being_accepted.csl_accepted = True
+    csl_being_accepted.save()
+    current_year = getCurrentYear()
+    csl_for_current_year_check = CertifiedSickPerYear.objects.filter(yearly_csl_officer_id=csl_being_accepted.csl_officer_id).filter(csl_year=current_year)
+    if csl_for_current_year_check.exists():
+        csl_for_current_year_check = CertifiedSickPerYear.objects.get(yearly_csl_officer_id=csl_being_accepted.csl_officer_id, csl_year=current_year)
+        csl_for_current_year_check.number_csl_for_year += 1
+    else:
+        new_cert_sick_per_year = CertifiedSickPerYear(yearly_csl_officer_id=csl_being_accepted.csl_officer_id, csl_year=current_year, number_csl_for_year=1)
+    
+    #NOTIFICATION TO APPLICANT THAT CERT HAS BEEN ACCEPTED.
+    notify.send(request.user, recipient=csl_being_accepted.csl_officer_id, verb=" has accepted your Certified Sick Leave application: " + str(csl_being_accepted))
+    messages.success(request, "You have accepted this certified sick leave application.")
+    
+    return redirect('view_staff_sick_leave_applications')
