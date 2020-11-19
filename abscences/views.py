@@ -94,3 +94,13 @@ def view_usl_application(request, pk):
     usl_application = get_object_or_404(UnCertifiedSickLeave, pk=pk)
     usl_application.save()
     return render(request, "view_usl_application.html", {'usl_application': usl_application})
+    
+@login_required()
+def delete_usl(request, pk):
+    '''
+    View to delete usl application.
+    '''
+    usl_applic_for_deletion = UnCertifiedSickLeave.objects.get(pk=pk)
+    usl_applic_for_deletion.delete()
+    messages.success(request, "You have successfully deleted this uncertified sick leave application.")
+    return redirect('abscences_page')
