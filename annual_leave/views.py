@@ -283,3 +283,24 @@ def reject_annual_leave(request, pk):
         annual_leave_reject_form = AnnualLeaveRequestRejectForm(instance=leave_being_rejected)
     return render(request, "reject_al_request.html", {'leave_being_rejected': leave_being_rejected, 'annual_leave_reject_form': annual_leave_reject_form})
     
+@login_required()
+def accept_short_term_leave(request, pk):
+    '''
+    This view allows a validator to accept a short term leave request. 
+    It also subtracts the leave amount from the total leave balance and creates an AnnualLeave instance.
+    ''' 
+    st_leave_req_being_accepted = ShortTermAnnualLeaveRequest.objects.get(pk=pk)
+    st_leave_record = AnnualLeave(al_officer_id=st_leave_req_being_accepted.st_annual_leave_request_officer_id, al_date=st_leave_req_being_accepted.st_leave_date, leave_amount_used=st_leave_req_being_accepted.st_leave_amount, short_term_leave=True)
+    st_leave_record.save()
+    
+    st_leave_req_being_accepted.st_leave_request_checked_by_validator = True
+    st_leave_req_being_accepted.st_leave_request_granted = True
+    st_leave_req_being_accepted.save()
+    #NOTIFICATION TO APPLICANT THAT SHORT TERM REQUEST HAS BEEN GRAMTED.
+    notify.send(request.user, recipient=st_leave_req_being_accepted.st_annual_leave_request_officer_id, verb=" has accepted your short term leave request: " + str(st_leave_req_being_accepted))
+    messages.success(request, 'You have granted this leave request.')
+    
+    st_leave_req_being_accepted.st_annual_leave_request_officer_id.current_leave_total = st_leave_req_being_accepted.st_annual_leave_request_officer_id.current_leave_total - st_leave_req_being_accepted.st_leave_amount
+    st_leave_req_being_accepted.st_annual_leave_request_officer_id.save()
+    
+    return redirect('view_staff_leave_submissions')
