@@ -146,3 +146,13 @@ def view_fm_application(request, pk):
     fm_application = get_object_or_404(ForceMajeure, pk=pk)
     fm_application.save()
     return render(request, "view_fm_application.html", {'fm_application': fm_application})
+    
+@login_required()
+def delete_fm(request, pk):
+    '''
+    View allows user to delete one of their own FM applications.
+    '''
+    fm_applic__for_deletion = ForceMajeure.objects.get(pk=pk)
+    fm_applic__for_deletion.delete()
+    messages.success(request, "You have successfully deleted this Force Majeure leave application.")
+    return redirect('abscences_page')
