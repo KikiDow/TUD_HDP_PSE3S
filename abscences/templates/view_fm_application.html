@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-info text-white">
+  <div class="container">
+      <div class="row justify-content-center">
+        <h1 class="display-4">View Force Majeure</h1>
+      </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <table class="table table-striped table-dark justify-content-center">
+                    {% if user.is_staff %}
+                    <tbody>
+                    <tr>
+                        <td><strong>Name: </strong></td>
+                        <td>{{ fm_application.fm_officer_id }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <td><strong>Force Majeure Date: </strong></td>
+                        <td>{{ fm_application.fm_date }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Reason for F.M.: </strong></td>
+                        <td>{{ fm_application.reason_for_fm }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Application Checked: </strong></td>
+                        {% if fm_application.fm_checked_by_validator == True %}
+                            <td><i class="fa fa-check-circle-o fa-lg"></i></td>
+                        {% else %}
+                            <td><i class="fa fa-times-circle fa-lg"></i></td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td><strong>Application Accepted: </strong></td>
+                        {% if fm_application.fm_accepted == True %}
+                            <td><i class="fa fa-check-circle-o fa-lg"></i></td>
+                        {% else %}
+                            <td><i class="fa fa-times-circle fa-lg"></i></td>
+                        {% endif %}
+                    </tr>
+                    {% if fm_application.fm_checked_by_validator == True and fm_application.fm_accepted == False %}
+                    <tr>
+                        <td><strong>Reason U.S.L. rejected:</strong></td>
+                        <td>{{ fm_application.reason_fm_rejected }}</td>
+                    </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2"></div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-2"></div>
+        <div class="col-md-4 col-sm-12 col-xs-12">
+            {% if user == fm_application.fm_officer_id and fm_application.fm_checked_by_validator == False %}
+            <a class="btn btn-info" href=""><i class="fa fa-pencil"></i> Edit Application </a>
+            {% endif %}
+        </div>
+        <div class="col-md-4 col-sm-12 col-xs-12">
+            {% if user == fm_application.fm_officer_id %}
+            <a class="btn btn-info" href=""><i class="fa fa-trash"></i> Delete </a>
+            {% endif %}
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    {% if user.is_staff %}
+    <div class="row justify-content-center">
+        <div class="col-md-2"></div>
+        <div class="col-md-4 col-sm-12 col-xs-12">
+            <a class="btn btn-info" href=""><i class="fa fa-thumbs-up"></i> Accept Application </a>
+        </div>
+        <div class="col-md-4 col-sm-12 col-xs-12">
+            <a class="btn btn-info" href=""><i class="fa fa-thumbs-down"></i> Reject Application </a>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
