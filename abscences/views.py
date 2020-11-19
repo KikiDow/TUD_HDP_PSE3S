@@ -221,3 +221,21 @@ def accept_csl(request, pk):
     messages.success(request, "You have accepted this certified sick leave application.")
     
     return redirect('view_staff_sick_leave_applications')
+    
+@login_required()
+def reject_csl(request, pk):
+    csl_being_rejected = CertifiedSickLeave.objects.get(pk=pk)
+    if request.method == "POST":
+        csl_reject_form = RejectCertifiedSickLeaveForm(request.POST, request.FILES, instance=csl_being_rejected)
+        if csl_reject_form.is_valid():
+            csl_being_rejected = csl_reject_form.save()
+            csl_being_rejected.csl_checked_by_validator = True
+            csl_being_rejected.csl_accepted = False
+            csl_being_rejected.save()
+            #NOTIFICATION TO APPLICANY THAT CERT HAS BEEN REJECTED.
+            notify.send(request.user, recipient=csl_being_rejected.csl_officer_id, verb=" has rejected your Certified Sick Leave application: " + str(csl_being_rejected))
+            messages.success(request, 'Cert Successfully Rejected.')
+            return redirect('view_staff_sick_leave_submissions')
+    else:
+        csl_reject_form = RejectCertifiedSickLeaveForm(instance=csl_being_rejected)
+    return render(request, "reject_csl.html", {'csl_being_rejected': csl_being_rejected, 'csl_reject_form': csl_reject_form})
