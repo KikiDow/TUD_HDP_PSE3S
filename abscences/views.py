@@ -277,3 +277,21 @@ def reject_usl(request, pk):
     else:
         usl_reject_form = RejectUnCertifiedSickLeaveForm(instance=usl_being_rejected)
     return render(request, "reject_usl.html", {'usl_being_rejected': usl_being_rejected, 'usl_reject_form': usl_reject_form})
+    
+@login_required()
+def accept_fm(request, pk):
+    fm_being_accepted = ForceMajeure.objects.get(pk=pk)
+    fm_being_accepted.fm_checked_by_validator = True
+    fm_being_accepted.fm_accepted = True
+    fm_being_accepted.save()
+    current_year = getCurrentYear()
+    fm_for_current_year_check = ForceMajeurePerYear.objects.filter(yearly_fm_officer_id=fm_being_accepted.fm_officer_id).filter(fm_year=current_year)
+    if fm_for_current_year_check.exists():
+        fm_for_current_year_check = ForceMajeurePerYear.objects.get(yearly_fm_officer_id=fm_being_accepted.fm_officer_id, fm_year=current_year)
+        fm_for_current_year_check.number_fm_for_year += 1
+    else:
+        new_fm_for_year = ForceMajeurePerYear(yearly_fm_officer_id=fm_being_accepted.fm_officer_id, fm_year=current_year, number_fm_for_year=1)
+    #NOTIFICATION TO APPLICANT THAT FM ACCEPTED.
+    notify.send(request.user, recipient=fm_being_accepted.fm_officer_id, verb=" has accepted your Force Majeure application: " + str(fm_being_accepted))
+    messages.success(request, "Force Majeure application accepted.")
+    return redirect('view_staff_sick_leave_applications')
