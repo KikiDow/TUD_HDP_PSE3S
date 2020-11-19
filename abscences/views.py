@@ -68,3 +68,29 @@ def edit_csl(request, pk):
     else:
         edit_csl_form = CertifiedSickLeaveForm(instance=csl_for_editing)
     return render(request, "edit_csl_application.html", {'csl_for_editing': csl_for_editing, 'edit_csl_form': edit_csl_form})
+    
+#USL
+@login_required()
+def submit_usl(request):
+    '''
+    This view allows the user to submit and create a usl application.
+    '''
+    if request.method == "POST":
+        usl_form = UnCertifiedSickLeaveForm(request.POST, request.FILES)
+        if usl_form.is_valid():
+            usl_form.instance.usl_officer_id = request.user
+            usl_application = usl_form.save()
+            messages.success(request, 'You have successfully submitted an uncertified sick leave application.')
+            return redirect(view_usl_application, usl_application.pk)
+    else:
+        usl_form = UnCertifiedSickLeaveForm()
+    return render(request, "submit_usl.html", {'usl_form': usl_form})
+    
+@login_required()
+def view_usl_application(request, pk):
+    '''
+    This view allows the user to view a single usl application and its status.
+    '''
+    usl_application = get_object_or_404(UnCertifiedSickLeave, pk=pk)
+    usl_application.save()
+    return render(request, "view_usl_application.html", {'usl_application': usl_application})
