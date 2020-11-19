@@ -239,3 +239,23 @@ def reject_csl(request, pk):
     else:
         csl_reject_form = RejectCertifiedSickLeaveForm(instance=csl_being_rejected)
     return render(request, "reject_csl.html", {'csl_being_rejected': csl_being_rejected, 'csl_reject_form': csl_reject_form})
+    
+@login_required()
+def accept_usl(request, pk):
+    usl_being_accepted = UnCertifiedSickLeave.objects.get(pk=pk)
+    usl_being_accepted.usl_checked_by_validator = True
+    usl_being_accepted.usl_accepted = True
+    usl_being_accepted.save()
+    current_year = getCurrentYear()
+    usl_for_current_year_check = UnCertifiedSickPerYear.objects.filter(yearly_usl_officer_id=usl_being_accepted.usl_officer_id).filter(usl_year=current_year)
+    if usl_for_current_year_check.exist():
+        usl_for_current_year_check = UnCertifiedSickPerYear.objects.get(yearly_usl_officer_id=usl_being_accepted.usl_officer_id, usl_year=current_year)
+        usl_for_current_year_check.number_usl_for_year += 1
+    else:
+        new_uncert_sick_per_year = UnCertifiedSickPerYear(yearly_usl_officer_id=usl_being_accepted.usl_officer_id, usl_year=current_year, number_usl_for_year=1)
+        
+    #NOTIFICATION TO APPLICANT THAT UN-CERT HAS BEEN ACCEPTED.
+    notify.send(request.user, recipient=usl_being_accepted.usl_officer_id, verb=" has accepted your Un-Certified Sick Leave application: " + str(usl_being_accepted))
+    messages.success(request, "You have accepted this uncertified sick leave application.")
+    
+    return redirect('view_staff_sick_leave_applications')
