@@ -65,7 +65,7 @@
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12">
             {% if user == csl_application.csl_officer_id %}
-            <a class="btn btn-info" href="#"><i class="fa fa-trash"></i> Delete Request </a>
+            <a class="btn btn-info" href="{% url 'delete_csl' csl_application.id %}"><i class="fa fa-trash"></i> Delete Request </a>
             {% endif %}
         </div>
         <div class="col-md-2"></div>
@@ -74,10 +74,10 @@
     <div class="row justify-content-center">
         <div class="col-md-2"></div>
         <div class="col-md-4 col-sm-12 col-xs-12">
-            <a class="btn btn-info" href="{% url 'accept_block_leave' annual_leave_req.id %}"><i class="fa fa-thumbs-up"></i> Grant Request </a>
+            <a class="btn btn-info" href=""><i class="fa fa-thumbs-up"></i> Accept Application </a>
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12">
-            <a class="btn btn-info" href="{% url 'reject_annual_leave' annual_leave_req.id %}"><i class="fa fa-thumbs-down"></i> Reject Request </a>
+            <a class="btn btn-info" href=""><i class="fa fa-thumbs-down"></i> Reject Application </a>
         </div>
         <div class="col-md-2"></div>
     </div>

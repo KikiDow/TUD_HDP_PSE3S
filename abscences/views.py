@@ -42,3 +42,13 @@ def view_csl_application(request, pk):
     csl_application = get_object_or_404(CertifiedSickLeave, pk=pk)
     csl_application.save()
     return render(request, "view_csl_application.html", {'csl_application': csl_application})
+    
+@login_required()
+def delete_csl(request, pk):
+    '''
+    This view allows user to delete a csl application.
+    '''
+    csl_applic_for_deletion = CertifiedSickLeave.objects.get(pk=pk)
+    csl_applic_for_deletion.delete()
+    messages.success(request, "You have successfully deleted this certified sick leave application.")
+    return redirect('abscences_page')
