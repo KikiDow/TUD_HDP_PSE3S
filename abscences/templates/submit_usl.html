@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load bootstrap_tags %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-info text-white">
+  <div class="container">
+      <div class="row justify-content-center">
+        <h1 class="display-4">Submit Un-Certified Sick Leave</h1>
+      </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <form method="POST" enctype="multipart/form-data">
+                <fieldset class="form-group">
+                    <legend>Submit your Un-Certified Sick Leave Application here</legend>
+                    {% csrf_token %}
+                    {{ usl_form | as_bootstrap }}
+                    <button class="btn btn-info" type="submit">Submit U.S.L.</button>
+                </fieldset>
+            </form>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+{% endblock %}
