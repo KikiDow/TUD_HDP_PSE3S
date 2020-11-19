@@ -120,3 +120,29 @@ def edit_usl(request, pk):
     else:
         edit_usl_form = UnCertifiedSickLeaveForm(instance=usl_for_editing)
     return render(request, "edit_usl_application.html", {'usl_for_editing': usl_for_editing, 'edit_usl_form': edit_usl_form})
+    
+#FM - SUBMIT, VIEW, EDIT & DELETE.
+@login_required()
+def submit_fm(request):
+    '''
+    This view allows a user to submit a FM application.
+    '''
+    if request.method == "POST":
+        fm_form = ForceMajeureForm(request.POST, request.FILES)
+        if fm_form.is_valid():
+            fm_form.instance.fm_officer_id = request.user
+            fm_application = fm_form.save()
+            messages.success(request, 'You have successfully submitted a Force Majeure application.')
+            return redirect(view_fm_application, fm_application.pk)
+    else:
+        fm_form = ForceMajeureForm()
+    return render(request, "submit_fm.html", {'fm_form': fm_form})
+    
+@login_required()
+def view_fm_application(request, pk):
+    '''
+    This view allows the user to view a FM application.
+    '''
+    fm_application = get_object_or_404(ForceMajeure, pk=pk)
+    fm_application.save()
+    return render(request, "view_fm_application.html", {'fm_application': fm_application})
