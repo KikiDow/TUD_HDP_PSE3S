@@ -1,5 +1,5 @@
 from django.conf.urls import url, include
-from .views import abscences_page, submit_csl, view_csl_application, delete_csl, edit_csl, submit_usl, view_usl_application, delete_usl, edit_usl, submit_fm, view_fm_application, delete_fm
+from .views import abscences_page, submit_csl, view_csl_application, delete_csl, edit_csl, submit_usl, view_usl_application, delete_usl, edit_usl, submit_fm, view_fm_application, delete_fm, edit_fm
 
 urlpatterns = [
     url(r'^abscences_page/$', abscences_page, name='abscences_page'),
@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^submit_fm/$', submit_fm, name='submit_fm'),
     url(r'^(?P<pk>\d+)/view_fm_application/$', view_fm_application, name='view_fm_application'),
     url(r'^(?P<pk>\d+)/delete_fm/$', delete_fm, name='delete_fm'),
+    url(r'^(?P<pk>\d+)/edit_fm/$', edit_fm, name='edit_fm'),
 ]

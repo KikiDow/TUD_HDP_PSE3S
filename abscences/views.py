@@ -156,3 +156,20 @@ def delete_fm(request, pk):
     fm_applic__for_deletion.delete()
     messages.success(request, "You have successfully deleted this Force Majeure leave application.")
     return redirect('abscences_page')
+    
+@login_required()
+def edit_fm(request, pk):
+    '''
+    View in combination with conditional content on view_fm_application.html allows a user to edit a previously
+    submitted fm application before it is checked by a validator.
+    '''
+    fm_for_editing = get_object_or_404(ForceMajeure, pk=pk) if pk else None
+    if request.method == "POST":
+        edit_fm_form = ForceMajeureForm(request.POST, request.FILES, instance=fm_for_editing)
+        if edit_fm_form.is_valid():
+            fm_for_editing = edit_fm_form.save()
+            messages.success(request, 'You have successfully made changes to this force majeure application.')
+            return redirect(view_fm_application, fm_for_editing.pk)
+    else:
+        edit_fm_form = ForceMajeureForm(instance=fm_for_editing)
+    return render(request, "edit_fm_application.html", {'fm_for_editing': fm_for_editing, 'edit_fm_form': edit_fm_form})
