@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-info text-white">
+  <div class="container">
+      <div class="row justify-content-center">
+        <h1 class="display-4">Staff Sick Leave Submissions</h1>
+      </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <h3> Certified Sick </h3>
+    </div>
+    {% if len_staff_csl_submissions == 0 %}
+    <div class="row justify-content-center">
+        <p> No new certified sick leave applications to check. </p>
+    </div>
+    {% else %}
+    <div class="row justify-content-center">
+        <div class="col-md-3"></div>
+        <div class="col-md-6 table-wrapper-scroll-y my-custom-scrollbar">
+            <table class="table table-striped table-dark mb-0">
+                <thead>
+                    <th>Officer</th>
+                    <th><i class="fa fa-folder-open fa-lg"></i></th>
+                </thead>
+                <tbody>
+                    {% for csl_req in staff_csl_submissions %}
+                        <tr>
+                            <td>{{ csl_req.csl_officer_id.firstname }} {{ csl_req.csl_officer_id.lastname }}</td>
+                            <td><a class="btn btn-info" href="{% url 'view_csl_application' csl_req.id %}"><i class="fa fa-eye"></i> View </a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+    {% endif %}
+    <hr/>
+    <div class="row justify-content-center">
+    <h3> Uncertified Sick </h3>
+    </div>
+    {% if len_staff_usl_submissions == 0 %}
+    <div class="row justify-content-center">
+        <p> No new uncertified sick leave applications to check. </p>
+    </div>
+    {% else %}
+    <div class="row justify-content-center">
+        <div class="col-md-3"></div>
+        <div class="col-md-6 table-wrapper-scroll-y my-custom-scrollbar">
+            <table class="table table-striped table-dark mb-0">
+                <thead>
+                    <th>Officer</th>
+                    <th><i class="fa fa-folder-open fa-lg"></i></th>
+                </thead>
+                <tbody>
+                    {% for usl_req in staff_usl_submissions %}
+                        <tr>
+                            <td>{{ usl_req.usl_officer_id.firstname }} {{ usl_req.usl_officer_id.lastname }}</td>
+                            <td><a class="btn btn-info btn-sm" href="{% url 'view_usl_application' usl_req.id %}"><i class="fa fa-eye"></i> View </a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+    {% endif %}
+    <h3> Force Majeure </h3>
+    </div>
+    {% if len_staff_fm_submissions == 0 %}
+    <div class="row justify-content-center">
+        <p> No new force majeure leave applications to check. </p>
+    </div>
+    {% else %}
+    <div class="row justify-content-center">
+        <div class="col-md-3"></div>
+        <div class="col-md-6 table-wrapper-scroll-y my-custom-scrollbar">
+            <table class="table table-striped table-dark mb-0">
+                <thead>
+                    <th>Officer</th>
+                    <th><i class="fa fa-folder-open fa-lg"></i></th>
+                </thead>
+                <tbody>
+                    {% for fm_req in staff_fm_submissions %}
+                        <tr>
+                            <td>{{ fm_req.fm_officer_id.firstname }} {{ fm_req.fm_officer_id.lastname }}</td>
+                            <td><a class="btn btn-info btn-sm" href="{% url 'view_fm_application' fm_req.id %}"><i class="fa fa-eye"></i> View </a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -173,3 +173,19 @@ def edit_fm(request, pk):
     else:
         edit_fm_form = ForceMajeureForm(instance=fm_for_editing)
     return render(request, "edit_fm_application.html", {'fm_for_editing': fm_for_editing, 'edit_fm_form': edit_fm_form})
+    
+@login_required()
+def view_staff_sick_leave_applications(request):
+    '''
+    This view returns all usl, csl and fm applications made by staff for validators to check.
+    '''
+    staff_csl_submissions = CertifiedSickLeave.objects.select_related('csl_officer_id').filter(csl_checked_by_validator=False)
+    staff_usl_submissions = UnCertifiedSickLeave.objects.select_related('usl_officer_id').filter(usl_checked_by_validator=False)
+    staff_fm_submissions = ForceMajeure.objects.select_related('fm_officer_id').filter(fm_checked_by_validator=False)
+    
+    len_staff_csl_submissions = len(staff_csl_submissions)
+    len_staff_usl_submissions = len(staff_usl_submissions)
+    len_staff_fm_submissions = len(staff_fm_submissions)
+    
+    return render(request, "staff_sick_leave_submissions.html", {'staff_csl_submissions': staff_csl_submissions, 'staff_usl_submissions': staff_usl_submissions, 'staff_fm_submissions': staff_fm_submissions, 'len_staff_csl_submissions': len_staff_csl_submissions, 'len_staff_usl_submissions': len_staff_usl_submissions, 'len_staff_fm_submissions': len_staff_fm_submissions})
+    
