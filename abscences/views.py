@@ -259,3 +259,21 @@ def accept_usl(request, pk):
     messages.success(request, "You have accepted this uncertified sick leave application.")
     
     return redirect('view_staff_sick_leave_applications')
+    
+@login_required()
+def reject_usl(request, pk):
+    usl_being_rejected = UnCertifiedSickLeave.objects.get(pk=pk)
+    if request.method == "POST":
+        usl_reject_form = RejectUnCertifiedSickLeaveForm(request.POST, request.FILES, instance=usl_being_rejected)
+        if usl_reject_form.is_valid():
+            usl_being_rejected = usl_reject_form.save()
+            usl_being_rejected.usl_checked_by_validator = True
+            usl_being_rejected.usl_accepted = False
+            usl_being_rejected.save()
+            #NOTIFUCATION TO APPLICANY THAT UN-CERT HAS BEEN REJECTED.
+            notify.send(request.user, recipient=usl_being_rejected.usl_officer_id, verb=" has rejected your Un-Certified Sick Leave application: " + str(usl_being_rejected))
+            messages.success(request, 'USL Application Rejected.')
+            return redirect('view_staff_sick_leave_submissions')
+    else:
+        usl_reject_form = RejectUnCertifiedSickLeaveForm(instance=usl_being_rejected)
+    return render(request, "reject_usl.html", {'usl_being_rejected': usl_being_rejected, 'usl_reject_form': usl_reject_form})
