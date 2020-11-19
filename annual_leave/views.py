@@ -8,6 +8,7 @@ from django.contrib import messages
 from account.models import Account
 from itertools import chain
 from clocking.models import Roster, Shift
+from notifications.signals import notify
 
 # Create your views here.
 @login_required()
@@ -220,3 +221,38 @@ def view_staff_leave_submissions(request):
     len_staff_submitted_al_requests = len(staff_submitted_al_requests)
     len_staff_submitted_st_requests = len(staff_submitted_st_requests)
     return render(request, "staff_leave_submissions.html", {'staff_submitted_al_requests': staff_submitted_al_requests, 'staff_submitted_st_requests': staff_submitted_st_requests, 'len_staff_submitted_al_requests': len_staff_submitted_al_requests, 'len_staff_submitted_st_requests': len_staff_submitted_st_requests})
+
+@login_required()
+def accept_block_leave(request, pk):
+    leave_reg_being_accepted = AnnualLeaveRequest.objects.get(pk=pk)
+    leave_start = leave_reg_being_accepted.leave_request_start_date
+    leave_end = leave_reg_being_accepted.leave_request_last_date
+    leave_hours_used = 0
+    one_day_delta = datetime.timedelta(days=1)
+    adjusted_end_date = leave_end + one_day_delta
+    list_of_leave_dates = []
+    
+    for i in range((adjusted_end_date - leave_start).days):
+        a_date = (leave_start + datetime.timedelta(days=i))
+        list_of_leave_dates.append(a_date)
+    
+    for date in list_of_leave_dates:
+        leave_date = Roster.objects.get(roster_shift_date=date, roster_officer_id=leave_reg_being_accepted.al_request_officer_id)
+        if leave_date.roster_due_on == True:
+            shift = Shift.objects.get(shift_label=leave_date.roster_shift_label)
+            hours_used = shift.shift_duration
+            leave_hours_used += hours_used
+            #print(leave_hours_used)
+            leave_record = AnnualLeave(al_officer_id=leave_reg_being_accepted.al_request_officer_id, al_date=date, leave_amount_used=hours_used)
+            leave_record.save()
+    
+    leave_reg_being_accepted.leave_request_checked_by_validator = True
+    leave_reg_being_accepted.leave_request_granted = True
+    leave_reg_being_accepted.save()
+    notify.send(request.user, recipient=leave_reg_being_accepted.al_request_officer_id, verb=" has granted your leave request: " + str(leave_reg_being_accepted))
+    messages.success(request, 'You have granted this leave request.')
+    
+    leave_reg_being_accepted.al_request_officer_id.current_leave_total = leave_reg_being_accepted.al_request_officer_id.current_leave_total - leave_hours_used
+    leave_reg_being_accepted.al_request_officer_id.save()
+    
+    return redirect('view_staff_leave_submissions')
