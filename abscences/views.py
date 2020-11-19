@@ -52,3 +52,19 @@ def delete_csl(request, pk):
     csl_applic_for_deletion.delete()
     messages.success(request, "You have successfully deleted this certified sick leave application.")
     return redirect('abscences_page')
+    
+@login_required()
+def edit_csl(request, pk):
+    '''
+    This view allows the user edit a previously submitted csl application.
+    '''
+    csl_for_editing = get_object_or_404(CertifiedSickLeave, pk=pk) if pk else None
+    if request.method == "POST":
+        edit_csl_form = CertifiedSickLeaveForm(request.POST, request.FILES, instance=csl_for_editing)
+        if edit_csl_form.is_valid():
+            csl_for_editing = edit_csl_form.save()
+            messages.success(request, 'You have successfully made changes to this certified sick leave application.')
+            return redirect(view_csl_application, csl_for_editing.pk)
+    else:
+        edit_csl_form = CertifiedSickLeaveForm(instance=csl_for_editing)
+    return render(request, "edit_csl_application.html", {'csl_for_editing': csl_for_editing, 'edit_csl_form': edit_csl_form})

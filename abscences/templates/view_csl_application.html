@@ -60,12 +60,12 @@
         <div class="col-md-2"></div>
         <div class="col-md-4 col-sm-12 col-xs-12">
             {% if user == csl_application.csl_officer_id and csl_application.csl_checked_by_validator == False %}
-            <a class="btn btn-info" href="#"><i class="fa fa-pencil"></i> Edit Request </a>
+            <a class="btn btn-info" href="{% url 'edit_csl' csl_application.id %}"><i class="fa fa-pencil"></i> Edit Application </a>
             {% endif %}
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12">
             {% if user == csl_application.csl_officer_id %}
-            <a class="btn btn-info" href="{% url 'delete_csl' csl_application.id %}"><i class="fa fa-trash"></i> Delete Request </a>
+            <a class="btn btn-info" href="{% url 'delete_csl' csl_application.id %}"><i class="fa fa-trash"></i> Delete </a>
             {% endif %}
         </div>
         <div class="col-md-2"></div>
