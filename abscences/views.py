@@ -104,3 +104,19 @@ def delete_usl(request, pk):
     usl_applic_for_deletion.delete()
     messages.success(request, "You have successfully deleted this uncertified sick leave application.")
     return redirect('abscences_page')
+    
+@login_required()
+def edit_usl(request, pk):
+    '''
+    This view allows a user to edit a usl application prior to being checked by a validator.
+    '''
+    usl_for_editing = get_object_or_404(UnCertifiedSickLeave, pk=pk) if pk else None
+    if request.method == "POST":
+        edit_usl_form = UnCertifiedSickLeaveForm(request.POST, request.FILES, instance=usl_for_editing)
+        if edit_usl_form.is_valid():
+            usl_for_editing = edit_usl_form.save()
+            messages.success(request, 'You have successfully made changes to this uncertified sick leave application.')
+            return redirect(view_usl_application, usl_for_editing.pk)
+    else:
+        edit_usl_form = UnCertifiedSickLeaveForm(instance=usl_for_editing)
+    return render(request, "edit_usl_application.html", {'usl_for_editing': usl_for_editing, 'edit_usl_form': edit_usl_form})
