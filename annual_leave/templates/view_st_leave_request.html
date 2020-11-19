@@ -10,21 +10,81 @@
 <div class="container">
     <div class="row">
         <!-- ST LEAVE REQUEST -->
+        <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <table class="table table-striped table-dark justify-content-center">
+                    {% if user.is_staff %}
+                    <tr>
+                        <td><strong> Name: </strong></td>
+                        <td>{{ st_leave_req.st_annual_leave_request_officer_id }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong> Applicant's Leave Balance: </strong></td>
+                        <td>{{ applicants_leave_balance }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <td><strong> Date: </strong></td>
+                        <td>{{ st_leave_req.st_leave_date }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong> Start Time: </strong></td>
+                        <td>{{ st_leave_req.st_leave_start_time }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong> Finish Time: </strong></td>
+                        <td>{{ st_leave_req.st_leave_finish_time }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong> Leave Amount: </strong></td>
+                        <td>{{ st_leave_req.st_leave_amount }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Request Checked: </strong></td>
+                        {% if st_leave_req.st_leave_request_checked_by_validator == True %}
+                            <td><i class="fa fa-check-circle-o fa-lg"></i></td>
+                        {% else %}
+                            <td><i class="fa fa-times-circle fa-lg"></i></td>
+                        {% endif %}
+                    </tr>
+                    <tr>
+                        <td><strong>Leave Granted: </strong></td>
+                        {% if st_leave_req.st_leave_request_granted == True %}
+                            <td><i class="fa fa-check-circle-o fa-lg"></i></td>
+                        {% else %}
+                            <td><i class="fa fa-times-circle fa-lg"></i></td>
+                        {% endif %}
+                    </tr>
+                    {% if st_leave_req.st_leave_request_checked_by_validator == True and st_leave_req.st_leave_request_granted == False %}
+                    <tr>
+                        <td><strong>Reason leave rejected: </strong></td>
+                        <td>{{ st_leave_req.reason_st_leave_rejected }}</td>
+                    </tr>
+                    {% endif %}
+                </table>
+            </div>
+        <div class="col-md-2"></div>
     </div>
     <div class="row">
-        <div class="col-md-6 col-sm-12 col-xs-12">
-            <a class="btn btn-info" href="{% url 'edit_short_term_leave_request' st_leave_req.id %}"> Edit Request </a>
+        <div class="col-md-2"></div>
+        <div class="col-md-4 col-sm-10 col-xs-10">
+            <a class="btn btn-info" href="{% url 'edit_short_term_leave_request' st_leave_req.id %}"><i class="fa fa-pencil"></i> Edit Request </a>
         </div>
-        <div class="col-md-6 col-sm-12 col-xs-12">
-            <a class="btn btn-info" href="{% url 'delete_short_term_leave_request' st_leave_req.id %}"> Delete Request </a>
+        <div class="col-md-6 col-sm-10 col-xs-10">
+            <a class="btn btn-info" href="{% url 'delete_short_term_leave_request' st_leave_req.id %}"><i class="fa fa-thrash"></i> Delete Request </a>
         </div>
+        <div class="col-md-2"></div>
     </div>
     {% if user.is_staff %}
     <div class="row justify-content-center">
-        <!-- BUTTON TO GRANT LEAVE  -->
-    </div>
-    <div class="row justify-content-center">
-        <!-- BUTTON TO REJECT LEAVE  -->
+        <div class="col-md-2"></div>
+        <div class="col-md-4 col-sm-10 col-xs-10">
+            <a class="btn btn-info" href=""><i class="fa fa-thumbs-up"></i> Grant Request </a>
+        </div>
+        <div class="col-md-4 col-sm-10 col-xs-10">
+            <a class="btn btn-info" href=""><i class="fa fa-thumbs-down"></i> Reject Request </a>
+        </div>
+        <div class="col-md-2"></div>
     </div>
     {% endif %}
 </div>
