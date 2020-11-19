@@ -304,3 +304,24 @@ def accept_short_term_leave(request, pk):
     st_leave_req_being_accepted.st_annual_leave_request_officer_id.save()
     
     return redirect('view_staff_leave_submissions')
+    
+@login_required()
+def reject_short_term_leave(request, pk):
+    '''
+    This view allows a validator to reject a short term leave request.
+    '''
+    st_leave_being_rejected = ShortTermAnnualLeaveRequest.objects.get(pk=pk)
+    if request.method == 'POST':
+        st_leave_reject_form = ShortTermLeaveRequestRejectForm(request.POST, request.FILES, instance=st_leave_being_rejected)
+        if st_leave_reject_form.is_valid():
+            st_leave_being_rejected = st_leave_reject_form.save()
+            st_leave_being_rejected.st_leave_request_checked_by_validator = True
+            st_leave_being_rejected.st_leave_request_granted = False
+            st_leave_being_rejected.save()
+            #NOTIFICATION TO APPLICANY THAT SHORT TERM LEAVE HAS BEEN REJECTED.
+            notify.send(request.user, recipient=st_leave_being_rejected.st_annual_leave_request_officer_id, verb=" has rejected your short term leave request: " + str(st_leave_being_rejected))
+            messages.success(request, 'Leave Rejected.')
+            return redirect('view_staff_leave_submissions')
+    else:
+        st_leave_reject_form = ShortTermLeaveRequestRejectForm(instance=st_leave_being_rejected)
+    return render(request, "reject_st_request.html", {'st_leave_being_rejected': st_leave_being_rejected, 'st_leave_reject_form': st_leave_reject_form})
