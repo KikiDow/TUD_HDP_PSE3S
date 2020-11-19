@@ -43,3 +43,7 @@ overflow: auto;
 .table-wrapper-scroll-y {
 display: block;
 }
+
+td, th {
+  text-align: center;
+}

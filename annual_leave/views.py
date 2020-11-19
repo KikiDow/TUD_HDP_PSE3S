@@ -206,3 +206,17 @@ def view_my_leave_requests(request):
     length_my_st_requests = len(my_short_term_leave_requests)
     
     return render(request, "my_leave_requests.html", {'my_annual_leave_requests': my_annual_leave_requests, 'my_short_term_leave_requests': my_short_term_leave_requests, 'length_my_al_requests': length_my_al_requests, 'length_my_st_requests': length_my_st_requests})
+
+@login_required()
+def view_staff_leave_submissions(request):
+    '''
+    This view collects all unchecked leave requests and presents them to a validator for checking.
+    '''
+    staff_submitted_al_requests = AnnualLeaveRequest.objects.select_related('al_request_officer_id').filter(leave_request_checked_by_validator=False)
+    staff_submitted_st_requests = ShortTermAnnualLeaveRequest.objects.select_related('st_annual_leave_request_officer_id').filter(st_leave_request_checked_by_validator=False)
+    
+    #for i in staff_submitted_al_requests:
+    #    print(i.al_request_officer_id.firstname)
+    len_staff_submitted_al_requests = len(staff_submitted_al_requests)
+    len_staff_submitted_st_requests = len(staff_submitted_st_requests)
+    return render(request, "staff_leave_submissions.html", {'staff_submitted_al_requests': staff_submitted_al_requests, 'staff_submitted_st_requests': staff_submitted_st_requests, 'len_staff_submitted_al_requests': len_staff_submitted_al_requests, 'len_staff_submitted_st_requests': len_staff_submitted_st_requests})
