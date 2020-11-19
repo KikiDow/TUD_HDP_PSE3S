@@ -18,7 +18,7 @@
         </div>
         <div class="col-md-6 col-sm-12 col-xs-12">
             <!-- BUTTON FOR VIEW ABSCENCES -->
-            <a class="btn btn-info" href="#"> My Previous Abscences </a>
+            <a class="btn btn-info" href="{% url 'view_my_sick_leave' %}"> My Previous Abscences </a>
         </div>
     </div>
     {% if user.is_staff %}
@@ -33,7 +33,7 @@
   <div class="modal-dialog modal-sm modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Submit Abscence</h5>
+        <h5 class="modal-title" id="submitAbscenceModalLabel">Submit Abscence</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>

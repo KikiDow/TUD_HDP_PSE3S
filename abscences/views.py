@@ -189,3 +189,16 @@ def view_staff_sick_leave_applications(request):
     
     return render(request, "staff_sick_leave_submissions.html", {'staff_csl_submissions': staff_csl_submissions, 'staff_usl_submissions': staff_usl_submissions, 'staff_fm_submissions': staff_fm_submissions, 'len_staff_csl_submissions': len_staff_csl_submissions, 'len_staff_usl_submissions': len_staff_usl_submissions, 'len_staff_fm_submissions': len_staff_fm_submissions})
     
+def view_my_sick_leave(request):
+    '''
+    This view returns personalised list to the user showing their sick leave records. 
+    '''
+    officer = request.user
+    my_csl = CertifiedSickLeave.objects.filter(csl_officer_id=officer.pk)
+    my_usl = UnCertifiedSickLeave.objects.filter(usl_officer_id=officer.pk)
+    my_fm = ForceMajeure.objects.filter(fm_officer_id=officer.pk)
+    len_my_csl = len(my_csl)
+    len_my_usl = len(my_usl)
+    len_my_fm = len(my_fm)
+    return render(request, "my_sick_leave.html", {'my_csl': my_csl, 'my_usl': my_usl, 'my_fm': my_fm, 'len_my_csl': len_my_csl, 'len_my_usl': len_my_usl, 'len_my_fm': len_my_fm})
+    
