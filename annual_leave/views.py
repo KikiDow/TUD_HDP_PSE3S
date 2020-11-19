@@ -224,6 +224,10 @@ def view_staff_leave_submissions(request):
 
 @login_required()
 def accept_block_leave(request, pk):
+    '''
+    This view allows a validator to accept an annual leave request. 
+    It also calculates the total amount of leave taken and creates annual leave instances.
+    '''
     leave_reg_being_accepted = AnnualLeaveRequest.objects.get(pk=pk)
     leave_start = leave_reg_being_accepted.leave_request_start_date
     leave_end = leave_reg_being_accepted.leave_request_last_date
@@ -256,3 +260,26 @@ def accept_block_leave(request, pk):
     leave_reg_being_accepted.al_request_officer_id.save()
     
     return redirect('view_staff_leave_submissions')
+    
+@login_required()
+def reject_annual_leave(request, pk):
+    '''
+    This view allows a validator to reject an annual leave request. It provides a form where the validator must provide a reason as 
+    to why leave request being rejected.
+    '''
+    leave_being_rejected = AnnualLeaveRequest.objects.get(pk=pk)
+    if request.method == 'POST':
+        annual_leave_reject_form = AnnualLeaveRequestRejectForm(request.POST, request.FILES, instance=leave_being_rejected)
+        if annual_leave_reject_form.is_valid():
+            leave_being_rejected = annual_leave_reject_form.save()
+            leave_being_rejected.leave_request_granted = False
+            leave_being_rejected.leave_request_checked_by_validator = True
+            leave_being_rejected.save()
+            #NOTIFICATION TO APPLICANT THAT ANNUAL LEAVE REQUEST REJECTED.
+            notify.send(request.user, recipient=leave_being_rejected.al_request_officer_id, verb=" has rejected your leave request: " + str(leave_being_rejected))
+            messages.success(request, 'Leave Rejected.')
+            return redirect('view_staff_leave_submissions')
+    else:
+        annual_leave_reject_form = AnnualLeaveRequestRejectForm(instance=leave_being_rejected)
+    return render(request, "reject_al_request.html", {'leave_being_rejected': leave_being_rejected, 'annual_leave_reject_form': annual_leave_reject_form})
+    
