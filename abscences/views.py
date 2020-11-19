@@ -295,3 +295,21 @@ def accept_fm(request, pk):
     notify.send(request.user, recipient=fm_being_accepted.fm_officer_id, verb=" has accepted your Force Majeure application: " + str(fm_being_accepted))
     messages.success(request, "Force Majeure application accepted.")
     return redirect('view_staff_sick_leave_applications')
+    
+@login_required()
+def reject_fm(request, pk):
+    fm_being_rejected = ForceMajeure.objects.get(pk=pk)
+    if request.method == "POST":
+        fm_reject_form = RejectForceMajeureForm(request.POST, request.FILES, instance=fm_being_rejected)
+        if fm_reject_form.is_valid():
+            fm_being_rejected = fm_reject_form.save()
+            fm_being_rejected.fm_checked_by_validator = True
+            fm_being_rejected.fm_accepted = False
+            fm_being_rejected.save()
+            #NOTIFICATION TO APPLICANY THAT UN-CERT HAS BEEN REJECTED.
+            notify.send(request.user, recipient=fm_being_rejected.fm_officer_id, verb=" has rejected your Force Majeure application: " + str(fm_being_rejected))
+            messages.success(request, 'Force Majeure Application Rejected.')
+            return redirect('view_staff_sick_leave_submissions')
+    else:
+        fm_reject_form = RejectForceMajeureForm(instance=fm_being_rejected)
+    return render(request, "reject_fm.html", {'fm_being_rejected': fm_being_rejected, 'fm_reject_form': fm_reject_form})
