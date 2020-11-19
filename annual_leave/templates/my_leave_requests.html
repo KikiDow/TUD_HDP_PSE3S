@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-info text-white">
+  <div class="container">
+      <div class="row justify-content-center">
+        <h1 class="display-4">My Leave Requests</h1>
+      </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <h3> Block Leave Requests </h3>
+    </div>
+    {% if length_my_al_requests == 0 %}
+    <div class="row justify-content-center">
+        <p> You have no previous block leave requests. </p>
+    </div>
+    {% else %}
+    <div class="row justify-content-center">
+        
+    </div>
+</div>
+{% endblock %}

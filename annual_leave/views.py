@@ -193,3 +193,16 @@ def edit_short_term_leave_request(request, pk):
     else:
         edit_st_request_form = ShortTermAnnualLeaveRequestForm(instance=st_request_for_editing)
     return render(request, "edit_st_request.html", {'st_request_for_editing': st_request_for_editing, 'edit_st_request_form': edit_st_request_form})
+    
+@login_required()
+def view_my_leave_requests(request):
+    '''
+    This view returns two querysets. One for a user's annual leave requests and one for short term leave requests. 
+    '''
+    officer = request.user
+    my_annual_leave_requests = AnnualLeaveRequest.objects.filter(al_request_officer_id=officer.pk)
+    my_short_term_leave_requests = ShortTermAnnualLeaveRequest.objects.filter(st_annual_leave_request_officer_id=officer.pk)
+    length_my_al_requests = len(my_annual_leave_requests)
+    length_my_st_requests = len(my_short_term_leave_requests)
+    
+    return render(request, "my_leave_requests.html", {'my_annual_leave_requests': my_annual_leave_requests, 'my_short_term_leave_requests': my_short_term_leave_requests, 'length_my_al_requests': length_my_al_requests, 'length_my_st_requests': length_my_st_requests})
