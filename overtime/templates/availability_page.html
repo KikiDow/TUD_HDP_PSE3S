@@ -30,7 +30,7 @@
                         <tr>
                             <td>{{ avail_sheet.avail_sheet_qtr_id }}</td>
                             <td>{{ avail_sheet.avail_sheet_date_submitted }}</td>
-                            <td><a class="btn btn-info" href=""><i class="fa fa-eye"></i> View</a></td>
+                            <td><a class="btn btn-info" href="{% url 'view_availability_sheet' avail_sheet.id %}"><i class="fa fa-eye"></i> View</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

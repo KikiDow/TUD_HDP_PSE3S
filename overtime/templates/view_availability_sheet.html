@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-info text-white">
+  <div class="container">
+      <div class="row justify-content-center">
+        <h1 class="display-4">Availability Sheet</h1>
+      </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <h4>View Availability Sheet for {{ avail_sheet_to_view.avail_sheet_qtr_id }}</h4>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table>
+                <thead>
+                    <th colspan="4">Days Nominated:</th>
+                </thead>
+                <tbody>
+                    <tr><td><strong>First Monday: </strong></td><td>{{ avail_sheet_to_view.mon_one }}</td><td><strong>Second Monday: </strong></td><td>{{ avail_sheet_to_view.mon_two }}</td></tr>
+                    <tr><td><strong>First Tuesday: </strong></td><td>{{ avail_sheet_to_view.tue_one }}</td><td><strong>Second Tuesday: </strong></td><td>{{ avail_sheet_to_view.tue_two }}</td></tr>
+                    <tr><td><strong>First Wednesday: </strong></td><td>{{ avail_sheet_to_view.wed_one }}</td><td><strong>Second Wednesday: </strong></td><td>{{ avail_sheet_to_view.wed_two }}</td></tr>
+                    <tr><td><strong>First Thursday: </strong></td><td>{{ avail_sheet_to_view.thurs_one }}</td><td><strong>Second Thursday: </strong></td><td>{{ avail_sheet_to_view.thurs_two }}</td></tr>
+                    <tr><td><strong>First Friday: </strong></td><td>{{ avail_sheet_to_view.fri_one }}</td><td><strong>Second Friday: </strong></td><td>{{ avail_sheet_to_view.fri_two }}</td></tr>
+                    <tr><td><strong>First Saturday: </strong></td><td>{{ avail_sheet_to_view.sat_one }}</td><td><strong>Second Saturday: </strong></td><td>{{ avail_sheet_to_view.sat_two }}</td></tr>
+                    <tr><td><strong>First Sunday: </strong></td><td>{{ avail_sheet_to_view.sun_one }}</td><td><strong>Second Sunday: </strong></td><td>{{ avail_sheet_to_view.sun_two }}</td></tr>
+                    <tr><td colspan="2"><strong>Date Submitted: </strong></td><td colspan="2">{{ avail_sheet_to_view.avail_sheet_date_submitted }}</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-2"></div>
+        <div class="col-md-4 col-sm-10 col-xs-10">
+            <a class="btn btn-info" href=""><i class="fa fa-pencil"></i> Edit Availability Sheet </a>
+        </div>
+        <div class="col-md-4 col-sm-10 col-xs-10">
+            <a class="btn btn-info" href=""><i class="fa fa-trash"></i> Delete Availability Sheet </a>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+{% endblock %}
