@@ -14,7 +14,7 @@
         <div class="col-md-8">
             <form method="POST" enctype="multipart/form-data">
                 <fieldset class="form-group">
-                    <legend>Enter teh details of the Non Scheduled Overtime request here.</legend>
+                    <legend>Enter the details of the Non Scheduled Overtime request here.</legend>
                     {% csrf_token %}
                     {{ nsot_req_form | as_bootstrap }}
                     <button class="btn btn-info" type="submit">Submit NSOT Request</button>
