@@ -1,5 +1,5 @@
 from django.conf.urls import url, include
-from .views import overtime_page, allowances_page, submit_allowance_request, view_allowance_request, edit_allowance_request, delete_allowance_request, view_staff_allowance_requests, accept_allowance_request, reject_allowance_request, non_scheduled_ot_page, submit_nsot_request, view_non_scheduled_overtime_request, delete_nsot_request, edit_nsot_request, view_staff_nsot_requests, accept_nsot_request, reject_nsot_request, availability_page
+from .views import overtime_page, allowances_page, submit_allowance_request, view_allowance_request, edit_allowance_request, delete_allowance_request, view_staff_allowance_requests, accept_allowance_request, reject_allowance_request, non_scheduled_ot_page, submit_nsot_request, view_non_scheduled_overtime_request, delete_nsot_request, edit_nsot_request, view_staff_nsot_requests, accept_nsot_request, reject_nsot_request, availability_page, submit_availability_sheet, view_availability_sheet
 
 urlpatterns = [
     url(r'^overtime_page/$', overtime_page, name='overtime_page'),
@@ -20,4 +20,6 @@ urlpatterns = [
     url(r'^(?P<pk>\d+)/accept_nsot_request/$', accept_nsot_request, name='accept_nsot_request'),
     url(r'^(?P<pk>\d+)/reject_nsot_request/$', reject_nsot_request, name='reject_nsot_request'),
     url(r'^availability_page/$', availability_page, name='availability_page'),
+    url(r'^submit_availability_sheet/$', submit_availability_sheet, name='submit_availability_sheet'),
+    url(r'^(?P<pk>\d+)view_availability_sheet/$', view_availability_sheet, name='view_availability_sheet'),
 ]

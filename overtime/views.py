@@ -261,3 +261,73 @@ def availability_page(request):
     
     return render(request, "availability_page.html", {'my_availability_sheets': my_availability_sheets, 'my_short_term_availability': my_short_term_availability, 'len_my_availability_sheets': len_my_availability_sheets, 'len_my_st_availability': len_my_st_availability})
     
+@login_required()
+def submit_availability_sheet(request):
+    if request.method == "POST":
+        availability_sheet_form = AvailabilitySheetForm(request.POST, request.FILES)
+        mon_one = request.POST.get('mon_one')
+        availability_sheet_form.fields['mon_one'].choices = [(mon_one, mon_one)]
+        mon_two = request.POST.get('mon_two')
+        availability_sheet_form.fields['mon_two'].choices = [(mon_two, mon_two)]
+        tue_one = request.POST.get('tue_one')
+        availability_sheet_form.fields['tue_one'].choices = [(tue_one, tue_one)]
+        tue_two = request.POST.get('tue_two')
+        availability_sheet_form.fields['tue_two'].choices = [(tue_two, tue_two)]
+        wed_one = request.POST.get('wed_one')
+        availability_sheet_form.fields['wed_one'].choices = [(wed_one, wed_one)]
+        wed_two = request.POST.get('wed_two')
+        availability_sheet_form.fields['wed_two'].choices = [(wed_two, wed_two)]
+        thurs_one = request.POST.get('thurs_one')
+        availability_sheet_form.fields['thurs_one'].choices = [(thurs_one, thurs_one)]
+        thurs_two = request.POST.get('thurs_two')
+        availability_sheet_form.fields['thurs_two'].choices = [(thurs_two, thurs_two)]
+        fri_one = request.POST.get('fri_one')
+        availability_sheet_form.fields['fri_one'].choices = [(fri_one, fri_one)]
+        fri_two = request.POST.get('fri_two')
+        availability_sheet_form.fields['fri_two'].choices = [(fri_two, fri_two)]
+        sat_one = request.POST.get('sat_one')
+        availability_sheet_form.fields['sat_one'].choices = [(sat_one, sat_one)]
+        sat_two = request.POST.get('sat_two')
+        availability_sheet_form.fields['sat_two'].choices = [(sat_two, sat_two)]
+        sun_one = request.POST.get('sun_one')
+        availability_sheet_form.fields['sun_one'].choices = [(sun_one, sun_one)]
+        sun_two = request.POST.get('sun_two')
+        availability_sheet_form.fields['sun_two'].choices = [(sun_two, sun_two)]
+        
+        if availability_sheet_form.is_valid():
+            availability_sheet_form.instance.avail_sheet_off_id = request.user
+            availability_sheet_form.instance.avail_sheet_qtr_id = getNextQtr()
+            if availability_sheet_form.instance.mon_one == availability_sheet_form.instance.mon_two:
+                messages.error(request, "The two mondays you have selected are the same date.")
+                return render(request, "submit_availability_sheet.html", {'availability_sheet_form': availability_sheet_form})
+            elif availability_sheet_form.instance.tue_one == availability_sheet_form.instance.tue_two:
+                messages.error(request, "The two tuesdays you have selected are the same date.")
+                return render(request, "submit_availability_sheet.html", {'availability_sheet_form': availability_sheet_form})
+            elif availability_sheet_form.instance.wed_one == availability_sheet_form.instance.wed_two:
+                messages.error(request, "The two wednesdays you have selected are the same date.")
+                return render(request, "submit_availability_sheet.html", {'availability_sheet_form': availability_sheet_form})
+            elif availability_sheet_form.instance.thurs_one == availability_sheet_form.instance.thurs_two:
+                messages.error(request, "The two thursdays you have selected are the same date.")
+                return render(request, "submit_availability_sheet.html", {'availability_sheet_form': availability_sheet_form})
+            elif availability_sheet_form.instance.fri_one == availability_sheet_form.instance.fri_two:
+                messages.error(request, "The two fridays you have selected are the same date.")
+                return render(request, "submit_availability_sheet.html", {'availability_sheet_form': availability_sheet_form})
+            elif availability_sheet_form.instance.sat_one == availability_sheet_form.instance.sat_two:
+                messages.error(request, "The two saturdays you have selected are the same date.")
+                return render(request, "submit_availability_sheet.html", {'availability_sheet_form': availability_sheet_form})
+            elif availability_sheet_form.instance.sun_one == availability_sheet_form.instance.sun_two:
+                messages.error(request, "The two wednesdays you have selected are the same date.")
+                return render(request, "submit_availability_sheet.html", {'availability_sheet_form': availability_sheet_form})
+            else:
+                availability_sheet = availability_sheet_form.save()
+                messages.success(request, "Availability Sheet successfully submitted.")
+                return redirect(view_availability_sheet, availability_sheet.id)
+    else:
+        availability_sheet_form = AvailabilitySheetForm()
+    return render(request, "submit_availability_sheet.html", {'availability_sheet_form': availability_sheet_form})
+    
+@login_required()
+def view_availability_sheet(request, pk):
+    avail_sheet_to_view = get_object_or_404(AvailabilitySheet, pk=pk)
+    avail_sheet_to_view.save()
+    return render(request, "view_availability_sheet.html", {'avail_sheet_to_view': avail_sheet_to_view})
