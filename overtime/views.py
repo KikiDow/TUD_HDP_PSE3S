@@ -373,3 +373,25 @@ def assign_ot_recall(request, chosen_date):
     else:
         assign_recall_form = AssignRecallStaffForm(initial = {'selected_date': date_selected})
     return render(request, "assign_ot_recall.html", {'assign_recall_form': assign_recall_form, 'date_selected': date_selected})
+    
+@login_required()
+def assign_ot_require(request, date_selected):
+    date_for_require = date_selected
+    #print(date_for_require)
+    if request.method == "POST":
+        assign_require_form = AssignRequireStaffForm(request.POST, request.FILES)
+        officers_for_require = request.POST.get['officers_for_require']
+        assign_require_form.fields['officers_for_require'].choices = [(officers_for_require, officers_for_require)]
+        if assign_require_form.is_valid():
+            officer = assign_require_form.cleaned_data.get("officers_for_require")
+            date = assign_require_form.cleaned_data.get("selected_require_date")
+            quarter = getQtrDateIn(date)
+            shift = assign_require_form.cleaned_data.get("assign_require_shift")
+            new_overtime = Overtime(ot_officer_id=officer.id, ot_qtr_id=quarter.id, ot_date=date, ot_shift_id=shift.id, ot_require=True)
+            new_overtime.save()
+            notify.send(request.user, recipient=new_overtime.ot_officer_id, verb=" has required you for overtime on : " + str(new_overtime.ot_date))
+            messages.success(request, "Staff successfully required.")
+            return redirect(overtime_page)
+    else:
+        assign_require_form = AssignRequireStaffForm(initial = {'selected_require_date': date_for_require})
+    return render(request, "assign_ot_require.html", {'assign_require_form': assign_require_form})
