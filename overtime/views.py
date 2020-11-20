@@ -367,6 +367,7 @@ def assign_ot_recall(request, chosen_date):
             shift = assign_recall_form.cleaned_data.get("assign_shift")
             new_overtime = Overtime(ot_officer_id=officer.id, ot_qtr_id=quarter.id, ot_date=date, ot_shift_id=shift.id, ot_recall=True)
             new_overtime.save()
+            notify.send(request.user, recipient=new_overtime.ot_officer_id, verb=" has recalled you for overtime on : " + str(new_overtime.ot_date))
             messages.success(request, "Staff successfully recalled.")
             return redirect(overtime_page)
     else:

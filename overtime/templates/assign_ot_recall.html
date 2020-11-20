@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load bootstrap_tags %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-info text-white">
+  <div class="container">
+      <div class="row justify-content-center">
+        <h1 class="display-4">Assign Overtime</h1>
+      </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <form method="POST" enctype="multipart/form-data">
+                <fieldset class="form-group">
+                    <legend>Now select the officer and shift you want to recall. If no staff appear, then no one has made themselves available for the date selected. </legend>
+                    {% csrf_token %}
+                    {{ assign_recall_form | as_bootstrap }}
+                    <button class="btn btn-info" type="submit">Create Recall</button>
+                </fieldset>
+            </form>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-4"></div>
+        <div class="col-md-4 col-sm-10 col-xs-10">
+            <a class="btn btn-info" href=""> Require Staff </a>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+</div>
+{% endblock %}
