@@ -234,3 +234,19 @@ def accept_nsot_request(request, pk):
     messages.success(request, "You have accepted this non scheduled overtime request.")
     return redirect('view_staff_nsot_requests')
     
+@login_required()
+def reject_nsot_request(request, pk):
+    nsot_req_being_rejected = NonScheduledOvertimeRequest.objects.get(pk=pk)
+    if request.method == "POST":
+        nsot_req_reject_form = RejectNSOTForm(request.POST, request.FILES, instance=nsot_req_being_rejected)
+        if nsot_req_reject_form.is_valid():
+            nsot_req_being_rejected = nsot_req_reject_form.save()
+            nsot_req_being_rejected.nsot_req_checked_by_validator = True
+            nsot_req_being_rejected.nsot_req_accepted = False
+            nsot_req_being_rejected.save()
+            #NOTIFICATION TO APPLCANT THAT NSOT REQUEST HAS BEEN REJECTED.
+            notify.send(request.user, recipient=nsot_req_being_rejected.nsot_off_id, verb=" has rejected your non-scheduled overtime request : " + str(nsot_req_being_rejected.nsot_date))
+            messages.success(request, "You have rejected this non scheduled overtime request.")
+    else:
+        nsot_req_reject_form = RejectNSOTForm(instance=nsot_req_being_rejected)
+    return render(request, "reject_nsot_request.html", {'nsot_req_being_rejected': nsot_req_being_rejected, 'nsot_req_reject_form': nsot_req_reject_form})
