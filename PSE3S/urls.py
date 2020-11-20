@@ -20,6 +20,7 @@ from account import urls as account_urls
 from clocking import urls as clocking_urls
 from annual_leave import urls as annual_leave_urls
 from abscences import urls as abscences_urls
+from overtime import urls as overtime_urls
 import notifications.urls
 
 urlpatterns = [
@@ -30,4 +31,5 @@ urlpatterns = [
     url('^inbox/notifications/', include(notifications.urls, namespace='notifications')),
     url(r'^annual_leave/', include(annual_leave_urls)),
     url(r'^abscences/', include(abscences_urls)),
+     url(r'^overtime/', include(overtime_urls)),
 ]
