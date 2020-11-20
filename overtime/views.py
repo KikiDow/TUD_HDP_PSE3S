@@ -150,3 +150,10 @@ def reject_allowance_request(request, pk):
     else:
         allow_req_reject_form = RejectAllowanceRequestForm(instance=allow_req_being_rejected)
     return render(request, "reject_allow_request.html", {'allow_req_being_rejected': allow_req_being_rejected, 'allow_req_reject_form': allow_req_reject_form})
+    
+@login_required()
+def non_scheduled_ot_page(request):
+    user = request.user
+    my_non_scheduled_ot_requests = NonScheduledOvertimeRequest.objects.filter(nsot_off_id=user.pk)
+    len_my_non_scheduled_ot_requests = len(my_non_scheduled_ot_requests)
+    return render(request, "nsot_page.html", {'my_non_scheduled_ot_requests': my_non_scheduled_ot_requests, 'len_my_non_scheduled_ot_requests': len_my_non_scheduled_ot_requests})
