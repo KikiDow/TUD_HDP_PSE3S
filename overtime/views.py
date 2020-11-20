@@ -338,3 +338,37 @@ def delete_availability_sheet(request, pk):
     avail_sheet_for_deletion.delete()
     messages.success(request, "You have successfully deleted this non-scheduled overtime request.")
     return redirect(availability_page)
+    
+@login_required()
+def assign_ot_date(request):
+    if request.method == "POST":
+        assign_ot_date_form = AssignOvertimeDateForm(request.POST, request.FILES)
+        if assign_ot_date_form.is_valid():
+            chosen_date = assign_ot_date_form.cleaned_data.get("date_for_assignment")
+            print("Inside ot date view: " + str(chosen_date))
+            return redirect(assign_ot_recall, chosen_date)
+    else:
+        assign_ot_date_form = AssignOvertimeDateForm()
+    return render(request, "assign_ot_date.html", {'assign_ot_date_form': assign_ot_date_form})
+    
+@login_required()
+def assign_ot_recall(request, chosen_date):
+    date_selected = chosen_date
+    print("Inside ot_recall_view: " + str(date_selected))
+    if request.method == "POST":
+        assign_recall_form = AssignRecallStaffForm(request.POST, request.FILES)
+        available_officers = request.POST.get('available_officers')
+        #len_available_officers = available_officers.count()
+        assign_recall_form.fields['available_officers'].choices = [(available_officers, available_officers)]
+        if assign_recall_form.is_valid():
+            officer = assign_recall_form.cleaned_data.get("available_officers")
+            date = assign_recall_form.cleaned_data.get("selected_date")
+            quarter = getQtrDateIn(date)
+            shift = assign_recall_form.cleaned_data.get("assign_shift")
+            new_overtime = Overtime(ot_officer_id=officer.id, ot_qtr_id=quarter.id, ot_date=date, ot_shift_id=shift.id, ot_recall=True)
+            new_overtime.save()
+            messages.success(request, "Staff successfully recalled.")
+            return redirect(overtime_page)
+    else:
+        assign_recall_form = AssignRecallStaffForm(initial = {'selected_date': date_selected})
+    return render(request, "assign_ot_recall.html", {'assign_recall_form': assign_recall_form, 'date_selected': date_selected})
