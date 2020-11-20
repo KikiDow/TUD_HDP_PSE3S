@@ -157,3 +157,31 @@ def non_scheduled_ot_page(request):
     my_non_scheduled_ot_requests = NonScheduledOvertimeRequest.objects.filter(nsot_off_id=user.pk)
     len_my_non_scheduled_ot_requests = len(my_non_scheduled_ot_requests)
     return render(request, "nsot_page.html", {'my_non_scheduled_ot_requests': my_non_scheduled_ot_requests, 'len_my_non_scheduled_ot_requests': len_my_non_scheduled_ot_requests})
+    
+@login_required()
+def submit_nsot_request(request):
+    if request.method == "POST":
+        nsot_req_form = NonScheduledOvertimeRequestForm(request.POST, request.FILES)
+        if nsot_req_form.is_valid():
+            nsot_req_form.instance.nsot_off_id = request.user
+            if nsot_req_form.instance.nsot_start_time > nsot_req_form.instance.nsot_end_time:
+                messages.error(request, "The start time must be before the finish time.")
+                return render(request, "submit_nsot_request.html", {'nsot_req_form': nsot_req_form})
+            else:
+                nsot_request = nsot_req_form.save()
+                date_time_start = datetime.datetime.combine(nsot_request.nsot_date, nsot_request.nsot_start_time)
+                date_time_end = datetime.datetime.combine(nsot_request.nsot_date, nsot_request.nsot_end_time)
+                nsot_difference_as_delta = date_time_end - date_time_start
+                nsot_request.ot_hours_claimed = getLeaveAmount(nsot_difference_as_delta)
+                nsot_request.save()
+                messages.success(request, "Non Scheduled Overtime Request successfully submitted.")
+                return redirect(view_non_scheduled_overtime_request, nsot_request.id)
+    else:
+        nsot_req_form = NonScheduledOvertimeRequestForm()
+    return render(request, "submit_nsot_request.html", {'nsot_req_form': nsot_req_form})
+    
+@login_required()
+def view_non_scheduled_overtime_request(request, pk):
+    nsot_req_to_view = get_object_or_404(NonScheduledOvertimeRequest, pk=pk)
+    nsot_req_to_view.save()
+    return render(request, "view_nsot_request.html", {'nsot_req_to_view': nsot_req_to_view})
