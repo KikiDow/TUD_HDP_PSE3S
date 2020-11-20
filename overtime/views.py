@@ -192,3 +192,20 @@ def delete_nsot_request(request, pk):
     nsot_req_for_deletion.delete()
     messages.success(request, "You have successfully deleted this non-scheduled overtime request.")
     return redirect(non_scheduled_ot_page)
+    
+@login_required()
+def edit_nsot_request(request, pk):
+    nsot_req_for_editing = get_object_or_404(NonScheduledOvertimeRequest, pk=pk) if pk else None
+    if request.method == "POST":
+        edit_nsot_form = NonScheduledOvertimeRequestForm(request.POST, request.FILES, instance=nsot_req_for_editing)
+        if edit_nsot_form.is_valid():
+            if edit_nsot_form.instance.nsot_start_time > edit_nsot_form.instance.nsot_end_time:
+                messages.error(request, "The start date for the non scheduled overtime request must be before the end date.")
+                return render(request, "edit_nsot_request.html", {'edit_nsot_form': edit_nsot_form})
+            else:
+                nsot_req_for_editing = edit_nsot_form.save()
+                messages.success(request, 'You have successfully made changes to this non scheduled overtime request.')
+                return redirect(view_non_scheduled_overtime_request, nsot_req_for_editing.pk)
+    else:
+        edit_nsot_form = NonScheduledOvertimeRequestForm(instance=nsot_req_for_editing)
+    return render(request, "edit_nsot_request.html", {'nsot_req_for_editing': nsot_req_for_editing, 'edit_nsot_form': edit_nsot_form})
