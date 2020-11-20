@@ -250,3 +250,14 @@ def reject_nsot_request(request, pk):
     else:
         nsot_req_reject_form = RejectNSOTForm(instance=nsot_req_being_rejected)
     return render(request, "reject_nsot_request.html", {'nsot_req_being_rejected': nsot_req_being_rejected, 'nsot_req_reject_form': nsot_req_reject_form})
+    
+@login_required()
+def availability_page(request):
+    user = request.user
+    my_availability_sheets = AvailabilitySheet.objects.filter(avail_sheet_off_id=user.pk)
+    len_my_availability_sheets = len(my_availability_sheets)
+    my_short_term_availability = ShortTermAvailabilty.objects.filter(st_availability_off_id=user.pk)
+    len_my_st_availability = len(my_short_term_availability)
+    
+    return render(request, "availability_page.html", {'my_availability_sheets': my_availability_sheets, 'my_short_term_availability': my_short_term_availability, 'len_my_availability_sheets': len_my_availability_sheets, 'len_my_st_availability': len_my_st_availability})
+    

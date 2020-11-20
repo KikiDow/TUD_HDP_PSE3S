@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-info text-white">
+  <div class="container">
+      <div class="row justify-content-center">
+        <h1 class="display-4">Availability</h1>
+      </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <h3> Previous Availability Sheets: </h3>
+    </div>
+    {% if len_my_availability_sheets == 0 %}
+    <div class="row justify-content-center">
+        <p> You are yet to submit any availability sheets. </p>
+    </div>
+    {% else %}
+    <div class="row justify-content-center">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 table-wrapper-scroll-y my-custom-scrollbar">
+            <table class="table table-striped table-dark mb-0">
+                <thead>
+                    <th>Quarter</th>
+                    <th>Date Submitted</th>
+                    <th><i class="fa fa-folder-open fa-lg"></i></th>
+                </thead>
+                <tbody>
+                    {% for avail_sheet in my_availability_sheets %}
+                        <tr>
+                            <td>{{ avail_sheet.avail_sheet_qtr_id }}</td>
+                            <td>{{ avail_sheet.avail_sheet_date_submitted }}</td>
+                            <td><a class="btn btn-info" href=""><i class="fa fa-eye"></i> View</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    {% endif %}
+    <div class="row justify-content-center">
+        <h3> Short Term Availability: </h3>
+    </div>
+    {% if len_my_st_availability == 0 %}
+    <div class="row justify-content-center">
+        <p> You are yet to submit any short term availability. </p>
+    </div>
+    {% else %}
+    <div class="row justify-content-center">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 table-wrapper-scroll-y my-custom-scrollbar">
+            <table class="table table-striped table-dark mb-0">
+                <thead>
+                    <th>Date</th>
+                    <th>Quarter</th>
+                    <th><i class="fa fa-folder-open fa-lg"></i></th>
+                </thead>
+                <tbody>
+                    {% for st_avail in my_short_term_availability %}
+                        <tr>
+                            <td>{{ st_avail.st_availability_date }}</td>
+                            <td>{{ st_avail.st_availability_qtr_id }}</td>
+                            <td><a class="btn btn-info" href=""><i class="fa fa-eye"></i> View</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    {% endif %}
+    <div class="row justify-content-center">
+        <div class="col-md-2"></div>
+        <div class="col-md-4">
+            <a class="btn btn-info" href=""> Submit New Availability Sheet </a>
+        </div>
+        <div class="col-md-4">
+            <a class="btn btn-info" href=""> Submit Short Term Availability </a>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+{% endblock %}
