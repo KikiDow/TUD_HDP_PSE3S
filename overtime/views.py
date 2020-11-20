@@ -331,3 +331,10 @@ def view_availability_sheet(request, pk):
     avail_sheet_to_view = get_object_or_404(AvailabilitySheet, pk=pk)
     avail_sheet_to_view.save()
     return render(request, "view_availability_sheet.html", {'avail_sheet_to_view': avail_sheet_to_view})
+    
+@login_required()
+def delete_availability_sheet(request, pk):
+    avail_sheet_for_deletion = AvailabilitySheet.objects.get(pk=pk)
+    avail_sheet_for_deletion.delete()
+    messages.success(request, "You have successfully deleted this non-scheduled overtime request.")
+    return redirect(availability_page)
