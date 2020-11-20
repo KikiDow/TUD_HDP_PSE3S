@@ -133,3 +133,20 @@ def accept_allowance_request(request, pk):
     notify.send(request.user, recipient=allow_req_being_accepted.allow_req_off_id, verb=" has accepted your allowance request : " + str(allow_req_being_accepted.allow_req_date))
     messages.success(request, "You have accepted this allowance request.")
     return redirect('view_staff_allowance_requests')
+    
+@login_required()
+def reject_allowance_request(request, pk):
+    allow_req_being_rejected = AllowancesRequest.objects.get(pk=pk)
+    if request.method == "POST":
+        allow_req_reject_form = RejectAllowanceRequestForm(request.POST, request.FILES, instance=allow_req_being_rejected)
+        if allow_req_reject_form.is_valid():
+            allow_req_being_rejected = allow_req_reject_form.save()
+            allow_req_being_rejected.allow_req_checked_by_validator = True
+            allow_req_being_rejected.allow_req_accepted = False
+            allow_req_being_rejected.save()
+            #NOTIFICATION TO APPLCANT THAT ALLOWANCE REQUEST HAS BEEN REJECTED.
+            notify.send(request.user, recipient=allow_req_being_rejected.allow_req_off_id, verb=" has rejected your allowance request : " + str(allow_req_being_rejected.allow_req_date))
+            messages.success(request, "You have rejected this allowance request.")
+    else:
+        allow_req_reject_form = RejectAllowanceRequestForm(instance=allow_req_being_rejected)
+    return render(request, "reject_allow_request.html", {'allow_req_being_rejected': allow_req_being_rejected, 'allow_req_reject_form': allow_req_reject_form})
