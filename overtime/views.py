@@ -107,3 +107,10 @@ def edit_allowance_request(request, pk):
     else:
         edit_allow_req_form = AllowancesRequestForm(instance=allow_req_for_editing)
     return render(request, "edit_allowance_request.html", {'allow_req_for_editing': allow_req_for_editing, 'edit_allow_req_form': edit_allow_req_form})
+    
+@login_required()
+def delete_allowance_request(request, pk):
+    allowance_req_for_deletion = AllowancesRequest.objects.get(pk=pk)
+    allowance_req_for_deletion.delete()
+    messages.success(request, "You have successfully deleted this allowance request.")
+    return redirect(allowances_page)
