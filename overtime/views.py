@@ -19,3 +19,58 @@ def allowances_page(request):
     allowance_requests = AllowancesRequest.objects.filter(allow_req_off_id=user.pk)
     len_allowance_requests = len(allowance_requests)
     return render(request, "allowances_page.html", {'allowance_requests': allowance_requests, 'len_allowance_requests': len_allowance_requests})
+    
+@login_required()
+def submit_allowance_request(request):
+    if request.method == "POST":
+        allowance_req_form = AllowancesRequestForm(request.POST, request.FILES)
+        if allowance_req_form.is_valid():
+            allowance_req_form.instance.allow_req_off_id = request.user
+            if allowance_req_form.instance.claiming_food_for_prisoner_expense == True:
+                if allowance_req_form.instance.food_for_prisoner_amount is None:
+                    messages.error(request, "You must include the cost of the prisoner's meal to claim this expense.")
+                    return render(request, "submit_allowance_request.html", {'allowance_req_form': allowance_req_form})
+                elif allowance_req_form.instance.receipt_for_prisoner_food is False:
+                    messages.error(request, "You must provide a photograph of the receipt for the prisoner's meal to claim this expense.")
+                    return render(request, "submit_allowance_request.html", {'allowance_req_form': allowance_req_form})
+                else:
+                    allowance_request = allowance_req_form.save()
+                    total_claim_amount = 0.0
+                    if allowance_request.claiming_breakfast_allowance == True:
+                        total_claim_amount += settings.BREAKFAST_ALLOWANCE
+                    if allowance_request.claiming_dinner_allowance == True:
+                        total_claim_amount += settings.DINNER_ALLOWANCE
+                    if allowance_request.claiming_tea_allowance == True:
+                        total_claim_amount += settings.TEA_ALLOWANCE
+                    if allowance_request.claiming_plain_clothes_allowance == True:
+                        total_claim_amount += settings.PLAIN_CLOTHES_ALLOWANCE
+                    if allowance_request.claiming_food_for_prisoner_expense == True:
+                        total_claim_amount += allowance_request.food_for_prisoner_amount
+                    allowance_request.claim_total = total_claim_amount
+                    allowance_request.save()
+                    return redirect(view_allowance_request, allowance_request.pk)
+            else:
+                allowance_request = allowance_req_form.save()
+                total_claim_amount = 0.0
+                if allowance_request.claiming_breakfast_allowance == True:
+                    total_claim_amount += settings.BREAKFAST_ALLOWANCE
+                if allowance_request.claiming_dinner_allowance == True:
+                    total_claim_amount += settings.DINNER_ALLOWANCE
+                if allowance_request.claiming_tea_allowance == True:
+                    total_claim_amount += settings.TEA_ALLOWANCE
+                if allowance_request.claiming_plain_clothes_allowance == True:
+                    total_claim_amount += settings.PLAIN_CLOTHES_ALLOWANCE
+                if allowance_request.claiming_food_for_prisoner_expense == True:
+                    total_claim_amount += allowance_request.food_for_prisoner_amount
+                allowance_request.claim_total = total_claim_amount
+                allowance_request.save()
+                return redirect(view_allowance_request, allowance_request.pk)
+    else:
+        allowance_req_form = AllowancesRequestForm()
+    return render(request, "submit_allowance_request.html", {'allowance_req_form': allowance_req_form})
+    
+@login_required()    
+def view_allowance_request(request, pk):
+    allow_req_to_view = get_object_or_404(AllowancesRequest, pk=pk)
+    allow_req_to_view.save()
+    return render(request, "view_allowance_request.html", {'allow_req_to_view': allow_req_to_view})
