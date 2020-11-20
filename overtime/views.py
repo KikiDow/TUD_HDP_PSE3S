@@ -209,3 +209,10 @@ def edit_nsot_request(request, pk):
     else:
         edit_nsot_form = NonScheduledOvertimeRequestForm(instance=nsot_req_for_editing)
     return render(request, "edit_nsot_request.html", {'nsot_req_for_editing': nsot_req_for_editing, 'edit_nsot_form': edit_nsot_form})
+    
+@login_required()
+def view_staff_nsot_requests(request):
+    user = request.user
+    staff_nsot_requests = NonScheduledOvertimeRequest.objects.filter(nsot_checked_by_validator=False).exclude(nsot_off_id=user.pk)
+    length_of_staff_nsot_req = len(staff_nsot_requests)
+    return render(request, "view_staff_nsot_requests.html", {'staff_nsot_requests': staff_nsot_requests, 'length_of_staff_nsot_req': length_of_staff_nsot_req})
