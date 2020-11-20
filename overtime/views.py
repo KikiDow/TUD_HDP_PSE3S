@@ -216,3 +216,21 @@ def view_staff_nsot_requests(request):
     staff_nsot_requests = NonScheduledOvertimeRequest.objects.filter(nsot_checked_by_validator=False).exclude(nsot_off_id=user.pk)
     length_of_staff_nsot_req = len(staff_nsot_requests)
     return render(request, "view_staff_nsot_requests.html", {'staff_nsot_requests': staff_nsot_requests, 'length_of_staff_nsot_req': length_of_staff_nsot_req})
+    
+@login_required()
+def accept_nsot_request(request, pk):
+    nsot_req_being_accepted = NonScheduledOvertimeRequest.objects.get(pk=pk)
+    nsot_req_being_accepted.nsot_checked_by_validator = True
+    nsot_req_being_accepted.nsot_accepted = True
+    nsot_req_being_accepted.save()
+    qtr_application_date_in = getQtrDateIn(nsot_req_being_accepted.nsot_date)
+    new_short_overtime_record = ShortOvertime(short_ot_officer_id=nsot_req_being_accepted.nsot_off_id, short_ot_qtr_id=qtr_application_date_in.id, short_ot_date=nsot_req_being_accepted.nsot_date, short_ot_start_time=nsot_req_being_accepted.nsot_start_time, short_ot_end_time=nsot_req_being_accepted.nsot_end_time, overtime_hours=nsot_req_being_accepted.ot_hours_claimed)
+    new_short_overtime_record.save()
+    officers_ot_per_qtr = OvertimePerQtr.objects.get(ot_per_qtr_off_id=nsot_req_being_accepted.nsot_off_id, ot_per_qtr_qtr_id=qtr_application_date_in.id)
+    officers_ot_per_qtr.ot_hours_completed += nsot_req_being_accepted.ot_hours_claimed
+    officers_ot_per_qtr.save()
+    #NOTIFICATION TO APPLICANT THAT NSOT REQUEST HAS BEEN ACCEPTED.
+    notify.send(request.user, recipient=nsot_req_being_accepted.nsot_off_id, verb=" has accepted your non-scheduled overtime request : " + str(nsot_req_being_accepted.nsot_date))
+    messages.success(request, "You have accepted this non scheduled overtime request.")
+    return redirect('view_staff_nsot_requests')
+    
