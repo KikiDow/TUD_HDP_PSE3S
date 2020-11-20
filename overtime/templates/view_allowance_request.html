@@ -113,7 +113,7 @@
         <div class="col-md-2"></div>
         <div class="col-md-4 col-sm-12 col-xs-12">
             {% if user == allow_req_to_view.allow_req_off_id and allow_req_to_view.allow_req_checked_by_validator == False %}
-            <a class="btn btn-info" href=""><i class="fa fa-pencil"></i> Edit Allowance Request </a>
+            <a class="btn btn-info" href="{% url 'edit_allowance_request' allow_req_to_view.id %}"><i class="fa fa-pencil"></i> Edit Allowance Request </a>
             {% endif %}
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12">
