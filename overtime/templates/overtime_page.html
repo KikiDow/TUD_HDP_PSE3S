@@ -1,0 +1,42 @@
+% extends 'base.html' %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-info text-white">
+  <div class="container">
+      <div class="row justify-content-center">
+        <h1 class="display-4">Overtime</h1>
+      </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <!-- REPORT CARD -->
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-4 col-sm-12 col-xs-12">
+            <!-- BUTTON FOR REPORT ABSCENCE -->
+             <a class="btn btn-info" href="#"> Availability </a>
+        </div>
+        <div class="col-md-4 col-sm-12 col-xs-12">
+            <!-- BUTTON FOR VIEW ABSCENCES -->
+            <a class="btn btn-info" href=""> Non Scheduled Overtime </a>
+        </div>
+        <div class="col-md-4 col-sm-12 col-xs-12">
+            <!-- BUTTON FOR VIEW ABSCENCES -->
+            <a class="btn btn-info" href=""> Allowances </a>
+        </div>
+    </div>
+    {% if user.is_staff %}
+    <div class="row justify-content-center">
+        <div class="col-md-4 col-sm-12 col-xs-12">
+             <a class="btn btn-info" href="#">View Staff NSOT Requests </a>
+        </div>
+        <div class="col-md-4 col-sm-12 col-xs-12">
+             <a class="btn btn-info" href="#">View Staff Allowance Requests</a>
+        </div>
+        <div class="col-md-4 col-sm-12 col-xs-12">
+             <a class="btn btn-info" href="#"> Assign Overtime </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
