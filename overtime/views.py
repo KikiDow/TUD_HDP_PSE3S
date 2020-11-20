@@ -114,3 +114,10 @@ def delete_allowance_request(request, pk):
     allowance_req_for_deletion.delete()
     messages.success(request, "You have successfully deleted this allowance request.")
     return redirect(allowances_page)
+    
+@login_required()
+def view_staff_allowance_requests(request):
+    user = request.user
+    staff_allowance_requests = AllowancesRequest.objects.filter(allow_req_checked_by_validator=False).exclude(allow_req_off_id=user.pk)
+    length_of_staff_allow_req = len(staff_allowance_requests)
+    return render(request, "view_staff_allowance_requests.html", {'staff_allowance_requests': staff_allowance_requests, 'length_of_staff_allow_req': length_of_staff_allow_req})
