@@ -185,3 +185,10 @@ def view_non_scheduled_overtime_request(request, pk):
     nsot_req_to_view = get_object_or_404(NonScheduledOvertimeRequest, pk=pk)
     nsot_req_to_view.save()
     return render(request, "view_nsot_request.html", {'nsot_req_to_view': nsot_req_to_view})
+    
+@login_required()
+def delete_nsot_request(request, pk):
+    nsot_req_for_deletion = NonScheduledOvertimeRequest.objects.get(pk=pk)
+    nsot_req_for_deletion.delete()
+    messages.success(request, "You have successfully deleted this non-scheduled overtime request.")
+    return redirect(non_scheduled_ot_page)
