@@ -12,3 +12,10 @@ from .utils import getQtrDateIn, getNextQtr
 @login_required()
 def overtime_page(request):
     return render(request, "overtime_page.html")
+    
+@login_required()
+def allowances_page(request):
+    user = request.user
+    allowance_requests = AllowancesRequest.objects.filter(allow_req_off_id=user.pk)
+    len_allowance_requests = len(allowance_requests)
+    return render(request, "allowances_page.html", {'allowance_requests': allowance_requests, 'len_allowance_requests': len_allowance_requests})

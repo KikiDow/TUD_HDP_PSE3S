@@ -13,16 +13,13 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-md-4 col-sm-12 col-xs-12">
-            <!-- BUTTON FOR REPORT ABSCENCE -->
-             <a class="btn btn-info" href="#"> Availability </a>
+            <a class="btn btn-info" href="#"> Availability </a>
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12">
-            <!-- BUTTON FOR VIEW ABSCENCES -->
             <a class="btn btn-info" href=""> Non Scheduled Overtime </a>
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12">
-            <!-- BUTTON FOR VIEW ABSCENCES -->
-            <a class="btn btn-info" href=""> Allowances </a>
+            <a class="btn btn-info" href="{% url 'allowances_page' %}"> Allowances </a>
         </div>
     </div>
     {% if user.is_staff %}
