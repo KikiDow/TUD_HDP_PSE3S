@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'notifications',
     'abscences',
     'annual_leave',
+    'overtime',
 ]
 
 MIDDLEWARE = [
