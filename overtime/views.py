@@ -7,6 +7,7 @@ from .forms import AllowancesRequestForm, NonScheduledOvertimeRequestForm, Rejec
 import datetime
 from annual_leave.utils import getLeaveAmount
 from .utils import getQtrDateIn, getNextQtr
+from notifications.signals import notify
 
 # Create your views here.
 @login_required()
@@ -121,3 +122,14 @@ def view_staff_allowance_requests(request):
     staff_allowance_requests = AllowancesRequest.objects.filter(allow_req_checked_by_validator=False).exclude(allow_req_off_id=user.pk)
     length_of_staff_allow_req = len(staff_allowance_requests)
     return render(request, "view_staff_allowance_requests.html", {'staff_allowance_requests': staff_allowance_requests, 'length_of_staff_allow_req': length_of_staff_allow_req})
+    
+@login_required()
+def accept_allowance_request(request, pk):
+    allow_req_being_accepted = AllowancesRequest.objects.get(pk=pk)
+    allow_req_being_accepted.allow_req_checked_by_validator = True
+    allow_req_being_accepted.allow_req_accepted = True
+    allow_req_being_accepted.save()
+    #NOTIFICATION TO APPLCANT THAT ALLOWANCE REQUEST HAS BEEN ACCEPTED.
+    notify.send(request.user, recipient=allow_req_being_accepted.allow_req_off_id, verb=" has accepted your allowance request : " + str(allow_req_being_accepted.allow_req_date))
+    messages.success(request, "You have accepted this allowance request.")
+    return redirect('view_staff_allowance_requests')
