@@ -105,4 +105,40 @@ def submit_exchange_replacing_off_reply(request, pk):
     else:
         submit_exchange_replacing_off_form = SubmitExchangeRequestReplacingOfficerForm(instance=exchange_req_being_replied_to)
     return render(request, "submit_exchange_replacing_off_reply.html", {'exchange_req_being_replied_to': exchange_req_being_replied_to, 'submit_exchange_replacing_off_form': submit_exchange_replacing_off_form})
+
+@login_required()
+def submit_exchange_exchange_off_confirm(request, pk):
+    exchange_req_being_confirmed = ExchangeRequest.objects.get(pk=pk)
+    if request.method == "POST":
+        submit_exchange_req_confirm_form = SubmitExchangeRequestExchangingOfficerCheckForm(request.POST, request.FILES, instance=exchange_req_being_confirmed)
+        if submit_exchange_req_confirm_form.is_valid():
+            new_exchange_confirm = submit_exchange_req_confirm_form.save()
+            if new_exchange_confirm.eo_proceed_with_swap == True:
+                new_exchange_confirm.swap_confirmed = True
+                new_exchange_confirm.save()
+               
+                if new_exchange_confirm.swap_confirmed == True:
+                    associated_post = Post.objects.get(postee_id=new_exchange_confirm.exchanging_req_officer.id, possible_exchange_date=new_exchange_confirm.exchange_req_date)
+                    if associated_post.exists():
+                        associated_post.post_led_to_exchange = True
+                        associated_post.save()
+                    else:
+                        pass
+                    
+                roster_exch_day = Roster.objects.get(roster_officer_id=new_exchange_confirm.exchanging_req_officer, roster_shift_date__contains=new_exchange_confirm.exchange_req_date)
+                roster_replace_day = Roster.objects.get(roster_officer_id=new_exchange_confirm.replacing_req_officer, roster_shift_date__contains=new_exchange_confirm.replacing_req_date)
+                exch_shift = Shift.objects.get(shift_label=roster_exch_day.roster_shift_label)
+                print(exch_shift)
+                replace_shift = Shift.objects.get(shift_label=roster_replace_day.roster_shift_label)
+                print(replace_shift)
+                
+                new_exchange = Exchange(exchanging_officer=new_exchange_confirm.exchanging_req_officer, exchange_date=new_exchange_confirm.exchange_req_date, exchange_shift=exch_shift, replacing_officer=new_exchange_confirm.replacing_req_officer, replacement_date=new_exchange_confirm.replacing_req_date, replacement_shift=replace_shift)
+                new_exchange.save()
+                messages.success(request, "Your exchange with " + str(new_exchange_confirm.replacing_req_officer) + " has been confirmed.")
+                #notification to replacing officer of confirmation.
+                notify.send(new_exchange.exchanging_officer, recipient=new_exchange.replacing_officer, verb=" has confirmed your exchange for : " + str(new_exchange.exchange_date) + " and " + str(new_exchange.replacement_date))
+                return redirect(exchanges_page)
+    else:
+        submit_exchange_req_confirm_form = SubmitExchangeRequestExchangingOfficerCheckForm(instance=exchange_req_being_confirmed)
+    return render(request, "exchange_off_confirm.html", {'exchange_req_being_confirmed': exchange_req_being_confirmed, 'submit_exchange_req_confirm_form': submit_exchange_req_confirm_form})
     

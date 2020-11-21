@@ -4,7 +4,7 @@
 <div class="jumbotron jumbotron-fluid bg-info text-white">
   <div class="container">
       <div class="row justify-content-center">
-        <h1 class="display-4">Reply to Exchange Request</h1>
+        <h1 class="display-4">Confirm Exchange Request</h1>
       </div>
     </div>
 </div>
@@ -19,6 +19,9 @@
                     <tr><td><strong>Exchange Request Shift: </strong></td><td>{{ exchange_req_being_replied_to.exchange_req_shift_label }}</td></tr>
                     <tr><td><strong>Exchanging Officer Notes: </strong></td><td>{{ exchange_req_being_replied_to.exchanging_req_officer_notes }}</td></tr>
                     <tr><td><strong>Replacing Officer: </strong></td><td>{{ exchange_req_being_replied_to.replacing_req_officer }}</td></tr>
+                    <tr><td><strong>Replacement Date: </strong></td><td>{{ exchange_req_being_confirmed.replacing_req_date }}</td></tr>
+                    <tr><td><strong>Replacing Shift: </strong></td><td>{{ exchange_req_being_confirmed.replacing_req_shift }}</td></tr>
+                    <tr><td><strong>Replacing Officer Notes: </strong></td><td>{{ exchange_req_being_replied_to.replacing_req_officer_notes }}</td></tr>
                 </tbody>
             </table>
         </div>
@@ -30,10 +33,10 @@
         <div class="col-md-8">
             <form method="POST" enctype="multipart/form-data">
                 <fieldset class="form-group">
-                    <legend>Fill in the details below to reply to this exchange request.</legend>
+                    <legend>Fill in the details below to confirm this exchange request.</legend>
                     {% csrf_token %}
-                    {{ submit_exchange_replacing_off_form | as_bootstrap }}
-                    <button type="submit" onclick="return confirm('Are you sure?')">Reply to Request</button>
+                    {{ submit_exchange_req_confirm_form | as_bootstrap }}
+                    <button type="submit" onclick="return confirm('Are you sure?')">Confirm Exchange</button>
                 </fieldset>
             </form>
         </div>
