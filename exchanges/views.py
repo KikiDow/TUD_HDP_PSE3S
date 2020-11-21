@@ -141,4 +141,10 @@ def submit_exchange_exchange_off_confirm(request, pk):
     else:
         submit_exchange_req_confirm_form = SubmitExchangeRequestExchangingOfficerCheckForm(instance=exchange_req_being_confirmed)
     return render(request, "exchange_off_confirm.html", {'exchange_req_being_confirmed': exchange_req_being_confirmed, 'submit_exchange_req_confirm_form': submit_exchange_req_confirm_form})
-    
+
+@login_required()
+def exchange_noticeboard(request):
+    noticeboard_posts = Post.objects.filter(post_led_to_exchange=False) #Post will be filtered that if a exchange is confirmed it will not show.
+    likes = Like.objects.all()
+    len_posts = len(noticeboard_posts)
+    return render(request, "exchange_noticeboard.html", {'noticeboard_posts': noticeboard_posts, 'likes': likes, 'len_posts': len_posts})

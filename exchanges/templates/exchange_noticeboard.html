@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-info text-white">
+  <div class="container">
+      <div class="row justify-content-center">
+        <h1 class="display-4">Exchange Noticeboard</h1>
+      </div>
+    </div>
+</div>
+<div class="container">
+    {% if len_posts == 0 %}
+    <div class="row justify-content-center">
+        <p> No posts to display. </p>
+    </div>
+    {% else %}
+    <div class="row justify-content-center">
+        {% for post in noticeboard_posts %}
+        <div class="card bg-light mb-3">
+            <div class="card-header">{{ post.postee_id }} is looking to exchange {{ post.possible_exchange_date }} on a {{ post.possible_exchange_shift_id }} shift. </div>
+            <div class="card-body">
+                <p><strong>Content: </strong>{{ post.post_content }}</p>
+                <p><strong>Likes: </strong> {{ post.likes }}</p>
+                {% if user != post.postee_id %}
+                    <a class="btn btn-info btn-sm" href=""> Interested in Exchange </a>
+                {% endif %}
+                {% if user == post.postee_id %}
+                <div class="row">
+                    <div class="col-6">
+                        <div class="dropdown">
+                            <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                See who's interested
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Select someone to begin an exchange</a>
+                                <div class="dropdown-divider"></div>
+                                {% for like in likes %}
+                                    {% if like.post_liked == post %}
+                                    <a class="dropdown-item" href="">{{ like.post_liked_by }} {% if like.exchange_started == True %}<strong>- Exchange Started</strong>{% endif %}</a>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <a class="btn btn-info btn-sm" href="">Delete</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="row justify-content-center">
+        <div class="col-md-2"></div>
+        <div class="col-md-4 col-sm-10 col-xs-10">
+            <a class="btn btn-info" href=""> Submit Post </a>
+        </div>
+        <div class="col-md-4 col-sm-10 col-xs-10">
+            <a class="btn btn-info" href=""> View My Posts </a>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+{% endblock %}
