@@ -4,8 +4,8 @@ from django.contrib import messages
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .models import Account
-#from overtime.models import OvertimePerQtr
-#from overtime.utils import getCurrentQtr
+from overtime.models import OvertimePerQtr
+from overtime.utils import getCurrentQtr
 from django_currentuser.middleware import get_current_user, get_current_authenticated_user
 from account.forms import RegistrationForm, AccountAuthenticationForm
 from notifications.signals import notify
@@ -65,9 +65,9 @@ def registration(request):
             new_account = Account.objects.get(email=email)
             notify.send(request.user, recipient=new_account, verb="Can you please fill in your personal details as soon as possible.")
             messages.success(request, "You have successfully registered a new user.")
-            #current_qtr = getCurrentQtr()
-            #new_ot_per_qtr = OvertimePerQtr(ot_per_qtr_off_id=new_account, ot_per_qtr_qtr_id=current_qtr)
-            #new_ot_per_qtr.save()
+            current_qtr = getCurrentQtr()
+            new_ot_per_qtr = OvertimePerQtr(ot_per_qtr_off_id=new_account, ot_per_qtr_qtr_id=current_qtr)
+            new_ot_per_qtr.save()
             
             return redirect('view_new_account', new_account.pk)
             
