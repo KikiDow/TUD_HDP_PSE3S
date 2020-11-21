@@ -148,3 +148,22 @@ def exchange_noticeboard(request):
     likes = Like.objects.all()
     len_posts = len(noticeboard_posts)
     return render(request, "exchange_noticeboard.html", {'noticeboard_posts': noticeboard_posts, 'likes': likes, 'len_posts': len_posts})
+    
+@login_required()
+def submit_post(request):
+    if request.method == "POST":
+        submit_post_form = PostForm(request.POST, request.FILES)
+        possible_exchange_date = request.POST.get('possible_exchange_date')
+        submit_post_form.fields['possible_exchange_date'].choices = [(possible_exchange_date, possible_exchange_date)]
+        if submit_post_form.is_valid():
+            submit_post_form.instance.postee_id = request.user
+            new_post = submit_post_form.save()
+            roster_day_for_post = Roster.objects.get(roster_officer_id=new_post.postee_id, roster_shift_date__contains=new_post.possible_exchange_date)
+            shift_for_post = Shift.objects.get(shift_label=roster_day_for_post.roster_shift_label)
+            new_post.possible_exchange_shift_id = shift_for_post
+            new_post.save()
+            messages.success(request, "You have posted on the noticeboard.")
+            return redirect(exchange_noticeboard)
+    else:
+        submit_post_form = PostForm()
+    return render(request, "submit_post.html", {'submit_post_form': submit_post_form})
