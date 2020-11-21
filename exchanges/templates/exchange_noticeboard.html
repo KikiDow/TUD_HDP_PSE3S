@@ -35,7 +35,7 @@
                                 <div class="dropdown-divider"></div>
                                 {% for like in likes %}
                                     {% if like.post_liked == post %}
-                                    <a class="dropdown-item" href="">{{ like.post_liked_by }} {% if like.exchange_started == True %}<strong>- Exchange Started</strong>{% endif %}</a>
+                                    <a class="dropdown-item" href="{% url 'like_post' post.id %}">{{ like.post_liked_by }} {% if like.exchange_started == True %}<strong>- Exchange Started</strong>{% endif %}</a>
                                     {% endif %}
                                 {% endfor %}
                             </div>

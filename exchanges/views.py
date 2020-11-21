@@ -167,3 +167,13 @@ def submit_post(request):
     else:
         submit_post_form = PostForm()
     return render(request, "submit_post.html", {'submit_post_form': submit_post_form})
+    
+@login_required()
+def like_post(request, pk):
+    post_being_liked = Post.objects.get(pk=pk)
+    post_being_liked.likes += 1
+    post_being_liked.save()
+    new_like = Like(post_liked=post_being_liked, post_liked_by=request.user)
+    new_like.save()
+    messages.success(request, "Post Liked !!")
+    return redirect(exchange_noticeboard)
