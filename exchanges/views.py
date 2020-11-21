@@ -84,4 +84,25 @@ def previous_exchanges(request):
     return render(request, "view_previous_exchanges.html", {'exchange_reqs_cancelled': exchange_reqs_cancelled, 'previous_exchange_reqs': previous_exchange_reqs,'len_cancelled_exchanges': len_cancelled_exchanges, 'len_previous_exchange_reqs': len_previous_exchange_reqs})
     
     
+@login_required()
+def submit_exchange_replacing_off_reply(request, pk):
+    exchange_req_being_replied_to = ExchangeRequest.objects.get(pk=pk)
+    if request.method == "POST":
+        submit_exchange_replacing_off_form = SubmitExchangeRequestReplacingOfficerForm(request.POST, request.FILES, instance=exchange_req_being_replied_to)
+        replacing_req_date = request.POST.get('replacing_req_date')
+        submit_exchange_replacing_off_form.fields['replacing_req_date'].choices = [(replacing_req_date, replacing_req_date)]
+        if submit_exchange_replacing_off_form.is_valid():
+            new_exchange_req_replace_reply = submit_exchange_replacing_off_form.save()
+            replace_date = new_exchange_req_replace_reply.replacing_req_date
+            roster_day = Roster.objects.get(roster_officer_id=new_exchange_req_replace_reply.replacing_req_officer, roster_shift_date__contains=replace_date)
+            newly_created_exch_req_reply = ExchangeRequest.objects.get(pk=new_exchange_req_replace_reply.id)
+            newly_created_exch_req_reply.replacing_req_shift = roster_day.roster_shift_label
+            newly_created_exch_req_reply.save()
+            messages.success(request, "You have successfully replied to this exchange request.")
+            #NOTIFICATION TO EXCHANGING OFFICER THAT REPLY HAS BEEN SENT.
+            notify.send(newly_created_exch_req_reply.replacing_req_officer, recipient=newly_created_exch_req_reply.exchanging_req_officer, verb=" has replied to your exchange request : " + str(newly_created_exch_req_reply.exchange_req_date))
+            return redirect(view_all_exchanges)
+    else:
+        submit_exchange_replacing_off_form = SubmitExchangeRequestReplacingOfficerForm(instance=exchange_req_being_replied_to)
+    return render(request, "submit_exchange_replacing_off_reply.html", {'exchange_req_being_replied_to': exchange_req_being_replied_to, 'submit_exchange_replacing_off_form': submit_exchange_replacing_off_form})
     
