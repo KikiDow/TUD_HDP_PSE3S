@@ -175,5 +175,6 @@ def like_post(request, pk):
     post_being_liked.save()
     new_like = Like(post_liked=post_being_liked, post_liked_by=request.user)
     new_like.save()
+    notify.send(new_like.post_liked_by, recipient=post_being_liked.postee_id, verb=" is interested in your post for : " + str(post_being_liked.possible_exchange_date))
     messages.success(request, "Post Liked !!")
     return redirect(exchange_noticeboard)
