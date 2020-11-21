@@ -49,3 +49,39 @@ def submit_exchange_exchange_off(request):
         submit_exchange_exchange_off_form = SubmitExchangeRequestExchangingOfficerForm()
         
     return render(request, "submit_exchange_exchange_off.html", {'submit_exchange_exchange_off_form': submit_exchange_exchange_off_form})
+    
+@login_required()
+def view_all_exchanges(request):
+    user = request.user
+    exchange_requests = ExchangeRequest.objects.filter(Q(exchanging_req_officer=user) | Q(replacing_req_officer=user)).filter(swap_cancelled=False)
+    #Started: Awaiting Replacement officer reply
+    exchanges_req_started = exchange_requests.filter(exchanging_req_officer=user).filter(ro_proceed_with_swap=False)
+    len_exchange_req_started = len(exchanges_req_started)
+    #Awaiting my reply:
+    exchanges_req_awaiting_reply = exchange_requests.filter(replacing_req_officer=user).filter(ro_proceed_with_swap=False)
+    len_exchange_req_awaiting_reply = len(exchanges_req_awaiting_reply)
+    #Awaiting Exchanging Officers Confirmation.
+    exchange_reqs_awaiting_eo_confirm = exchange_requests.filter(replacing_req_officer=user).filter(ro_proceed_with_swap=True)
+    len_exchange_req_awaiting_eo_confirm = len(exchange_reqs_awaiting_eo_confirm)
+    #Awaiting my confirmation:
+    exchanges_req_awaiting_confirmation = exchange_requests.filter(exchanging_req_officer=user).filter(eo_proceed_with_swap=False).filter(ro_proceed_with_swap=True)
+    len_exchange_req_waiting_confirm = len(exchanges_req_awaiting_confirmation)
+    
+    return render(request, "view_all_exchanges.html", {'exchanges_req_started': exchanges_req_started, 'exchanges_req_awaiting_reply': exchanges_req_awaiting_reply, 'exchange_reqs_awaiting_eo_confirm': exchange_reqs_awaiting_eo_confirm, 'exchanges_req_awaiting_confirmation': exchanges_req_awaiting_confirmation, 'len_exchange_req_started': len_exchange_req_started, 'len_exchange_req_awaiting_reply': len_exchange_req_awaiting_reply, 'len_exchange_req_awaiting_eo_confirm': len_exchange_req_awaiting_eo_confirm, 'len_exchange_req_waiting_confirm': len_exchange_req_waiting_confirm})
+    
+@login_required()
+def previous_exchanges(request):
+    user = request.user
+    exchange_requests = ExchangeRequest.objects.filter(Q(exchanging_req_officer=user) | Q(replacing_req_officer=user)).filter(swap_cancelled=False)
+    #cancelled swaps:
+    exchange_reqs_cancelled = exchange_requests.filter(swap_cancelled=True)
+    len_cancelled_exchanges = len(exchange_reqs_cancelled)
+    #Previous Exchanges
+    todays_date = dt.date.today()
+    previous_exchange_reqs = exchange_requests.filter(swap_confirmed=True).filter(Q(exchange_req_date__lt=todays_date) & Q(replacing_req_date__lt=todays_date))
+    len_previous_exchange_reqs = len(previous_exchange_reqs)
+    
+    return render(request, "view_previous_exchanges.html", {'exchange_reqs_cancelled': exchange_reqs_cancelled, 'previous_exchange_reqs': previous_exchange_reqs,'len_cancelled_exchanges': len_cancelled_exchanges, 'len_previous_exchange_reqs': len_previous_exchange_reqs})
+    
+    
+    
