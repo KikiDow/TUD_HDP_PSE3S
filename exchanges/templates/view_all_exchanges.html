@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-info text-white">
+  <div class="container">
+      <div class="row justify-content-center">
+        <h1 class="display-4">My Exchanges</h1>
+      </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <h4> Exchange Requests Awaiting Replacement Officer Reply: </h4>
+    </div>
+    {% if len_exchange_req_started == 0 %}
+    <div class="row justify-content-center">
+        <p> You have no exchange requests awaiting a reply. </p>
+    </div>
+    {% else %}
+    <div class="row justify-content-center">
+        <div class="col-md-1"></div>
+        <div class="col-md-10 table-wrapper-scroll-y my-custom-scrollbar">
+            <table class="table table-striped table-dark mb-0">
+                <thead>
+                    <th>Exchanging Off</th>
+                    <th>Exchange Request Date</th>
+                    <th>Exchange Request Shift</th>
+                    <th>Replacing Off</th>
+                </thead>
+                <tbody>
+                    {% for exch_req_started in exchanges_req_started %}
+                        <tr>
+                            <td>{{ exch_req_started.exchanging_req_officer }}</td>
+                            <td>{{ exch_req_started.exchange_req_date }}</td>
+                            <td>{{ exch_req_started.exchange_req_shift_label }}</td>
+                            <td>{{ exch_req_started.replacing_req_officer }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    {% endif %}
+    <div class="row justify-content-center">
+    <h4> Exchange Requests Awaiting My Reply:  </h4>
+    </div>
+    {% if len_exchange_req_awaiting_reply == 0 %}
+    <div class="row justify-content-center">
+        <p> You have no exchange requests awaiting your reply. </p>
+    </div>
+    {% else %}
+    <div class="row justify-content-center">
+        <div class="col-md-1"></div>
+        <div class="col-md-10 table-wrapper-scroll-y my-custom-scrollbar">
+            <table class="table table-striped table-dark mb-0">
+                <thead>
+                    <th>Exchanging Off</th>
+                    <th>Exchange Request Date</th>
+                    <th>Exchange Request Shift</th>
+                    <th>Replacing Off</th>
+                    <th><i class="fa fa-folder-open fa-lg"></i></th>
+                </thead>
+                <tbody>
+                    {% for exch_req_awaiting_your_reply in exchanges_req_awaiting_reply %}
+                        <tr>
+                            <td>{{ exch_req_awaiting_your_reply.exchanging_req_officer }}</td>
+                            <td>{{ exch_req_awaiting_your_reply.exchange_req_date }}</td>
+                            <td>{{ exch_req_awaiting_your_reply.exchange_req_shift_label }}</td>
+                            <td>{{ exch_req_awaiting_your_reply.replacing_req_officer }}</td>
+                            <td><a href="">Reply</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    {% endif %}
+    <div class="row justify-content-center">
+    <h4> Exchange Requests Awaiting Exchanging Officers Confirmation:  </h4>
+    </div>
+    {% if len_exchange_req_awaiting_eo_confirm == 0 %}
+    <div class="row justify-content-center">
+        <p> You have no exchange requests awaiting the exchanging officers confirmation. </p>
+    </div>
+    {% else %}
+    <div class="row justify-content-center">
+        <div class="col-md-1"></div>
+        <div class="col-md-10 table-wrapper-scroll-y my-custom-scrollbar">
+            <table class="table table-striped table-dark mb-0">
+                <thead>
+                    <th>Exchanging Off</th>
+                    <th>Exchange Request Date</th>
+                    <th>Exchange Request Shift</th>
+                    <th>Replacing Off</th>
+                    <th>Replacement Request Date</th>
+                    <th>Replacement Request Shift</th>
+                </thead>
+                <tbody>
+                    {% for exch_req_awaiting_eo_confirm in exchange_reqs_awaiting_eo_confirm %}
+                        <tr>
+                            <td>{{ exch_req_awaiting_eo_confirm.exchanging_req_officer }}</td>
+                            <td>{{ exch_req_awaiting_eo_confirm.exchange_req_date }}</td>
+                            <td>{{ exch_req_awaiting_eo_confirm.exchange_req_shift_label }}</td>
+                            <td>{{ exch_req_awaiting_eo_confirm.replacing_req_officer }}</td>
+                            <td>{{ exch_req_awaiting_eo_confirm.replacing_req_date }}</td>
+                            <td>{{ exch_req_awaiting_eo_confirm.replacing_req_shift }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    {% endif %}
+    <div class="row justify-content-center">
+    <h4> Exchange Requests Awaiting My Confirmation: </h4>
+    </div>
+    {% if len_exchange_req_waiting_confirm == 0 %}
+    <div class="row justify-content-center">
+        <p> You have no exchange requests awaiting your confirmation. </p>
+    </div>
+    {% else %}
+    <div class="row justify-content-center">
+        <div class="col-md-1"></div>
+        <div class="col-md-10 table-wrapper-scroll-y my-custom-scrollbar">
+            <table class="table table-striped table-dark mb-0">
+                <thead>
+                    <th>Exchanging Off</th>
+                    <th>Exchange Request Date</th>
+                    <th>Exchange Request Shift</th>
+                    <th>Replacing Off</th>
+                    <th>Replacement Request Date</th>
+                    <th>Replacement Request Shift</th>
+                    <th><i class="fa fa-folder-open fa-lg"></i></th>
+                </thead>
+                <tbody>
+                    {% for exch_req_awaiting_your_confirm in exchanges_req_awaiting_confirmation %}
+                        <tr>
+                            <td>{{ exch_req_awaiting_your_confirm.exchanging_req_officer }}</td>
+                            <td>{{ exch_req_awaiting_your_confirm.exchange_req_date }}</td>
+                            <td>{{ exch_req_awaiting_your_confirm.exchange_req_shift_label }}</td>
+                            <td>{{ exch_req_awaiting_your_confirm.replacing_req_officer }}</td>
+                            <td>{{ exch_req_awaiting_your_confirm.replacing_req_date }}</td>
+                            <td>{{ exch_req_awaiting_your_confirm.replacing_req_shift }}</td>
+                            <td><a href="">Go to Confirm</a></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    {% endif %}
+    <div class="row justify-content-center">
+        <div class="col-md-3"></div>
+        <div class="col-md-6 col-sm-10 col-xs-10">
+            <a class="btn btn-info" href="{% url 'previous_exchanges' %}">Previous & Cancelled Exchanges </a>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>
+{% endblock %}
