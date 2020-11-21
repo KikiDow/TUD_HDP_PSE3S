@@ -67,7 +67,7 @@
                             <td>{{ exch_req_awaiting_your_reply.exchange_req_date }}</td>
                             <td>{{ exch_req_awaiting_your_reply.exchange_req_shift_label }}</td>
                             <td>{{ exch_req_awaiting_your_reply.replacing_req_officer }}</td>
-                            <td><a href="">Reply</a></td>
+                            <td><a href="{% url 'submit_exchange_replacing_off_reply' exch_req_awaiting_your_reply.id %}">Reply</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>
