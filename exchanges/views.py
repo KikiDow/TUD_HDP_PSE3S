@@ -199,3 +199,10 @@ def cancel_exchange(request, pk):
     else:
         cancel_exchange_form = CancelExchangeRequestForm(instance=exchange_being_cancelled)
     return render(request, "cancel_exchange_request.html", {'exchange_being_cancelled': exchange_being_cancelled, 'cancel_exchange_form': cancel_exchange_form})
+    
+@login_required()
+def delete_post(request, pk):
+    post_for_deletion = Post.objects.get(pk=pk)
+    post_for_deletion.delete()
+    messages.success(request, "Post deleted !!")
+    return redirect(exchange_noticeboard)
