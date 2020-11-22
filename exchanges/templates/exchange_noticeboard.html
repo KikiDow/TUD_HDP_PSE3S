@@ -21,7 +21,7 @@
                 <p><strong>Content: </strong>{{ post.post_content }}</p>
                 <p><strong>Likes: </strong> {{ post.likes }}</p>
                 {% if user != post.postee_id %}
-                    <a class="btn btn-info btn-sm" href=""> Interested in Exchange </a>
+                    <a class="btn btn-info btn-sm" href="{% url 'like_post' post.id %}"> Interested in Exchange </a>
                 {% endif %}
                 {% if user == post.postee_id %}
                 <div class="row">
@@ -35,7 +35,7 @@
                                 <div class="dropdown-divider"></div>
                                 {% for like in likes %}
                                     {% if like.post_liked == post %}
-                                    <a class="dropdown-item" href="{% url 'like_post' post.id %}">{{ like.post_liked_by }} {% if like.exchange_started == True %}<strong>- Exchange Started</strong>{% endif %}</a>
+                                    <a class="dropdown-item" href="{% url 'create_exch_req_from_like' like.id %}">{{ like.post_liked_by }} {% if like.exchange_started == True %}<strong>- Exchange Started</strong>{% endif %}</a>
                                     {% endif %}
                                 {% endfor %}
                             </div>

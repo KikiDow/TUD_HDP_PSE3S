@@ -41,9 +41,9 @@ def submit_exchange_exchange_off(request):
             newly_created_exch_req = ExchangeRequest.objects.get(pk=new_exchange_req.id)
             newly_created_exch_req.exchange_req_shift_label = roster_day.roster_shift_label
             newly_created_exch_req.save()
-            messages.success(request, "Exchange Reguest successfully started.")
             #NOTIFICATION TO REPLACING OFFICER THAT EXCHANGE HAS BEEN STARTED.
             notify.send(newly_created_exch_req.exchanging_req_officer, recipient=newly_created_exch_req.replacing_req_officer, verb=" has begun an exchange request for : " + str(newly_created_exch_req.exchange_req_date))
+            messages.success(request, "Exchange Reguest successfully started.")
             return redirect(exchanges_page)
     else:
         submit_exchange_exchange_off_form = SubmitExchangeRequestExchangingOfficerForm()
@@ -98,9 +98,9 @@ def submit_exchange_replacing_off_reply(request, pk):
             newly_created_exch_req_reply = ExchangeRequest.objects.get(pk=new_exchange_req_replace_reply.id)
             newly_created_exch_req_reply.replacing_req_shift = roster_day.roster_shift_label
             newly_created_exch_req_reply.save()
+            notify.send(newly_created_exch_req_reply.replacing_req_officer, recipient=newly_created_exch_req_reply.exchanging_req_officer, verb=" has replied to your exchange request : " + str(newly_created_exch_req_reply.exchange_req_date))
             messages.success(request, "You have successfully replied to this exchange request.")
             #NOTIFICATION TO EXCHANGING OFFICER THAT REPLY HAS BEEN SENT.
-            notify.send(newly_created_exch_req_reply.replacing_req_officer, recipient=newly_created_exch_req_reply.exchanging_req_officer, verb=" has replied to your exchange request : " + str(newly_created_exch_req_reply.exchange_req_date))
             return redirect(view_all_exchanges)
     else:
         submit_exchange_replacing_off_form = SubmitExchangeRequestReplacingOfficerForm(instance=exchange_req_being_replied_to)
@@ -134,9 +134,9 @@ def submit_exchange_exchange_off_confirm(request, pk):
                 
                 new_exchange = Exchange(exchanging_officer=new_exchange_confirm.exchanging_req_officer, exchange_date=new_exchange_confirm.exchange_req_date, exchange_shift=exch_shift, replacing_officer=new_exchange_confirm.replacing_req_officer, replacement_date=new_exchange_confirm.replacing_req_date, replacement_shift=replace_shift)
                 new_exchange.save()
-                messages.success(request, "Your exchange with " + str(new_exchange_confirm.replacing_req_officer) + " has been confirmed.")
                 #notification to replacing officer of confirmation.
                 notify.send(new_exchange.exchanging_officer, recipient=new_exchange.replacing_officer, verb=" has confirmed your exchange for : " + str(new_exchange.exchange_date) + " and " + str(new_exchange.replacement_date))
+                messages.success(request, "Your exchange with " + str(new_exchange_confirm.replacing_req_officer) + " has been confirmed.")
                 return redirect(exchanges_page)
     else:
         submit_exchange_req_confirm_form = SubmitExchangeRequestExchangingOfficerCheckForm(instance=exchange_req_being_confirmed)
@@ -205,4 +205,20 @@ def delete_post(request, pk):
     post_for_deletion = Post.objects.get(pk=pk)
     post_for_deletion.delete()
     messages.success(request, "Post deleted !!")
+    return redirect(exchange_noticeboard)
+    
+@login_required()
+def create_exch_req_from_like(request, pk):
+    like_for_exchange = Like.objects.get(pk=pk)
+    like_for_exchange.exchange_started = True
+    like_for_exchange.save()
+    post_for_exchange = Post.objects.get(pk=like_for_exchange.post_liked.id)
+    shift_conversion = Shift.objects.get(pk=post_for_exchange.possible_exchange_shift_id.id)
+    shft_label = shift_conversion.shift_label
+    new_exchange_req = ExchangeRequest(exchanging_req_officer=post_for_exchange.postee_id, exchange_req_date=post_for_exchange.possible_exchange_date, exchange_req_shift_label=shft_label, exchanging_req_officer_notes=post_for_exchange.post_content, replacing_req_officer=like_for_exchange.post_liked_by)
+    new_exchange_req.save()
+    #Notification to replacing officer that exchange request has been started.
+    notify.send(new_exchange_req.exchanging_req_officer, recipient=new_exchange_req.replacing_req_officer, verb=" has begun an exchange with you from the noticeboard : " + str(new_exchange_req.exchange_req_date))
+    messages.success(request, "You have started an exchange request with " + str(new_exchange_req.replacing_req_officer) + ".")
+    
     return redirect(exchange_noticeboard)
