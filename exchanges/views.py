@@ -222,3 +222,29 @@ def create_exch_req_from_like(request, pk):
     messages.success(request, "You have started an exchange request with " + str(new_exchange_req.replacing_req_officer) + ".")
     
     return redirect(exchange_noticeboard)
+    
+@login_required()
+def show_my_posts(request):
+    likes = Like.objects.all()
+    my_posts = Post.objects.filter(postee_id=request.user)
+    len_my_posts = len(my_posts)
+    my_likes = Like.objects.filter(post_liked_by=request.user)
+    posts_user_liked = []
+    for my_like in my_likes:
+        posts_user_liked.append(my_like.post_liked.id)
+    ''' Used in testing.    
+    for i in posts_user_liked:
+        print(i)
+        print(type(i))
+    '''
+    list_of_liked_posts = []
+    for pst in posts_user_liked:
+        o = Post.objects.get(pk=pst)
+        list_of_liked_posts.append(o)
+    ''' Used in testing.    
+    for i in list_of_liked_posts:
+        print(i)
+        print(type(i))
+    '''   
+    len_liked_posts = len(list_of_liked_posts)
+    return render(request, "my_posts.html", {'my_posts': my_posts, 'list_of_liked_posts': list_of_liked_posts, 'len_my_posts': len_my_posts, 'len_liked_posts': len_liked_posts, 'likes': likes})

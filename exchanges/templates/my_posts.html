@@ -3,27 +3,30 @@
 <div class="jumbotron jumbotron-fluid bg-info text-white">
   <div class="container">
       <div class="row justify-content-center">
-        <h1 class="display-4">Exchange Noticeboard</h1>
+        <h1 class="display-4">My Posts</h1>
       </div>
     </div>
 </div>
 <div class="container">
-    {% if len_posts == 0 %}
     <div class="row justify-content-center">
-        <p> No posts to display. </p>
+        <h3> My Posts: </h3>
+    </div>
+    {% if len_my_posts == 0 %}
+    <div class="row justify-content-center">
+        <p> You have'nt submitted any posts to the noticeboard. </p>
     </div>
     {% else %}
     <div class="row justify-content-center">
-        {% for post in noticeboard_posts %}
+        {% for my_post in my_posts %}
         <div class="card bg-light mb-3">
-            <div class="card-header">{{ post.postee_id }} is looking to exchange {{ post.possible_exchange_date }} on a {{ post.possible_exchange_shift_id }} shift. </div>
+            <div class="card-header">{{ my_post.postee_id }} is looking to exchange {{ my_post.possible_exchange_date }} on a {{ my_post.possible_exchange_shift_id }} shift. </div>
             <div class="card-body">
-                <p><strong>Content: </strong>{{ post.post_content }}</p>
-                <p><strong>Likes: </strong> {{ post.likes }}</p>
-                {% if user != post.postee_id %}
-                    <a class="btn btn-info btn-sm" href="{% url 'like_post' post.id %}"> Interested in Exchange </a>
+                <p><strong>Content: </strong>{{ my_post.post_content }}</p>
+                <p><strong>Likes: </strong> {{ my_post.likes }}</p>
+                {% if user != my_post.postee_id %}
+                    <a class="btn btn-info btn-sm" href="{% url 'like_post' my_post.id %}"> Interested in Exchange </a>
                 {% endif %}
-                {% if user == post.postee_id %}
+                {% if user == my_post.postee_id %}
                 <div class="row">
                     <div class="col-6">
                         <div class="dropdown">
@@ -34,7 +37,7 @@
                                 <a class="dropdown-item" href="#">Select someone to begin an exchange</a>
                                 <div class="dropdown-divider"></div>
                                 {% for like in likes %}
-                                    {% if like.post_liked == post %}
+                                    {% if like.post_liked == my_post %}
                                     <a class="dropdown-item" href="{% url 'create_exch_req_from_like' like.id %}">{{ like.post_liked_by }} {% if like.exchange_started == True %}<strong>- Exchange Started</strong>{% endif %}</a>
                                     {% endif %}
                                 {% endfor %}
@@ -42,7 +45,7 @@
                         </div>
                     </div>
                     <div class="col-6">
-                        <a class="btn btn-info btn-sm" href="{% url 'delete_post' post.id %}">Delete</a>
+                        <a class="btn btn-info btn-sm" href="{% url 'delete_post' my_post.id %}">Delete</a>
                     </div>
                 </div>
                 {% endif %}
@@ -52,14 +55,24 @@
     </div>
     {% endif %}
     <div class="row justify-content-center">
-        <div class="col-md-2"></div>
-        <div class="col-md-4 col-sm-10 col-xs-10">
-            <a class="btn btn-info" href="{% url 'submit_post' %}"> Submit Post </a>
-        </div>
-        <div class="col-md-4 col-sm-10 col-xs-10">
-            <a class="btn btn-info" href="{% url 'show_my_posts' %}"> View My Posts </a>
-        </div>
-        <div class="col-md-2"></div>
+        <h3> Posts You Liked: </h3>
     </div>
+    {% if len_liked_posts == 0 %}
+    <div class="row justify-content-center">
+        <p> You have not liked any posts yet. </p>
+    </div>
+    {% else %}
+    <div class="row justify-content-center">
+        {% for pst_liked in list_of_liked_posts %}
+        <div class="card bg-light mb-3">
+            <div class="card-header">{{ pst_liked.postee_id }} is looking to exchange {{ pst_liked.possible_exchange_date }} on a {{ pst_liked.possible_exchange_shift_id }} shift. </div>
+            <div class="card-body">
+                <p><strong>Content: </strong>{{ pst_liked.post_content }}</p>
+                <p><strong>Likes: </strong> {{ pst_liked.likes }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
