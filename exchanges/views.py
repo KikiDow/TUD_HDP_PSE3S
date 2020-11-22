@@ -178,3 +178,24 @@ def like_post(request, pk):
     notify.send(new_like.post_liked_by, recipient=post_being_liked.postee_id, verb=" is interested in your post for : " + str(post_being_liked.possible_exchange_date))
     messages.success(request, "Post Liked !!")
     return redirect(exchange_noticeboard)
+    
+@login_required()
+def cancel_exchange(request, pk):
+    exchange_being_cancelled = ExchangeRequest.objects.get(pk=pk)
+    if request.method == "POST":
+        cancel_exchange_form = CancelExchangeRequestForm(request.POST, request.FILES, instance=exchange_being_cancelled)
+        if cancel_exchange_form.is_valid():
+            new_cancel_exchange = cancel_exchange_form.save()
+            if new_cancel_exchange.exchanging_req_officer == request.user:
+                #Notification to replacing offcier that swap is cancelled.
+                notify.send(new_cancel_exchange.exchanging_req_officer, recipient=new_cancel_exchange.replacing_req_officer, verb=" has cancelled an exchange for : " + str(new_cancel_exchange.exchange_req_date))
+            else:
+                #Notifiction to exchanging officer that swap is cancelled.
+                notify.send(new_cancel_exchange.replacing_req_officer, recipient=new_cancel_exchange.exchanging_req_officer, verb=" has cancelled an exchange for : " + str(new_cancel_exchange.exchange_req_date))
+            
+            messages.success(request, "Exchange Request Cancelled.")
+            
+            return redirect(exchanges_page)
+    else:
+        cancel_exchange_form = CancelExchangeRequestForm(instance=exchange_being_cancelled)
+    return render(request, "cancel_exchange_request.html", {'exchange_being_cancelled': exchange_being_cancelled, 'cancel_exchange_form': cancel_exchange_form})
