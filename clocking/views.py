@@ -191,7 +191,7 @@ def manual_clocking(request):
             return redirect(view_manual_clock, manual_clock.pk)
     else:
         manual_clock_form = ManualClockingForm()
-    return render(request, 'submit_manual_clocking_form.html', {'manual_clock_form': manual_clock_form})
+    return render(request, "submit_manual_clocking_form.html", {'manual_clock_form': manual_clock_form})
     
 @login_required()
 def view_manual_clock(request, pk):

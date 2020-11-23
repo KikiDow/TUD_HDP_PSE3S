@@ -6,8 +6,26 @@
       </div>
     </div>
 </div>
+<div class="container">
+  <div class="row">
     {% if user.is_superuser %}
     <hr/>
-    <a href="{% url 'generate_quarters' %}"> Generate Quarters </a>
+    <a class="btn btn-danger" href="{% url 'generate_quarters' %}"> Generate Quarters </a>
     {% endif %}
+  </div>
+  <div class="row">
+        <!-- CLOCKINGS & PAGINATION -->
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-4 col-sm-12 col-xs-12">
+            <a class="btn btn-info" href="{% 'manual_clocking' %}">Submit Manual Clock</a>
+        </div>
+        <div class="col-md-4 col-sm-12 col-xs-12">
+            <a class="btn btn-info" href="">Clock Remotely</a>
+        </div>
+        <div class="col-md-4 col-sm-12 col-xs-12">
+            <a class="btn btn-info" href="">Previous Manual Clockings</a>
+        </div>
+    </div>
+</div>
 {% endblock %}
