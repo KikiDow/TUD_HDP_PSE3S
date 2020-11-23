@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 import datetime
-from .models import Quarter, Shift, RosterSideA, RosterSideB, Roster, PersonalDetails
-from .forms import PersonalDetailsForm
+from .models import Quarter, Shift, RosterSideA, RosterSideB, Roster, PersonalDetails, ManualClocking
+from .forms import PersonalDetailsForm, ManualClockingForm
 from django.contrib import messages
 from.utils import findRosterStartPoint, rosterPointerCheck
 from account.models import Account
@@ -180,3 +180,21 @@ def clock(request):
     roster_record_for_today.save()
     return redirect("home_page")
     
+@login_required()
+def manual_clocking(request):
+    if request.method == "POST":
+        manual_clock_form = ManualClockingForm(request.POST, request.FILES)
+        if manual_clock_form.is_valid():
+            manual_clock_form.instance.mc_officer_id = request.user
+            manual_clock = manual_clock_form.save()
+            messages.success(request, 'You have successfully submitted a manual clocking form.')
+            return redirect(view_manual_clock, manual_clock.pk)
+    else:
+        manual_clock_form = ManualClockingForm()
+    return render(request, 'submit_manual_clocking_form.html', {'manual_clock_form': manual_clock_form})
+    
+@login_required()
+def view_manual_clock(request, pk):
+    manual_clock = get_object_or_404(ManualClocking, pk=pk)
+    manual_clock.save()
+    return render(request, "view_manual_clock.html", {'manual_clock': manual_clock})
