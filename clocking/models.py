@@ -2,6 +2,7 @@ from django.db import models
 from account.models import Account
 from account.utils import ChoiceEnum
 from datetime import datetime
+from django.contrib import messages
 
 # Create your models here.
 class Quarter(models.Model):
@@ -65,6 +66,12 @@ class Roster(models.Model):
     roster_shift = models.ForeignKey(Shift, related_name='roster_shift', on_delete=models.CASCADE, blank=True, null=True)
     roster_shift_date = models.DateField(blank=False, null=False)
     roster_due_on = models.BooleanField()
+    number_of_clockings = models.IntegerField(default=0)
+    clocking_in_time = models.TimeField(blank=True, null=True)
+    clocking_out_time = models.TimeField(blank=True, null=True)
+    lunch_out_time = models.TimeField(blank=True, null=True)
+    lunch_in_time = models.TimeField(blank=True, null=True)
+    #clocking_date = models.DateField(blank=True, null=True)
     
     def __unicode__(self):
         return self.roster_shift_label
@@ -74,6 +81,30 @@ class Roster(models.Model):
             return str(self.roster_officer_id.username) + " : " + str(self.roster_shift_date) + " : " + str(self.roster_shift_label)
         else:
             return str(self.roster_officer_id.username) + " : " + str(self.roster_shift_date) + " : " + str(self.roster_shift)
+            
+    def updateCorrectClocking(self, request):
+        if self.number_of_clockings == 0:
+            t = datetime.now().time()
+            self.clocking_in_time = t.replace(microsecond=0)
+            #print("Clock In: " + str(self.clocking_in_time))
+            messages.success(request, "Clock In completed.")
+        elif self.number_of_clockings == 1:
+            t = datetime.now().time()
+            self.lunch_out_time = t.replace(microsecond=0)
+            #print("Lunch Out: " + str(self.lunch_out_time))
+            messages.success(request, "Lunch Out clock completed.")
+        elif self.number_of_clockings == 2:
+            t = datetime.now().time()
+            self.lunch_in_time = t.replace(microsecond=0)
+            #print("Lunch In: " + str(self.lunch_in_time))
+            messages.success(request, "Lunch In clock completed.")
+        else:
+            t = datetime.now().time()
+            self.clocking_out_time = t.replace(microsecond=0)
+            #print("Clock Out: " + str(self.clocking_out_time))
+            messages.success(request, "Clock Out completed.")
+        self.number_of_clockings += 1
+        return self.save()
             
 class PersonalDetails(models.Model):
 	address_1 = models.CharField(max_length=100)
@@ -108,3 +139,24 @@ class PersonalDetails(models.Model):
 	
 	def __str__(self):
 	    return "Personal Details for " + self.officer_pd
+	    
+class ManualClocking(models.Model):
+	mc_officer_id = models.ForeignKey(Account,related_name='mc_officer_id', on_delete=models.CASCADE)
+	clocking_date = models.DateField(blank=False, null=False)
+	clocking_in_time = models.TimeField(blank=False, null=False)
+	clocking_out_time = models.TimeField(blank=False, null=False)
+	lunch_out_time = models.TimeField(blank=False, null=False)
+	lunch_in_time = models.TimeField(blank=False, null=False)
+	reason_for_missed_clocking = models.CharField(max_length=200, blank=False, null=False)
+	checked_by_validator = models.BooleanField(default=False)
+	validator_id = models.ForeignKey(Account, related_name='validator_id', on_delete=models.CASCADE, blank=True, null=True)
+	accept_reject_clock = models.BooleanField(default=False)
+	reason_manual_clock_rejected = models.TextField(max_length=400, blank=True, null=True)
+	
+	
+	def __unicode__(self):
+		return self.clocking_date
+		
+		
+	def __str__(self):
+		return self.mc_officer_id + " manual clock for " + str(self.clocking_date)
