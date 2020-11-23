@@ -170,3 +170,13 @@ def my_notifications(request):
     user = request.user.id
     notifications = Notification.objects.unread().filter(recipient=user).order_by('-timestamp')
     return render(request, "notifications.html", {'notifications': notifications})
+    
+@login_required()
+def clock(request):
+    user = request.user
+    todays_date = datetime.date.today()
+    roster_record_for_today = Roster.objects.get(roster_officer_id=user, roster_shift_date=todays_date)
+    roster_record_for_today.updateCorrectClocking(request)
+    roster_record_for_today.save()
+    return redirect("home_page")
+    

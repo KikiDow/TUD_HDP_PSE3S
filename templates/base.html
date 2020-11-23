@@ -69,7 +69,7 @@
         <div>
             <ul class="nav nav-pills justify-content-end" style="margin-top:5px;">
                 {% if user.is_authenticated %}
-                <li class="nav-item"><a class="nav-link btn btn-secondary btn-sm" style="margin-left:5px; margin-right:5px;" href=""><i class="fa fa-clock-o"></i> Clock </a></li>
+                <li class="nav-item"><a class="nav-link btn btn-secondary btn-sm" style="margin-left:5px; margin-right:5px;" href="{% url 'clock' %}"><i class="fa fa-clock-o"></i> Clock </a></li>
                 <li class="nav-item">
                     <a role="button" class="nav-link btn btn-secondary btn-sm" style="margin-left:5px; margin-right:5px;" href="{% url 'my_notifications' %}">
                           <i class="fa fa-inbox"></i> Notifications <span>{% live_notify_badge badge_class="badge" %}</span></a>
