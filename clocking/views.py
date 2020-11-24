@@ -221,6 +221,18 @@ def accept_manual_clock(request, pk):
     roster_record_for_manual_clock.save()
     
     notify.send(request.user, recipient=manual_being_accepted.mc_officer_id, verb=" accepted your manual clocking entry for " + str(manual_being_accepted.clocking_date))
-    messages.success(request, 'You have checked and accepted this manual clocking submission.')
+    messages.success(request, 'Manual Clock Accepted')
+    return redirect("view_submitted_manual_clockings")
+    
+@login_required()
+def reject_manual_clock(request, pk):
+    manual_clock_being_rejected = ManualClocking.objects.get(pk=pk)
+    manual_clock_being_rejected.accept_reject_clock = False
+    manual_clock_being_rejected.checked_by_validator = True
+    manual_clock_being_rejected.validator_id = request.user
+    manual_clock_being_rejected.save()
+    
+    notify.send(request.user, recipient=manual_clock_being_rejected.mc_officer_id, verb=" rejected your manual clocking entry for " + str(manual_clock_being_rejected.clocking_date))
+    messages.success(request, 'Manual Clock Rejected')
     return redirect("view_submitted_manual_clockings")
     
