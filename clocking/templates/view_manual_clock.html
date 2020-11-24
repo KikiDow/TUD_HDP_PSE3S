@@ -3,7 +3,7 @@
 <div class="jumbotron jumbotron-fluid bg-info text-white">
   <div class="container">
       <div class="row justify-content-center">
-        <h1 class="display-4">View Block Leave Request</h1>
+        <h1 class="display-4">View Manual Clock</h1>
       </div>
     </div>
 </div>
@@ -16,41 +16,53 @@
                     {% if user.is_staff %}
                     <tr>
                         <td><strong>Name: </strong></td>
-                        <td>{{ annual_leave_req.al_request_officer_id }}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Applicant's Leave Balance: </strong></td>
-                        <td>{{ applicants_leave_balance }}</td>
+                        <td>{{ manual_clock.mc_officer_id }}</td>
                     </tr>
                     {% endif %}
                     <tr>
-                        <td><strong>Requested Start Date: </strong></td>
-                        <td>{{ annual_leave_req.leave_request_start_date }}</td>
+                        <td>Date: </td>
+                        <td>{{ manual_clock.clocking_date }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Requested Last Date: </strong></td>
-                        <td>{{ annual_leave_req.leave_request_last_date }}</td>
+                        <td>Clock In: </td>
+                        <td>{{ manual_clock.clocking_in_time }}</td>
                     </tr>
                     <tr>
-                        <td><strong>Request Checked: </strong></td>
-                        {% if annual_leave_req.leave_request_checked_by_validator == True %}
+                        <td>Lunch Out: </td>
+                        <td>{{ manual_clock.lunch_out_time }}</td>
+                    </tr>
+                    <tr>
+                        <td>Lunch In: </td>
+                        <td>{{ manual_clock.lunch_in_time }}</td>
+                    </tr>
+                    <tr>
+                        <td>Clock Out: </td>
+                        <td>{{ manual_clock.clocking_out_time }}</td>
+                    </tr>
+                    <tr>
+                        <td>Reason for Missed Clock: </td>
+                        <td>{{ manual_clock.reason_for_missed_clocking }}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Manual Clocking Checked: </strong></td>
+                        {% if manual_clock.checked_by_validator == True %}
                             <td><i class="fa fa-check-circle-o fa-lg"></i></td>
                         {% else %}
                             <td><i class="fa fa-times-circle fa-lg"></i></td>
                         {% endif %}
                     </tr>
                     <tr>
-                        <td><strong>Leave Granted: </strong></td>
-                        {% if annual_leave_req.leave_request_granted == True %}
+                        <td><strong>Manual Clocking Accepted: </strong></td>
+                        {% if manual_clock.accept_reject_clock == True %}
                             <td><i class="fa fa-check-circle-o fa-lg"></i></td>
                         {% else %}
                             <td><i class="fa fa-times-circle fa-lg"></i></td>
                         {% endif %}
                     </tr>
-                    {% if annual_leave_req.leave_checked_by_validator == True and annual_leave_req.leave_request_granted == False %}
+                    {% if manual_clock.checked_by_validator == True and manual_clock.accept_reject_clock == False %}
                     <tr>
-                        <td><strong>Reason leave rejected: </strong></td>
-                        <td>{{ annual_leave_req.reason_leave_rejected }}</td>
+                        <td><strong>Reason clocking rejected: </strong></td>
+                        <td>{{ manual_clock.reason_manual_clock_rejected }}</td>
                     </tr>
                     {% endif %}
                 </table>
@@ -60,13 +72,13 @@
     <div class="row justify-content-center">
         <div class="col-md-2"></div>
         <div class="col-md-4 col-sm-12 col-xs-12">
-            {% if user == annual_leave_req.al_request_officer_id and annual_leave_req.leave_request_checked_by_validator == False %}
-            <a class="btn btn-info" href="{% url 'edit_block_leave_request' annual_leave_req.id %}"><i class="fa fa-pencil"></i> Edit Request </a>
+            {% if user == manual_clock.mc_officer_id and manual_clock.checked_by_validator == False %}
+            <a class="btn btn-info" href=""><i class="fa fa-pencil"></i> Edit Clocking </a>
             {% endif %}
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12">
             {% if user == annual_leave_req.al_request_officer_id %}
-            <a class="btn btn-info" href="{% url 'delete_block_leave_request' annual_leave_req.id %}"><i class="fa fa-trash"></i> Delete Request </a>
+            <a class="btn btn-info" href=""><i class="fa fa-trash"></i> Delete Clocking </a>
             {% endif %}
         </div>
         <div class="col-md-2"></div>
@@ -75,10 +87,10 @@
     <div class="row justify-content-center">
         <div class="col-md-2"></div>
         <div class="col-md-4 col-sm-12 col-xs-12">
-            <a class="btn btn-info" href="{% url 'accept_block_leave' annual_leave_req.id %}"><i class="fa fa-thumbs-up"></i> Grant Request </a>
+            <a class="btn btn-info" href=""><i class="fa fa-thumbs-up"></i> Accept Clocking </a>
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12">
-            <a class="btn btn-info" href="{% url 'reject_annual_leave' annual_leave_req.id %}"><i class="fa fa-thumbs-down"></i> Reject Request </a>
+            <a class="btn btn-info" href=""><i class="fa fa-thumbs-down"></i> Reject Clocking </a>
         </div>
         <div class="col-md-2"></div>
     </div>
