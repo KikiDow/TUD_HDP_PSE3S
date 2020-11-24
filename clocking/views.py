@@ -198,3 +198,29 @@ def view_manual_clock(request, pk):
     manual_clock = get_object_or_404(ManualClocking, pk=pk)
     manual_clock.save()
     return render(request, "view_manual_clock.html", {'manual_clock': manual_clock})
+    
+@login_required()
+def view_submitted_manual_clockings(request):
+    user = request.user
+    submitted_manual_clockings = ManualClocking.objects.filter(checked_by_validator=False).exclude(mc_officer_id=user)
+    return render(request, "view_submitted_manual_clockings.html", {'submitted_manual_clockings': submitted_manual_clockings})
+    
+@login_required()
+def accept_manual_clock(request, pk):
+    manual_being_accepted = ManualClocking.objects.get(pk=pk)
+    manual_being_accepted.accept_reject_clock = True
+    manual_being_accepted.checked_by_validator = True
+    manual_being_accepted.validator_id = request.user
+    manual_being_accepted.save()
+    
+    roster_record_for_manual_clock = Roster.objects.get(roster_officer_id=manual_being_accepted.mc_officer_id, roster_shift_date=manual_being_accepted.clocking_date)
+    roster_record_for_manual_clock.clocking_in_time = manual_being_accepted.clocking_in_time
+    roster_record_for_manual_clock.lunch_out_time = manual_being_accepted.lunch_out_time
+    roster_record_for_manual_clock.lunch_in_time = manual_being_accepted.lunch_in_time
+    roster_record_for_manual_clock.clocking_out_time = manual_being_accepted.clocking_out_time
+    roster_record_for_manual_clock.save()
+    
+    notify.send(request.user, recipient=manual_being_accepted.mc_officer_id, verb=" accepted your manual clocking entry for " + str(manual_being_accepted.clocking_date))
+    messages.success(request, 'You have checked and accepted this manual clocking submission.')
+    return redirect("view_submitted_manual_clockings")
+    
