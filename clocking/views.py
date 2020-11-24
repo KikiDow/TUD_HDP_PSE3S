@@ -240,5 +240,5 @@ def reject_manual_clock(request, pk):
             messages.success(request, 'Manual Clock Rejected')
     else:
         manual_clock_reject_form = RejectManualClockingForm(instance=manual_clock_being_rejected)
-    return render(request, "reject_manual_clock.html", )
+    return render(request, "reject_manual_clock.html", {'manual_clock_being_rejected': manual_clock_being_rejected, 'manual_clock_reject_form': manual_clock_reject_form})
     
