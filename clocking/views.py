@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.conf import settings
 import datetime
 from .models import Quarter, Shift, RosterSideA, RosterSideB, Roster, PersonalDetails, ManualClocking
-from .forms import PersonalDetailsForm, ManualClockingForm
+from .forms import PersonalDetailsForm, ManualClockingForm, RejectManualClockingForm
 from django.contrib import messages
 from.utils import findRosterStartPoint, rosterPointerCheck
 from account.models import Account
@@ -228,12 +228,17 @@ def accept_manual_clock(request, pk):
 @login_required()
 def reject_manual_clock(request, pk):
     manual_clock_being_rejected = ManualClocking.objects.get(pk=pk)
-    manual_clock_being_rejected.accept_reject_clock = False
-    manual_clock_being_rejected.checked_by_validator = True
-    manual_clock_being_rejected.validator_id = request.user
-    manual_clock_being_rejected.save()
-    
-    notify.send(request.user, recipient=manual_clock_being_rejected.mc_officer_id, verb=" rejected your manual clocking entry for " + str(manual_clock_being_rejected.clocking_date))
-    messages.success(request, 'Manual Clock Rejected')
-    return redirect("view_submitted_manual_clockings")
+    if request.method == "POST":
+        manual_clock_reject_form = RejectManualClockingForm(request.POST, request.FILES, instance=manual_clock_being_rejected)
+        if manual_clock_reject_form.is_valid:
+            manual_clock_being_rejected = manual_clock_being_rejected.save()
+            manual_clock_being_rejected.accept_reject_clock = False
+            manual_clock_being_rejected.checked_by_validator = True
+            manual_clock_being_rejected.validator_id = request.user
+            manual_clock_being_rejected.save()
+            notify.send(request.user, recipient=manual_clock_being_rejected.mc_officer_id, verb=" rejected your manual clocking entry for " + str(manual_clock_being_rejected.clocking_date))
+            messages.success(request, 'Manual Clock Rejected')
+    else:
+        manual_clock_reject_form = RejectManualClockingForm(instance=manual_clock_being_rejected)
+    return render(request, "reject_manual_clock.html", )
     
