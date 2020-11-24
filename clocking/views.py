@@ -203,7 +203,8 @@ def view_manual_clock(request, pk):
 def view_submitted_manual_clockings(request):
     user = request.user
     submitted_manual_clockings = ManualClocking.objects.filter(checked_by_validator=False).exclude(mc_officer_id=user)
-    return render(request, "view_submitted_manual_clockings.html", {'submitted_manual_clockings': submitted_manual_clockings})
+    length_staff_manual_clockings = len(submitted_manual_clockings)
+    return render(request, "view_submitted_manual_clockings.html", {'submitted_manual_clockings': submitted_manual_clockings, 'length_staff_manual_clockings': length_staff_manual_clockings})
     
 @login_required()
 def accept_manual_clock(request, pk):
