@@ -77,13 +77,13 @@
             {% endif %}
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12">
-            {% if user == annual_leave_req.al_request_officer_id %}
+            {% if user == manual_clock.mc_officer_id %}
             <a class="btn btn-info" href=""><i class="fa fa-trash"></i> Delete Clocking </a>
             {% endif %}
         </div>
         <div class="col-md-2"></div>
     </div>
-    {% if user.is_staff %}
+    {% if user.is_staff and user != manual_clock.mc_officer_id %}
     <div class="row justify-content-center">
         <div class="col-md-2"></div>
         <div class="col-md-4 col-sm-12 col-xs-12">
