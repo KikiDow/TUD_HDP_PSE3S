@@ -1,5 +1,6 @@
 import datetime
 from clocking.models import Quarter
+from account.models import Account
 
 def getCurrentQtr():
     today = datetime.date.today()
@@ -18,3 +19,8 @@ def getQtrDateIn(n):
     date_of_application = n
     qtr_date_in = Quarter.objects.get(qtr_start_date__lte=date_of_application, qtr_end_date__gte=date_of_application)
     return qtr_date_in
+    
+def getOfficerInstance(officer):
+    list_to_get_officer = officer.split()
+    officer_instance = Account.objects.get(firstname=list_to_get_officer[0], lastname=list_to_get_officer[1])
+    return officer_instance

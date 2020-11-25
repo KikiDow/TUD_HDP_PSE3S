@@ -99,69 +99,100 @@ class AssignOvertimeDateForm(forms.Form):
 
 class AssignRecallStaffForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        super(AssignRecallStaffForm, self).__init__(*args, **kwargs)
         initial_arguments = kwargs.get('initial', None)
+        updated_initial = {}
         selected_dat = initial_arguments.get('selected_date', None)
-        #print(selected_dat)
-        #print(type(selected_dat))
         selected_date_1 = datetime.strptime(selected_dat, "%Y-%m-%d")
-        #print(selected_date_1)
-        #print(type(selected_date_1))
         selected_date = dt.date(selected_date_1.year, selected_date_1.month, selected_date_1.day)
-        #print(selected_date)
-        #print(type(selected_date))
+        updated_initial['selected_date'] = selected_date
+        kwargs.update(initial=updated_initial)
+        
+        super(AssignRecallStaffForm, self).__init__(*args, **kwargs)
         qtr = getQtrDateIn(selected_date)
-        #selected_date = args.chosen_date
+        no_staff_available_for_selected_date = False
+        
         self.fields['selected_date'] = forms.DateField(disabled=True)
         
         if selected_date.strftime("%A") == "Monday":
             mon_query = AvailabilitySheet.objects.filter(avail_sheet_qtr_id=qtr).filter(Q(mon_one__contains=selected_date) | Q(mon_two__contains=selected_date))
-            #, mon_two__contains=selected_date
-            #mon_off_query = mon_query.objects.values('avail_sheet_off_id')
-            mon_off_query_choices = [('', 'select available staff member')] + [(id.avail_sheet_off_id, id.avail_sheet_off_id) for id in mon_query]
-            self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, choices=mon_off_query_choices)
+            length_mon_query = len(mon_query)
+            if length_mon_query == 0:
+                no_staff_available_for_selected_date = True
+                self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, disabled=True, help_text="No staff have made themselves available for " + str(selected_date) + ".")
+            else:
+                mon_off_query_choices = [('', 'Select available staff member')] + [(id.avail_sheet_off_id, id.avail_sheet_off_id) for id in mon_query]
+                self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, choices=mon_off_query_choices)
         elif selected_date.strftime("%A") == "Tuesday":
             tue_query = AvailabilitySheet.objects.filter(avail_sheet_qtr_id=qtr).filter(Q(tue_one__contains=selected_date) | Q(tue_two__contains=selected_date))
-            #tue_off_query = tue_query.objects.values('avail_sheet_off_id')
-            tue_off_query_choices = [('', 'select available staff member')] + [(id.avail_sheet_off_id, id.avail_sheet_off_id) for id in tue_query]
-            self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, choices=tue_off_query_choices)
+            length_tue_query = len(tue_query)
+            if length_tue_query == 0:
+                no_staff_available_for_selected_date = True
+                self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, disabled=True, help_text="No staff have made themselves available for " + str(selected_date) + ".")
+            else:
+                tue_off_query_choices = [('', 'Select available staff member')] + [(id.avail_sheet_off_id, id.avail_sheet_off_id) for id in tue_query]
+                self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, choices=tue_off_query_choices)
         elif selected_date.strftime("%A") == "Wednesday":
             wed_query = AvailabilitySheet.objects.filter(avail_sheet_qtr_id=qtr).filter(Q(wed_one__contains=selected_date) | Q(wed_two__contains=selected_date))
-            #wed_off_query = wed_query.objects.values('avail_sheet_off_id')
-            wed_off_query_choices = [('', 'select available staff member')] + [(id.avail_sheet_off_id, id.avail_sheet_off_id) for id in wed_query]
-            self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, choices=wed_off_query_choices)
+            length_wed_query = len(wed_query)
+            if length_wed_query == 0:
+                no_staff_available_for_selected_date = True
+                self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, disabled=True, help_text="No staff have made themselves available for " + str(selected_date) + ".")
+            else:
+                wed_off_query_choices = [('', 'Select available staff member')] + [(id.avail_sheet_off_id, id.avail_sheet_off_id) for id in wed_query]
+                self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, choices=wed_off_query_choices)
         elif selected_date.strftime("%A") == "Thursday":
             thurs_query = AvailabilitySheet.objects.filter(avail_sheet_qtr_id=qtr).filter(Q(thurs_one__contains=selected_date) | Q(thurs_two__contains=selected_date))
-            print(thurs_query)
-            #thurs_off_query = thurs_query.objects.values('avail_sheet_off_id')
-            thurs_off_query_choices = [('', 'select available staff member')] + [(id.avail_sheet_off_id, id.avail_sheet_off_id) for id in thurs_query]
-            self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, choices=thurs_off_query_choices)
+            length_thurs_query = len(thurs_query)
+            if length_thurs_query == 0:
+                no_staff_available_for_selected_date = True
+                self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, disabled=True, help_text="No staff have made themselves available for " + str(selected_date) + ".")
+            else:
+                thurs_off_query_choices = [('', 'Select available staff member')] + [(id.avail_sheet_off_id, id.avail_sheet_off_id) for id in thurs_query]
+                self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, choices=thurs_off_query_choices)
         elif selected_date.strftime("%A") == "Friday":
             fri_query = AvailabilitySheet.objects.filter(avail_sheet_qtr_id=qtr).filter(Q(fri_one__contains=selected_date) | Q(fri_two__contains=selected_date))
-            #fri_off_query = fri_query.objects.values('avail_sheet_off_id')
-            fri_off_query_choices = [('', 'select available staff member')] + [(id.avail_sheet_off_id, id.avail_sheet_off_id) for id in fri_query]
-            self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, choices=fri_off_query_choices)
+            length_fri_query = len(fri_query)
+            if length_fri_query == 0:
+                no_staff_available_for_selected_date = True
+                self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, disabled=True, help_text="No staff have made themselves available for " + str(selected_date) + ".")
+            else:
+                fri_off_query_choices = [('', 'Select available staff member')] + [(id.avail_sheet_off_id, id.avail_sheet_off_id) for id in fri_query]
+                self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, choices=fri_off_query_choices)
         elif selected_date.strftime("%A") == "Saturday":
             sat_query = AvailabilitySheet.objects.filter(avail_sheet_qtr_id=qtr).filter(Q(sat_one__contains=selected_date) | Q(sat_two__contains=selected_date))
-            #sat_off_query = sat_query.objects.values('avail_sheet_off_id')
-            sat_off_query_choices = [('', 'select available staff member')] + [(id.avail_sheet_off_id, id.avail_sheet_off_id) for id in sat_query]
-            self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, choices=sat_off_query_choices)    
+            length_sat_query = len(sat_query)
+            if length_sat_query == 0:
+                no_staff_available_for_selected_date = True
+                self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, disabled=True, help_text="No staff have made themselves available for " + str(selected_date) + ".")
+            else:
+                sat_off_query_choices = [('', 'Select available staff member')] + [(id.avail_sheet_off_id, id.avail_sheet_off_id) for id in sat_query]
+                self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, choices=sat_off_query_choices)    
         elif selected_date.strftime("%A") == "Sunday":
             sun_query = AvailabilitySheet.objects.filter(avail_sheet_qtr_id=qtr).filter(Q(sun_one__contains=selected_date) | Q(sun_two__contains=selected_date))
-            #sun_off_query = sun_query.objects.values('avail_sheet_off_id')
-            sun_off_query_choices = [('', 'select available staff member')] + [(id.avail_sheet_off_id, id.avail_sheet_off_id) for id in sun_query]
-            self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, choices=sun_off_query_choices)
+            length_sun_query = len(sun_query)
+            if length_sun_query == 0:
+                no_staff_available_for_selected_date = True
+                self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, disabled=True, help_text="No staff have made themselves available for " + str(selected_date) + ".")
+            else:
+                sun_off_query_choices = [('', 'Select available staff member')] + [(id.avail_sheet_off_id, id.avail_sheet_off_id) for id in sun_query]
+                self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, choices=sun_off_query_choices)
         
-        self.fields['assign_shift'] = forms.ModelChoiceField(widget=forms.Select, queryset=Shift.objects.all())
+        if no_staff_available_for_selected_date == True:
+            self.fields['assign_shift'] = forms.ChoiceField(widget=forms.Select, disabled=True)
+        else:
+            self.fields['assign_shift'] = forms.ModelChoiceField(widget=forms.Select, queryset=Shift.objects.all())
         
         
 class AssignRequireStaffForm(forms.Form):
    def __init__(self, *args, **kwargs):
-        super(AssignRequireStaffForm, self).__init__(*args, **kwargs)
         initial_arguments = kwargs.get('initial', None)
+        updated_initial = {}
         selected_date_as_string = initial_arguments.get('selected_require_date', None)
         selected_date_as_dt_obj = datetime.strptime(selected_date_as_string, "%Y-%m-%d")
         selected_require_date = dt.date(selected_date_as_dt_obj.year, selected_date_as_dt_obj.month, selected_date_as_dt_obj.day)
+        updated_initial['selected_require_date'] = selected_require_date
+        kwargs.update(initial=updated_initial)
+        super(AssignRequireStaffForm, self).__init__(*args, **kwargs)
         
         self.fields['selected_require_date'] = forms.DateField(disabled=True)
         

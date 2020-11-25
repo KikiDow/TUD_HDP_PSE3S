@@ -6,7 +6,7 @@ from .models import AllowancesRequest, NonScheduledOvertimeRequest, ShortOvertim
 from .forms import AllowancesRequestForm, NonScheduledOvertimeRequestForm, RejectAllowanceRequestForm, RejectNSOTForm, AvailabilitySheetForm, AssignOvertimeDateForm, AssignRecallStaffForm, AssignRequireStaffForm
 import datetime
 from annual_leave.utils import getLeaveAmount
-from .utils import getQtrDateIn, getNextQtr
+from .utils import getQtrDateIn, getNextQtr, getOfficerInstance
 from notifications.signals import notify
 
 # Create your views here.
@@ -345,7 +345,7 @@ def assign_ot_date(request):
         assign_ot_date_form = AssignOvertimeDateForm(request.POST, request.FILES)
         if assign_ot_date_form.is_valid():
             chosen_date = assign_ot_date_form.cleaned_data.get("date_for_assignment")
-            print("Inside ot date view: " + str(chosen_date))
+            #print("Inside ot date view: " + str(chosen_date))
             return redirect(assign_ot_recall, chosen_date)
     else:
         assign_ot_date_form = AssignOvertimeDateForm()
@@ -354,20 +354,19 @@ def assign_ot_date(request):
 @login_required()
 def assign_ot_recall(request, chosen_date):
     date_selected = chosen_date
-    print("Inside ot_recall_view: " + str(date_selected))
     if request.method == "POST":
-        assign_recall_form = AssignRecallStaffForm(request.POST, request.FILES)
-        available_officers = request.POST.get('available_officers')
-        #len_available_officers = available_officers.count()
-        assign_recall_form.fields['available_officers'].choices = [(available_officers, available_officers)]
+        assign_recall_form = AssignRecallStaffForm(request.POST, request.FILES, initial={'selected_date': date_selected})
+        officers_available = request.POST.get('officers_available')
+        assign_recall_form.fields['officers_available'].choices = [(officers_available, officers_available)]
         if assign_recall_form.is_valid():
-            officer = assign_recall_form.cleaned_data.get("available_officers")
+            officer = assign_recall_form.cleaned_data.get("officers_available")
+            officer_instance = getOfficerInstance(officer)
             date = assign_recall_form.cleaned_data.get("selected_date")
             quarter = getQtrDateIn(date)
             shift = assign_recall_form.cleaned_data.get("assign_shift")
-            new_overtime = Overtime(ot_officer_id=officer.id, ot_qtr_id=quarter.id, ot_date=date, ot_shift_id=shift.id, ot_recall=True)
+            new_overtime = Overtime(ot_officer_id=officer_instance, ot_qtr_id=quarter, ot_date=date, ot_shift_id=shift, ot_recall=True)
             new_overtime.save()
-            notify.send(request.user, recipient=new_overtime.ot_officer_id, verb=" has recalled you for overtime on : " + str(new_overtime.ot_date))
+            notify.send(request.user, recipient=new_overtime.ot_officer_id, verb=" has required you for overtime on : " + str(new_overtime.ot_date))
             messages.success(request, "Staff successfully recalled.")
             return redirect(overtime_page)
     else:
@@ -377,17 +376,17 @@ def assign_ot_recall(request, chosen_date):
 @login_required()
 def assign_ot_require(request, date_selected):
     date_for_require = date_selected
-    #print(date_for_require)
     if request.method == "POST":
-        assign_require_form = AssignRequireStaffForm(request.POST, request.FILES)
-        officers_for_require = request.POST.get['officers_for_require']
+        assign_require_form = AssignRequireStaffForm(request.POST, request.FILES, initial = {'selected_require_date': date_for_require})
+        officers_for_require = request.POST.get('officers_for_require')
         assign_require_form.fields['officers_for_require'].choices = [(officers_for_require, officers_for_require)]
         if assign_require_form.is_valid():
             officer = assign_require_form.cleaned_data.get("officers_for_require")
+            officer_instance = getOfficerInstance(officer)
             date = assign_require_form.cleaned_data.get("selected_require_date")
             quarter = getQtrDateIn(date)
             shift = assign_require_form.cleaned_data.get("assign_require_shift")
-            new_overtime = Overtime(ot_officer_id=officer.id, ot_qtr_id=quarter.id, ot_date=date, ot_shift_id=shift.id, ot_require=True)
+            new_overtime = Overtime(ot_officer_id=officer_instance, ot_qtr_id=quarter, ot_date=date, ot_shift_id=shift, ot_requirement=True)
             new_overtime.save()
             notify.send(request.user, recipient=new_overtime.ot_officer_id, verb=" has required you for overtime on : " + str(new_overtime.ot_date))
             messages.success(request, "Staff successfully required.")
