@@ -5,7 +5,7 @@ import datetime
 from .models import Quarter, Shift, RosterSideA, RosterSideB, Roster, PersonalDetails, ManualClocking
 from .forms import PersonalDetailsForm, ManualClockingForm, RejectManualClockingForm
 from django.contrib import messages
-from.utils import findRosterStartPoint, rosterPointerCheck, getStartPageForPagination
+from.utils import findRosterStartPoint, rosterPointerCheck, getStartPageForPagination, getSearchResultPaginationStartPage, convertStrToDateObj
 from account.models import Account
 from notifications.signals import notify
 from notifications.models import Notification
