@@ -39,6 +39,30 @@ def clocking_page(request):
         
     return render(request, 'clocking_page.html', {'users_ros': users_ros})
     
+def search_roster(request):
+    user = request.user
+    first_record = Roster.objects.filter(roster_officer_id=user).first()
+    first_day_of_users_roster = first_record.roster_shift_date
+    users_roster = Roster.objects.filter(roster_officer_id=user).order_by('id')
+    
+    search_date = request.GET['q']
+    #print(search_date)
+    date_as_obj = convertStrToDateObj(search_date)
+    
+    page_number = getSearchResultPaginationStartPage(first_day_of_users_roster, date_as_obj)
+    
+    page = request.GET.get('page', page_number)
+    
+    paginator = Paginator(users_roster, 7)
+    try:
+        users_ros = paginator.page(page)
+    except PageNotAnInteger:
+        users_ros = paginator.page(1)
+    except EmptyPage:
+        users_ros = paginator.page(paginator.num_pages)
+        
+    return render(request, "roster_search_result.html", {'users_ros': users_ros})
+
 @login_required()
 def generate_quarters(request):
     '''
