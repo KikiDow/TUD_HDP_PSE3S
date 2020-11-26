@@ -8,6 +8,8 @@ import datetime
 from annual_leave.utils import getLeaveAmount
 from .utils import getQtrDateIn, getNextQtr, getOfficerInstance
 from notifications.signals import notify
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from clocking.utils import convertStrToDateObj
 
 # Create your views here.
 @login_required()
@@ -17,9 +19,39 @@ def overtime_page(request):
 @login_required()
 def allowances_page(request):
     user = request.user
-    allowance_requests = AllowancesRequest.objects.filter(allow_req_off_id=user.pk)
-    len_allowance_requests = len(allowance_requests)
+    user_allowance_requests = AllowancesRequest.objects.filter(allow_req_off_id=user.pk).order_by('-allow_req_date')
+    len_allowance_requests = len(user_allowance_requests)
+    page = request.GET.get('page', 1)
+    
+    paginator = Paginator(user_allowance_requests, 8)
+    try:
+        allowance_requests = paginator.page(page)
+    except PageNotAnInteger:
+        allowance_requests = paginator.page(1)
+    except EmptyPage:
+        allowance_requests = paginator.page(paginator.num_pages)
+    
     return render(request, "allowances_page.html", {'allowance_requests': allowance_requests, 'len_allowance_requests': len_allowance_requests})
+    
+@login_required()
+def search_allowances(request):
+    user = request.user
+    allowance_search_date = request.GET['q']
+    date = convertStrToDateObj(allowance_search_date)
+    allowance_search_result = AllowancesRequest.objects.filter(allow_req_off_id=user, allow_req_date=date)
+   
+    page = request.GET.get('page', 1)
+    
+    paginator = Paginator(allowance_search_result, 8)
+    try:
+        allowance_requests = paginator.page(page)
+    except PageNotAnInteger:
+        allowance_requests = paginator.page(1)
+    except EmptyPage:
+        allowance_requests = paginator.page(paginator.num_pages)
+    
+    return render(request, "allowance_search.html", {'allowance_requests': allowance_requests})
+    
     
 @login_required()
 def submit_allowance_request(request):

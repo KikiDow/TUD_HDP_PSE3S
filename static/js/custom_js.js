@@ -1,7 +1,7 @@
 function validateDate(inputText) {
     if( inputText.value == "" ) {
             alert( "No date entered !!" );
-            document.rosterSearchForm.q.focus() ;
+            //document.rosterSearchForm.q.focus() ;
             return false;
         }
         
@@ -36,7 +36,7 @@ function validateDate(inputText) {
     }
     else {
         alert("Invalid date format!");
-        document.rosterSearchForm.q.focus();
+        //document.rosterSearchForm.q.focus();
         return false;
     }
 }

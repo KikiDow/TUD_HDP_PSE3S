@@ -11,11 +11,6 @@
     <div class="row justify-content-center">
         <h3> Previous Allowance Requests: </h3>
     </div>
-    {% if len_allowance_requests == 0 %}
-    <div class="row justify-content-center">
-        <p> You are yet to submit any allowance requests. </p>
-    </div>
-    {% else %}
     <div class="row justify-content-center">
         <div class="col-md-1"></div>
         <div class="col-md-3 col-sm-10 col-xs-10 justify-content-center">
@@ -68,38 +63,10 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-md-4"></div>
-        <div class="col-md-4 col-sm-10 col-xs-10 justify-content-center">
-            {% if allowance_requests.has_other_pages %}
-            <ul class="pagination justify-content_center">
-            {% if allowance_requests.has_previous %}
-                <li class="page-item"><a class="page-link text-dark" href="?page={{ allowance_requests.previous_page_number }}">&laquo;</a></li>
-            {% else %}
-                <li class="page-item page-link text-dark disabled"><span>&laquo;</span></li>
-            {% endif %}
-                {% for i in allowance_requests.paginator.page_range %}
-                    {% if i <= allowance_requests.number|add:3 and i >= allowance_requests.number|add:-3 and allowance_requests.number == i %}
-                        <li class="page-item active"><span class="page-link text-dark">{{ i }}<span class="sr-only bg-info">(current)</span></span></li>
-                    {% elif i <= allowance_requests.number|add:3 and i >= allowance_requests.number|add:-3 %}
-                        <li class="page-item"><a class="page-link text-dark" href="?page={{ i }}">{{ i }}</a></li>
-                    {% endif %}
-                {% endfor %}
-            {% if allowance_requests.has_next %}
-                <li class="page-item"><a class="page-link text-dark" href="?page={{ allowance_requests.next_page_number }}">&raquo;</a></li>
-            {% else %}
-                <li class="page-item page-link disabled"><span>&raquo;</span></li>
-            {% endif %}
-            </ul>
-            {% endif %}
+        <div class="col-md-4">
+            <a class="btn btn-info" href="{% url 'submit_allowance_request' %}"> Submit New Allowances Request </a>
         </div>
         <div class="col-md-4"></div>
-    </div>
-    {% endif %}
-    <div class="row justify-content-center">
-        <!--<div class="col-md-4"></div>
-        <div class="col-md-4"> -->
-            <a class="btn btn-info col-md-4 col-sm-6 col-xs-6" href="{% url 'submit_allowance_request' %}"> Submit New Allowances Request </a>
-        <!--</div>
-        <div class="col-md-4"></div>-->
     </div>
 </div>
 {% endblock %}
