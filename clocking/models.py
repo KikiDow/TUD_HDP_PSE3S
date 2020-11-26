@@ -138,7 +138,7 @@ class PersonalDetails(models.Model):
 	    return self.county
 	
 	def __str__(self):
-	    return "Personal Details for " + self.officer_pd
+	    return "Personal Details for " + str(self.officer_pd)
 	    
 class ManualClocking(models.Model):
 	mc_officer_id = models.ForeignKey(Account,related_name='mc_officer_id', on_delete=models.CASCADE)
@@ -159,4 +159,4 @@ class ManualClocking(models.Model):
 		
 		
 	def __str__(self):
-		return self.mc_officer_id + " manual clock for " + str(self.clocking_date)
+		return str(self.mc_officer_id) + " manual clock for " + str(self.clocking_date)
