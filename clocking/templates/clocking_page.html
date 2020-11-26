@@ -14,11 +14,68 @@
     {% endif %}
   </div>
   <div class="row">
-        <!-- CLOCKINGS & PAGINATION -->
+        <!-- SEARCH BAR -->
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-1"></div>
+        <div class="col-md-10 table-wrapper-scroll-y my-custom-scrollbar">
+            <table class="table table-striped table-dark mb-0">
+                <thead>
+                    <th>Date</th>
+                    <th>Shift</th>
+                    <th>Clock In</th>
+                    <th>Lunch Out</th>
+                    <th>Lunch In</th>
+                    <th>Clock Out</th>
+                    <!--<th><i class="fa fa-folder-open fa-lg"></i></th>-->
+                </thead>
+                <tbody>
+                    {% for users_day in users_ros %}
+                        <tr>
+                            <td>{{ users_day.roster_shift_date }}</td>
+                            {% if users_day.roster_shift_label == "Off" %}
+                                <td>{{ users_day.roster_shift_label }}</td>
+                            {% else %}
+                                <td>{{ users_day.roster_shift }}</td>
+                            {% endif %}
+                            <td>{{ users_day.clocking_in_time }}</td>
+                            <td>{{ users_day.lunch_out_time }}</td>
+                            <td>{{ users_day.lunch_in_time }}</td>
+                            <td>{{ users_day.clocking_out_time }}</td>
+                            <!--<td><a class="btn btn-info" href=""><i class="fa fa-eye"></i> View Request </a></td>-->
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <div class="row justify-content-center">
+        {% if users_ros.has_other_pages %}
+        <ul class="pagination">
+        {% if users_ros.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ users_ros.previous_page_number }}">&laquo;</a></li>
+        {% else %}
+            <li class="page-item disabled"><span>&laquo;</span></li>
+        {% endif %}
+            {% for i in users_ros.paginator.page_range %}
+                {% if i <= users_ros.number|add:3 and i >= users_ros.number|add:-3 and users_ros.number == i %}
+                    <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only bg-info">(current)</span></span></li>
+                {% elif i <= users_ros.number|add:3 and i >= users_ros.number|add:-3 %}
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+        {% if users_ros.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ users_ros.next_page_number }}">&raquo;</a></li>
+        {% else %}
+            <li class="page-item disabled"><span>&raquo;</span></li>
+        {% endif %}
+        </ul>
+    {% endif %}
     </div>
     <div class="row justify-content-center">
         <div class="col-md-4 col-sm-12 col-xs-12">
-            <a class="btn btn-info" href="{% 'manual_clocking' %}">Submit Manual Clock</a>
+            <a class="btn btn-info" href="{% url 'manual_clocking' %}">Submit Manual Clock</a>
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12">
             <a class="btn btn-info" href="">Clock Remotely</a>
@@ -31,7 +88,7 @@
     <div class="row justify-content-center">
         <div class="col-md-4"></div>
         <div class="col-md-4 col-sm-12 col-xs-12">
-            <a class="btn btn-info" href="{% 'view_submitted_manual_clockings' %}">View Submitted Manual Clockings</a>
+            <a class="btn btn-info" href="{% url 'view_submitted_manual_clockings' %}">View Submitted Manual Clockings</a>
         </div>
         <div class="col-md-4"></div>
     </div>

@@ -5,10 +5,12 @@ import datetime
 from .models import Quarter, Shift, RosterSideA, RosterSideB, Roster, PersonalDetails, ManualClocking
 from .forms import PersonalDetailsForm, ManualClockingForm, RejectManualClockingForm
 from django.contrib import messages
-from.utils import findRosterStartPoint, rosterPointerCheck
+from.utils import findRosterStartPoint, rosterPointerCheck, getStartPageForPagination
 from account.models import Account
 from notifications.signals import notify
 from notifications.models import Notification
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
 # Create your views here.
 
 def landing_page(request):
@@ -19,7 +21,23 @@ def landing_page(request):
 
 @login_required()
 def clocking_page(request):
-    return render(request, 'clocking_page.html')   
+    user = request.user
+    first_record = Roster.objects.filter(roster_officer_id=user).first()
+    first_day_of_users_roster = first_record.roster_shift_date
+    users_roster = Roster.objects.filter(roster_officer_id=user).order_by('id')
+    #Pagination
+    page_number = getStartPageForPagination(first_day_of_users_roster)
+    page = request.GET.get('page', page_number)
+    
+    paginator = Paginator(users_roster, 7)
+    try:
+        users_ros = paginator.page(page)
+    except PageNotAnInteger:
+        users_ros = paginator.page(1)
+    except EmptyPage:
+        users_ros = paginator.page(paginator.num_pages)
+        
+    return render(request, 'clocking_page.html', {'users_ros': users_ros})
     
 @login_required()
 def generate_quarters(request):
