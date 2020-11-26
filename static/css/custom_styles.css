@@ -47,3 +47,8 @@ display: block;
 td, th {
   text-align: center;
 }
+
+/* ------------------------------------------ BACKGROUND COLOR ON ACTIVE PAGINATION PAGE - */
+.pagination > .active > .a {
+  background-color: #5bc0de !Important;
+}
