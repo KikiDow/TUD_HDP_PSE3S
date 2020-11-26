@@ -39,6 +39,8 @@ footer {
 position: relative;
 height: 300px;
 overflow: auto;
+margin-top: 1vh;
+margin-bottom: 1vh;
 }
 .table-wrapper-scroll-y {
 display: block;
@@ -49,6 +51,20 @@ td, th {
 }
 
 /* ------------------------------------------ BACKGROUND COLOR ON ACTIVE PAGINATION PAGE - */
-.pagination > .active > .a {
-  background-color: #5bc0de !Important;
+.pagination > active > .a {
+  background-color: #5bc0de;
+}
+
+.page-item.active .page-link {
+  z-index: 0;
+  background-color: #5bc0de;
+  border: solid 1px #5bc0de;
+}
+
+/* ------------------------------------------ BUTTONS ------------------------------------ */
+.basic-button {
+  margin-top: 2px;
+  margin-bottom: 2px;
+  margin-left: 2px;
+  margin-right: 2px;
 }

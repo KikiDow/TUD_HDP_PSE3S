@@ -21,9 +21,9 @@
         <div class="col-md-7 col-sm-10 col-xs-10 justify-content-center">
             <form action="{% url 'search_roster' %}" method="get" name="rosterSearchForm" onsubmit = "return(validateDate(document.rosterSearchForm.q));">
                 <fieldset>
-                    <small><em>Enter the date in dd/mm/yyyy format:</em></small>
+                    <small><em>Enter the date in dd/mm/yyyy format: (e.g. 01/01/2021) </em></small>
                     <input type="text" name="q">
-                    <button class="btn btn-info btn-sm"  type="submit"><i class="fa fa-search"></i> Search</button>
+                    <button class="btn btn-info btn-sm"  type="submit"><i class="fa fa-search fa-xs"></i> Search</button>
                 </fieldset>
             </form>
         </div>
@@ -63,44 +63,10 @@
         </div>
         <div class="col-md-1"></div>
     </div>
-    <!--
     <div class="row justify-content-center">
-        <div class="col-md-2"></div>
-        <div class="col-md-8 col-sm-10 col-xs-10">
-            {% if users_ros.has_other_pages %}
-            <ul class="pagination">
-            {% if users_ros.has_previous %}
-                <li class="page-item"><a class="page-link text-dark" href="?page={{ users_ros.previous_page_number }}">&laquo;</a></li>
-            {% else %}
-                <li class="page-item page-link text-dark disabled"><span>&laquo;</span></li>
-            {% endif %}
-                {% for i in users_ros.paginator.page_range %}
-                    {% if i <= users_ros.number|add:3 and i >= users_ros.number|add:-3 and users_ros.number == i %}
-                        <li class="page-item active"><span class="page-link text-dark"><strong>{{ i }}<strong><span class="sr-only bg-info">(current)</span></span></li>
-                    {% elif i <= users_ros.number|add:3 and i >= users_ros.number|add:-3 %}
-                        <li class="page-item"><a class="page-link text-dark" href="?page={{ i }}"><strong>{{ i }}</strong></a></li>
-                    {% endif %}
-                {% endfor %}
-            {% if users_ros.has_next %}
-                <li class="page-item"><a class="page-link text-dark" href="?page={{ users_ros.next_page_number }}">&raquo;</a></li>
-            {% else %}
-                <li class="page-item page-link text-dark disabled"><span>&raquo;</span></li>
-            {% endif %}
-            </ul>
-            {% endif %}
-        </div>
-        <div class="col-md-2"></div>
-    </div> -->
-    <div class="row justify-content-center">
-        <div class="col-md-4 col-sm-12 col-xs-12">
-            <a class="btn btn-info" href="{% url 'manual_clocking' %}">Submit Manual Clock</a>
-        </div>
-        <div class="col-md-4 col-sm-12 col-xs-12">
-            <a class="btn btn-info" href="">Clock Remotely</a>
-        </div>
-        <div class="col-md-4 col-sm-12 col-xs-12">
-            <a class="btn btn-info" href="">Previous Manual Clockings</a>
-        </div>
+        <a class="btn btn-info basic-button col-md-3 col-sm-10 col-xs-10" href="{% url 'manual_clocking' %}">Submit Manual Clock</a>
+        <a class="btn btn-info basic-button col-md-3 col-sm-10 col-xs-10" href="">Clock Remotely</a>
+        <a class="btn btn-info basic-button col-md-3 col-sm-10 col-xs-10" href="">Previous Manual Clockings</a>
     </div>
     {% if user.is_staff %}
     <div class="row justify-content-center">
