@@ -284,3 +284,20 @@ def reject_manual_clock(request, pk):
         manual_clock_reject_form = RejectManualClockingForm(instance=manual_clock_being_rejected)
     return render(request, "reject_manual_clock.html", {'manual_clock_being_rejected': manual_clock_being_rejected, 'manual_clock_reject_form': manual_clock_reject_form})
     
+@login_required()
+def previous_manual_clockings(request):
+    user = request.user
+    user_manual_clocks = ManualClocking.objects.filter(mc_officer_id=user).order_by('-clocking_date')
+    len_manual_clocks = len(user_manual_clocks)
+    page = request.GET.get('page', 1)
+    
+    paginator = Paginator(user_manual_clocks, 8)
+    try:
+        my_manual_clocks = paginator.page(page)
+    except PageNotAnInteger:
+        my_manual_clocks = paginator.page(1)
+    except EmptyPage:
+        my_manual_clocks = paginator.page(paginator.num_pages)
+    
+    return render(request, "previous_manual_clockings.html", {'my_manual_clocks': my_manual_clocks, 'len_manual_clocks': len_manual_clocks})
+    
