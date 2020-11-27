@@ -202,6 +202,25 @@ def non_scheduled_ot_page(request):
     return render(request, "nsot_page.html", {'my_non_scheduled_ot_requests': my_non_scheduled_ot_requests, 'len_my_non_scheduled_ot_requests': len_my_non_scheduled_ot_requests})
     
 @login_required()
+def search_nsot(request):
+    user = request.user
+    nsot_search_date = request.GET['q']
+    date = convertStrToDateObj(nsot_search_date)
+    nsot_search_result = NonScheduledOvertimeRequest.objects.filter(nsot_off_id=user, nsot_date=date)
+   
+    page = request.GET.get('page', 1)
+    
+    paginator = Paginator(nsot_search_result, 8)
+    try:
+        my_non_scheduled_ot_requests = paginator.page(page)
+    except PageNotAnInteger:
+        my_non_scheduled_ot_requests = paginator.page(1)
+    except EmptyPage:
+        my_non_scheduled_ot_requests = paginator.page(paginator.num_pages)
+    
+    return render(request, "nsot_search.html", {'my_non_scheduled_ot_requests': my_non_scheduled_ot_requests})
+    
+@login_required()
 def submit_nsot_request(request):
     if request.method == "POST":
         nsot_req_form = NonScheduledOvertimeRequestForm(request.POST, request.FILES)
