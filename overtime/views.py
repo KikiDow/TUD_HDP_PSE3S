@@ -19,7 +19,7 @@ def overtime_page(request):
 @login_required()
 def allowances_page(request):
     user = request.user
-    user_allowance_requests = AllowancesRequest.objects.filter(allow_req_off_id=user.pk).order_by('-allow_req_date')
+    user_allowance_requests = AllowancesRequest.objects.filter(allow_req_off_id=user).order_by('-allow_req_date')
     len_allowance_requests = len(user_allowance_requests)
     page = request.GET.get('page', 1)
     
@@ -186,8 +186,19 @@ def reject_allowance_request(request, pk):
 @login_required()
 def non_scheduled_ot_page(request):
     user = request.user
-    my_non_scheduled_ot_requests = NonScheduledOvertimeRequest.objects.filter(nsot_off_id=user.pk)
-    len_my_non_scheduled_ot_requests = len(my_non_scheduled_ot_requests)
+    user_non_scheduled_ot_requests = NonScheduledOvertimeRequest.objects.filter(nsot_off_id=user).order_by('-nsot_date')
+    len_my_non_scheduled_ot_requests = len(user_non_scheduled_ot_requests)
+    
+    page = request.GET.get('page', 1)
+    
+    paginator = Paginator(user_non_scheduled_ot_requests, 8)
+    try:
+        my_non_scheduled_ot_requests = paginator.page(page)
+    except PageNotAnInteger:
+        my_non_scheduled_ot_requests = paginator.page(1)
+    except EmptyPage:
+        my_non_scheduled_ot_requests = paginator.page(paginator.num_pages)
+        
     return render(request, "nsot_page.html", {'my_non_scheduled_ot_requests': my_non_scheduled_ot_requests, 'len_my_non_scheduled_ot_requests': len_my_non_scheduled_ot_requests})
     
 @login_required()
