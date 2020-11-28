@@ -11,11 +11,6 @@
     <div class="row justify-content-center">
         <h3> Previous Manual Clockings: </h3>
     </div>
-    {% if len_manual_clocks == 0 %}
-    <div class="row justify-content-center">
-        <p> You are yet to submit any manual clockings. </p>
-    </div>
-    {% else %}
     <div class="row justify-content-center">
         <div class="col-md-1"></div>
         <div class="col-md-3 col-sm-10 col-xs-10 justify-content-center">
@@ -65,33 +60,5 @@
         </div>
         <div class="col-md-2"></div>
     </div>
-    <div class="row justify-content-center">
-        <div class="col-md-4"></div>
-        <div class="col-md-4 col-sm-10 col-xs-10 justify-content-center">
-            {% if my_manual_clocks.has_other_pages %}
-            <ul class="pagination justify-content_center">
-            {% if my_manual_clocks.has_previous %}
-                <li class="page-item"><a class="page-link text-dark" href="?page={{ my_manual_clocks.previous_page_number }}">&laquo;</a></li>
-            {% else %}
-                <li class="page-item page-link text-dark disabled"><span>&laquo;</span></li>
-            {% endif %}
-                {% for i in my_manual_clocks.paginator.page_range %}
-                    {% if i <= my_manual_clocks.number|add:3 and i >= my_manual_clocks.number|add:-3 and my_manual_clocks.number == i %}
-                        <li class="page-item active"><span class="page-link text-dark">{{ i }}<span class="sr-only bg-info">(current)</span></span></li>
-                    {% elif i <= my_manual_clocks.number|add:3 and i >= my_manual_clocks.number|add:-3 %}
-                        <li class="page-item"><a class="page-link text-dark" href="?page={{ i }}">{{ i }}</a></li>
-                    {% endif %}
-                {% endfor %}
-            {% if my_manual_clocks.has_next %}
-                <li class="page-item"><a class="page-link text-dark" href="?page={{ my_manual_clocks.next_page_number }}">&raquo;</a></li>
-            {% else %}
-                <li class="page-item page-link disabled"><span>&raquo;</span></li>
-            {% endif %}
-            </ul>
-            {% endif %}
-        </div>
-        <div class="col-md-4"></div>
-    </div>
-    {% endif %}
 </div>
 {% endblock %}
