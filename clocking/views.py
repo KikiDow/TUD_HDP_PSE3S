@@ -301,3 +301,21 @@ def previous_manual_clockings(request):
     
     return render(request, "previous_manual_clockings.html", {'my_manual_clocks': my_manual_clocks, 'len_manual_clocks': len_manual_clocks})
     
+@login_required()
+def search_manual_clocks(request):
+    user = request.user
+    mc_search_date = request.GET['q']
+    date = convertStrToDateObj(mc_search_date)
+    mc_search_result = ManualClocking.objects.filter(mc_officer_id=user, clocking_date=date)
+   
+    page = request.GET.get('page', 1)
+    
+    paginator = Paginator(mc_search_result, 8)
+    try:
+        my_manual_clocks = paginator.page(page)
+    except PageNotAnInteger:
+        my_manual_clocks = paginator.page(1)
+    except EmptyPage:
+        my_manual_clocks = paginator.page(paginator.num_pages)
+    
+    return render(request, "manual_clock_search.html", {'my_manual_clocks': my_manual_clocks})
