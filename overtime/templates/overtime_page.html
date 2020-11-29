@@ -12,8 +12,8 @@
             <h1>Upcoming Overtime</h1>
         </div>
         {% if length_upcoming_ot == 0 %}
-        <div class="row justify-content-center info-border">
-            <p>You have no upcoming overtime.</p>
+        <div class="row justify-content-center">
+            <p class="info-border">You have no upcoming overtime.</p>
         </div>
         {% else %}
         <div class="row justify-content-center">
@@ -77,6 +77,74 @@
     </div>
         {% endif %}
     </div>
+    <div class="row justify-content-center">
+            <h1>Previous Overtime</h1>
+        </div>
+        {% if length_previous_ot == 0 %}
+        <div class="row justify-content-center info-border">
+            <p>You have no previous overtime to display.</p>
+        </div>
+        {% else %}
+        <div class="row justify-content-center">
+            <div class="col-md-2"></div>
+            <div class="col-md-8 table-wrapper-scroll-y my-custom-scrollbar">
+                <table class="table table-striped table-dark mb-0">
+                    <thead>
+                        <th>Date</th>
+                        <th>Shift</th>
+                        <th>Recall</th>
+                        <th>Required</th>
+                    </thead>
+                    <tbody>
+                        {% for previous_ot_day in previous_ot %}
+                            <tr>
+                                <td>{{ previous_ot_day.ot_date }}</td>
+                                <td>{{ previous_ot_day.ot_shift_id }}</td>
+                                {% if previous_ot_day.ot_recall == True %}
+                                    <td><i class="fa fa-check-circle-o fa-lg"></i></td>
+                                {% else %}
+                                    <td><i class="fa fa-times-circle fa-lg"></i></td>
+                                {% endif %}
+                                {% if previous_ot_day.ot_requirement == True %}
+                                    <td><i class="fa fa-check-circle-o fa-lg"></i></td>
+                                {% else %}
+                                    <td><i class="fa fa-times-circle fa-lg"></i></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row justify-content-center">
+        <div class="col-md-4"></div>
+        <div class="col-md-4 col-sm-10 col-xs-10 justify-content-center">
+            {% if previous_ot.has_other_pages %}
+            <ul class="pagination justify-content_center">
+            {% if previous_ot.has_previous %}
+                <li class="page-item"><a class="page-link text-dark" href="?page={{ previous_ot.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="page-item page-link text-dark disabled"><span>&laquo;</span></li>
+            {% endif %}
+                {% for i in previous_ot.previous_paginator.page_range %}
+                    {% if i <= previous_ot.number|add:3 and i >= previous_ot.number|add:-3 and previous_ot.number == i %}
+                        <li class="page-item active"><span class="page-link text-dark">{{ i }}<span class="sr-only bg-info">(current)</span></span></li>
+                    {% elif i <= previous_ot.number|add:3 and i >= previous_ot.number|add:-3 %}
+                        <li class="page-item"><a class="page-link text-dark" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% if previous_ot.has_next %}
+                <li class="page-item"><a class="page-link text-dark" href="?page={{ previous_ot.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="page-item page-link disabled"><span>&raquo;</span></li>
+            {% endif %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+        {% endif %}
     <div class="row justify-content-center">
         <a class="btn btn-info col-xl-4 col-lg-4 col-md-4 col-sm-10 col-xs-10 basic-button" href="{% url 'availability_page' %}"> Availability </a>
         <a class="btn btn-info col-xl-4 col-lg-4 col-md-4 col-sm-10 col-xs-10 basic-button" href="{% url 'non_scheduled_ot_page' %}"> Non Scheduled Overtime </a>
