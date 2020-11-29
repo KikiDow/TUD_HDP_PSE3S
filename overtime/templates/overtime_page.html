@@ -8,29 +8,89 @@
     </div>
 </div>
 <div class="container">
-    <div class="row">
-        <!-- REPORT CARD -->
+        <div class="row justify-content-center">
+            <h1>Upcoming Overtime</h1>
+        </div>
+        {% if length_upcoming_ot == 0 %}
+        <div class="row justify-content-center info-border">
+            <p>You have no upcoming overtime.</p>
+        </div>
+        {% else %}
+        <div class="row justify-content-center">
+            <div class="col-md-2"></div>
+            <div class="col-md-8 table-wrapper-scroll-y my-custom-scrollbar">
+                <table class="table table-striped table-dark mb-0">
+                    <thead>
+                        <th>Date</th>
+                        <th>Shift</th>
+                        <th>Recall</th>
+                        <th>Required</th>
+                    </thead>
+                    <tbody>
+                        {% for ot_day in upcoming_ot %}
+                            <tr>
+                                <td>{{ ot_day.ot_date }}</td>
+                                <td>{{ ot_day.ot_shift_id }}</td>
+                                {% if ot_day.ot_recall == True %}
+                                    <td><i class="fa fa-check-circle-o fa-lg"></i></td>
+                                {% else %}
+                                    <td><i class="fa fa-times-circle fa-lg"></i></td>
+                                {% endif %}
+                                {% if ot_day.ot_requirement == True %}
+                                    <td><i class="fa fa-check-circle-o fa-lg"></i></td>
+                                {% else %}
+                                    <td><i class="fa fa-times-circle fa-lg"></i></td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <div class="row justify-content-center">
+        <div class="col-md-4"></div>
+        <div class="col-md-4 col-sm-10 col-xs-10 justify-content-center">
+            {% if upcoming_ot.has_other_pages %}
+            <ul class="pagination justify-content_center">
+            {% if upcoming_ot.has_previous %}
+                <li class="page-item"><a class="page-link text-dark" href="?page={{ upcoming_ot.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="page-item page-link text-dark disabled"><span>&laquo;</span></li>
+            {% endif %}
+                {% for i in upcoming_ot.upcoming_paginator.page_range %}
+                    {% if i <= upcoming_ot.number|add:3 and i >= upcoming_ot.number|add:-3 and upcoming_ot.number == i %}
+                        <li class="page-item active"><span class="page-link text-dark">{{ i }}<span class="sr-only bg-info">(current)</span></span></li>
+                    {% elif i <= upcoming_ot.number|add:3 and i >= upcoming_ot.number|add:-3 %}
+                        <li class="page-item"><a class="page-link text-dark" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% if upcoming_ot.has_next %}
+                <li class="page-item"><a class="page-link text-dark" href="?page={{ upcoming_ot.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="page-item page-link disabled"><span>&raquo;</span></li>
+            {% endif %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+        {% endif %}
     </div>
     <div class="row justify-content-center">
-        <div class="col-md-4 col-sm-12 col-xs-12">
-            <a class="btn btn-info" href="{% url 'availability_page' %}"> Availability </a>
-        </div>
-        <div class="col-md-4 col-sm-12 col-xs-12">
-            <a class="btn btn-info" href="{% url 'non_scheduled_ot_page' %}"> Non Scheduled Overtime </a>
-        </div>
-        <div class="col-md-4 col-sm-12 col-xs-12">
-            <a class="btn btn-info" href="{% url 'allowances_page' %}"> Allowances </a>
-        </div>
+        <a class="btn btn-info col-xl-4 col-lg-4 col-md-4 col-sm-10 col-xs-10 basic-button" href="{% url 'availability_page' %}"> Availability </a>
+        <a class="btn btn-info col-xl-4 col-lg-4 col-md-4 col-sm-10 col-xs-10 basic-button" href="{% url 'non_scheduled_ot_page' %}"> Non Scheduled Overtime </a>
+        <a class="btn btn-info col-xl-4 col-lg-4 col-md-4 col-sm-10 col-xs-10 basic-button" href="{% url 'allowances_page' %}"> Allowances </a>
     </div>
     {% if user.is_staff %}
     <div class="row justify-content-center">
-        <div class="col-md-4 col-sm-12 col-xs-12">
+        <div class="col-md-4 col-sm-10 col-xs-10">
              <a class="btn btn-info" href="{% url 'view_staff_nsot_requests' %}">View Staff NSOT Requests </a>
         </div>
-        <div class="col-md-4 col-sm-12 col-xs-12">
+        <div class="col-md-4 col-sm-10 col-xs-10">
              <a class="btn btn-info" href="{% url 'view_staff_allowance_requests' %}">View Staff Allowance Requests</a>
         </div>
-        <div class="col-md-4 col-sm-12 col-xs-12">
+        <div class="col-md-4 col-sm-10 col-xs-10">
              <a class="btn btn-info" href="{% url 'assign_ot_date' %}"> Assign Overtime </a>
         </div>
     </div>

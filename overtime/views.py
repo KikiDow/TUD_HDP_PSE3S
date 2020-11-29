@@ -14,7 +14,39 @@ from clocking.utils import convertStrToDateObj
 # Create your views here.
 @login_required()
 def overtime_page(request):
-    return render(request, "overtime_page.html")
+    user = request.user
+    users_overtime = Overtime.objects.filter(ot_officer_id=user)
+    todays_date = datetime.date.today()
+    upcoming_overtime = []
+    previous_overtime = []
+    for ot in users_overtime:
+        if ot.ot_date <= todays_date:
+            previous_overtime.append(ot)
+        else:
+            upcoming_overtime.append(ot)
+            
+    length_upcoming_ot = len(upcoming_overtime)
+    length_previous_ot = len(previous_overtime)
+    
+    upcoming_page = request.GET.get('upcoming_page', 1)
+    upcoming_paginator = Paginator(upcoming_overtime, 8)
+    try:
+        upcoming_ot = upcoming_paginator.page(upcoming_page)
+    except PageNotAnInteger:
+        upcoming_ot = upcoming_paginator.page(1)
+    except EmptyPage:
+        upcoming_ot = upcoming_paginator.page(upcoming_paginator.num_pages)
+        
+    previous_page = request.GET.get('previous_page', 1)
+    previous_paginator = Paginator(previous_overtime, 8)
+    try:
+        previous_ot = previous_paginator.page(previous_page)
+    except PageNotAnInteger:
+        previous_ot = previous_paginator.page(1)
+    except EmptyPage:
+        previous_ot = previous_paginator.page(previous_paginator.num_pages)
+        
+    return render(request, "overtime_page.html", {'upcoming_ot': upcoming_ot, 'previous_ot': previous_ot, 'length_upcoming_ot': length_upcoming_ot, 'length_previous_ot': length_previous_ot})
     
 @login_required()
 def allowances_page(request):
