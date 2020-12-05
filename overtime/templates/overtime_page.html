@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_tags %}
 {% block content %}
 <div class="jumbotron jumbotron-fluid bg-info text-white">
   <div class="container">
@@ -85,10 +86,10 @@
             <p>You have no previous overtime to display.</p>
         </div>
         {% else %}
-        <div class="row justify-content-center">
+        <div id="previous_overtime_section" class="row justify-content-center">
             <div class="col-md-1"></div>
             <div class="col-md-3 col-sm-10 col-xs-10 justify-content-center">
-                <a class="btn btn-info btn-sm" href="">Most Recent</a>
+                <a class="btn btn-info btn-sm" href="{% anchor 'overtime_page' 'previous_overtime_section' %}">Most Recent</a>
             </div>
             <div class="col-md-7 col-sm-10 col-xs-10 justify-content-center">
                 <form action="{% url 'search_previous_ot' %}" method="get" name="previousOvertimeSearchForm" onsubmit = "return(validateDate(document.previousOvertimeSearchForm.q));">
