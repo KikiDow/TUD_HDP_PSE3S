@@ -1,5 +1,5 @@
 from django.conf.urls import url, include
-from .views import overtime_page, allowances_page, submit_allowance_request, view_allowance_request, edit_allowance_request, delete_allowance_request, view_staff_allowance_requests, accept_allowance_request, reject_allowance_request, non_scheduled_ot_page, submit_nsot_request, view_non_scheduled_overtime_request, delete_nsot_request, edit_nsot_request, view_staff_nsot_requests, accept_nsot_request, reject_nsot_request, availability_page, submit_availability_sheet, view_availability_sheet, delete_availability_sheet, assign_ot_date, assign_ot_recall, assign_ot_require, search_allowances, search_nsot
+from .views import overtime_page, allowances_page, submit_allowance_request, view_allowance_request, edit_allowance_request, delete_allowance_request, view_staff_allowance_requests, accept_allowance_request, reject_allowance_request, non_scheduled_ot_page, submit_nsot_request, view_non_scheduled_overtime_request, delete_nsot_request, edit_nsot_request, view_staff_nsot_requests, accept_nsot_request, reject_nsot_request, availability_page, submit_availability_sheet, view_availability_sheet, delete_availability_sheet, assign_ot_date, assign_ot_recall, assign_ot_require, search_allowances, search_nsot, search_previous_ot
 
 urlpatterns = [
     url(r'^overtime_page/$', overtime_page, name='overtime_page'),
@@ -28,4 +28,5 @@ urlpatterns = [
     url(r'^(?P<date_selected>\d{4}-\d{2}-\d{2})/assign_ot_require/$', assign_ot_require, name='assign_ot_require'),
     url(r'^search_allowances/$', search_allowances, name='search_allowances'),
     url(r'^search_nsot/$', search_nsot, name='search_nsot'),
+    url(r'^search_previous_ot/$', search_previous_ot, name='search_previous_ot'),
 ]

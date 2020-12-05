@@ -12,8 +12,8 @@
             <h1>Upcoming Overtime</h1>
         </div>
         {% if length_upcoming_ot == 0 %}
-        <div class="row justify-content-center">
-            <p class="info-border">You have no upcoming overtime.</p>
+        <div class="row justify-content-center info-border">
+            <p>You have no upcoming overtime.</p>
         </div>
         {% else %}
         <div class="row justify-content-center">
@@ -85,6 +85,22 @@
             <p>You have no previous overtime to display.</p>
         </div>
         {% else %}
+        <div class="row justify-content-center">
+            <div class="col-md-1"></div>
+            <div class="col-md-3 col-sm-10 col-xs-10 justify-content-center">
+                <a class="btn btn-info btn-sm" href="">Most Recent</a>
+            </div>
+            <div class="col-md-7 col-sm-10 col-xs-10 justify-content-center">
+                <form action="{% url 'search_previous_ot' %}" method="get" name="previousOvertimeSearchForm" onsubmit = "return(validateDate(document.previousOvertimeSearchForm.q));">
+                    <fieldset>
+                        <small><em>Enter the date in dd/mm/yyyy format: (e.g. 01/01/2021) </em></small>
+                        <input type="text" name="q">
+                        <button class="btn btn-info btn-sm"  type="submit"><i class="fa fa-search fa-xs"></i> Search</button>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
         <div class="row justify-content-center">
             <div class="col-md-2"></div>
             <div class="col-md-8 table-wrapper-scroll-y my-custom-scrollbar">

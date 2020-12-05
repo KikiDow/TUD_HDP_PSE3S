@@ -47,7 +47,26 @@ def overtime_page(request):
         previous_ot = previous_paginator.page(previous_paginator.num_pages)
         
     return render(request, "overtime_page.html", {'upcoming_ot': upcoming_ot, 'previous_ot': previous_ot, 'length_upcoming_ot': length_upcoming_ot, 'length_previous_ot': length_previous_ot})
+
+@login_required()
+def search_previous_ot(request):
+    user = request.user
+    previous_ot_search_date = request.GET['q']
+    date = convertStrToDateObj(previous_ot_search_date)
+    previous_ot_search_result = Overtime.objects.filter(ot_officer_id=user, ot_date=date)
     
+    page = request.GET.get('page', 1)
+    
+    paginator = Paginator(previous_ot_search_result, 8)
+    try:
+        previous_ot = paginator.page(page)
+    except PageNotAnInteger:
+        previous_ot = paginator.page(1)
+    except EmptyPage:
+        previous_ot = paginator.page(paginator.num_pages)
+    
+    return render(request, "previous_ot_search.html", {'previous_ot': previous_ot})
+
 @login_required()
 def allowances_page(request):
     user = request.user
