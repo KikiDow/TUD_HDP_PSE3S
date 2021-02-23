@@ -69,6 +69,10 @@ td, th {
   margin-right: 2px;
 }
 
+.absence-buttons {
+  margin-top: 10px;
+}
+
 /* ------------------------------------------ INFO PARAGRAPH BORDER ---------------------- */
 .info-border {
   border: solid 2px #5bc0de;
