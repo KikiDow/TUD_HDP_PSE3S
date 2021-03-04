@@ -14,12 +14,14 @@
     </div>
     {% else %}
     <div class="row justify-content-center">
-        {% for post in noticeboard_posts %}
+        {% for post in noticeboard %}
         <div class="card bg-light mb-3">
             <div class="card-header">{{ post.postee_id }} is looking to exchange {{ post.possible_exchange_date }} on a {{ post.possible_exchange_shift_id }} shift. </div>
             <div class="card-body">
                 <p><strong>Content: </strong>{{ post.post_content }}</p>
-                <p><strong>Likes: </strong> {{ post.likes }}</p>
+                {% if user == post.postee_id %}
+                    <p><strong>Likes: </strong> {{ post.likes }}</p>
+                {% endif %}
                 {% if user != post.postee_id %}
                     <a class="btn btn-info btn-sm" href="{% url 'like_post' post.id %}"> Interested in Exchange </a>
                 {% endif %}
@@ -49,6 +51,29 @@
             </div>
         </div>
         {% endfor %}
+        <div class="row">
+        {% if noticeboard.has_other_pages %}
+            <ul class="pagination">
+            {% if noticeboard.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ users_ros.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="page-item disabled"><span>&laquo;</span></li>
+            {% endif %}
+                {% for i in noticeboard.paginator.page_range %}
+                    {% if i <= noticeboard.number|add:2 and i >= noticeboard.number|add:-2 and noticeboard.number == i %}
+                        <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only bg-info">(current)</span></span></li>
+                    {% elif i <= noticeboard.number|add:2 and i >= noticeboard.number|add:-2 %}
+                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% if noticeboard.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ noticeboard.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="page-item disabled"><span>&raquo;</span></li>
+            {% endif %}
+            </ul>
+        {% endif %}
+        </div>
     </div>
     {% endif %}
     <div class="row justify-content-center">

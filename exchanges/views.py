@@ -8,6 +8,7 @@ from datetime import datetime
 from .forms import SubmitExchangeRequestExchangingOfficerForm, SubmitExchangeRequestReplacingOfficerForm, SubmitExchangeRequestExchangingOfficerCheckForm, PostForm, CancelExchangeRequestForm
 from clocking.models import Roster, Shift
 from notifications.signals import notify
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 @login_required()
@@ -144,10 +145,23 @@ def submit_exchange_exchange_off_confirm(request, pk):
 
 @login_required()
 def exchange_noticeboard(request):
-    noticeboard_posts = Post.objects.filter(post_led_to_exchange=False) #Post will be filtered that if a exchange is confirmed it will not show.
+    todays_date = dt.date.today()
+    noticeboard_posts = Post.objects.filter(post_led_to_exchange=False).filter(possible_exchange_date__gt=todays_date)
+    #
     likes = Like.objects.all()
     len_posts = len(noticeboard_posts)
-    return render(request, "exchange_noticeboard.html", {'noticeboard_posts': noticeboard_posts, 'likes': likes, 'len_posts': len_posts})
+    #Pagination
+    page_number = 1
+    page = request.GET.get('page', page_number)
+    
+    paginator = Paginator(noticeboard_posts, 2)
+    try:
+        noticeboard = paginator.page(page)
+    except PageNotAnInteger:
+        noticeboard = paginator.page(1)
+    except EmptyPage:
+        noticeboard = paginator.page(paginator.num_pages)
+    return render(request, "exchange_noticeboard.html", {'noticeboard': noticeboard, 'likes': likes, 'len_posts': len_posts})
     
 @login_required()
 def submit_post(request):
