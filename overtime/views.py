@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.conf import settings
 from .models import AllowancesRequest, NonScheduledOvertimeRequest, ShortOvertime, OvertimePerQtr, AvailabilitySheet, ShortTermAvailabilty, Overtime
 from .forms import AllowancesRequestForm, NonScheduledOvertimeRequestForm, RejectAllowanceRequestForm, RejectNSOTForm, AvailabilitySheetForm, AssignOvertimeDateForm, AssignRecallStaffForm, AssignRequireStaffForm, ShortTermAvailabilityForm
-import datetime
+import datetime as dt
 from annual_leave.utils import getLeaveAmount
 from .utils import getQtrDateIn, getNextQtr, getOfficerInstance
 from notifications.signals import notify
@@ -282,8 +282,8 @@ def submit_nsot_request(request):
                 return render(request, "submit_nsot_request.html", {'nsot_req_form': nsot_req_form})
             else:
                 nsot_request = nsot_req_form.save()
-                date_time_start = datetime.datetime.combine(nsot_request.nsot_date, nsot_request.nsot_start_time)
-                date_time_end = datetime.datetime.combine(nsot_request.nsot_date, nsot_request.nsot_end_time)
+                date_time_start = dt.datetime.combine(nsot_request.nsot_date, nsot_request.nsot_start_time)
+                date_time_end = dt.datetime.combine(nsot_request.nsot_date, nsot_request.nsot_end_time)
                 nsot_difference_as_delta = date_time_end - date_time_start
                 nsot_request.ot_hours_claimed = getLeaveAmount(nsot_difference_as_delta)
                 nsot_request.save()

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load bootstrap_tags %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-info text-white">
+  <div class="container">
+      <div class="row justify-content-center">
+        <h1 class="display-4">Short Term Availability</h1>
+      </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <form method="POST" enctype="multipart/form-data">
+                <fieldset class="form-group">
+                    <legend>Enter the date you wish to make yourself available in the short-term below.</legend>
+                    {% csrf_token %}
+                    {{ short_term_availability_form | as_bootstrap }}
+                    <button class="btn btn-info" type="submit">Submit</button>
+                </fieldset>
+            </form>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+{% endblock %}
