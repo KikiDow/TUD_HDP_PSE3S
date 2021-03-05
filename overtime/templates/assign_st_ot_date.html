@@ -4,7 +4,7 @@
 <div class="jumbotron jumbotron-fluid bg-info text-white">
   <div class="container">
       <div class="row justify-content-center">
-        <h1 class="display-4">Assign Overtime</h1>
+        <h1 class="display-4">Assign Short-Term Overtime</h1>
       </div>
     </div>
 </div>
@@ -16,7 +16,7 @@
                 <fieldset class="form-group">
                     <legend>Select the date you want to recall for. Then select Go to find out what staff are available. </legend>
                     {% csrf_token %}
-                    {{ assign_ot_date_form | as_bootstrap }}
+                    {{ assign_st_ot_date_form | as_bootstrap }}
                     <button class="btn btn-info" type="submit">Go</button>
                 </fieldset>
             </form>
