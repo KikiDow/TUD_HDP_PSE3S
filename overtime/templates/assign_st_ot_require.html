@@ -14,21 +14,14 @@
         <div class="col-md-6">
             <form method="POST" enctype="multipart/form-data">
                 <fieldset class="form-group">
-                    <legend>Now select the officer and shift you want to recall. If no staff appear, then no one has made themselves available for the date selected. </legend>
+                    <legend>Select the officer and shift that you need to require.</legend>
                     {% csrf_token %}
-                    {{ assign_st_recall_form | as_bootstrap }}
-                    <button class="btn btn-info" type="submit">Create Short Term Recall</button>
+                    {{ assign_st_require_form | as_bootstrap }}
+                    <button class="btn btn-info" type="submit">Create Short Term Requirement</button>
                 </fieldset>
             </form>
         </div>
         <div class="col-md-3"></div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-md-4"></div>
-        <div class="col-md-4 col-sm-10 col-xs-10">
-            <a class="btn btn-info" href="{% url 'assign_st_ot_require' st_date_selected %}"> Require Staff </a>
-        </div>
-        <div class="col-md-4"></div>
     </div>
 </div>
 {% endblock %}

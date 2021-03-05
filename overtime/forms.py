@@ -251,3 +251,22 @@ class AssignShortTermRecallStaffForm(forms.Form):
             self.fields['assign_shift'] = forms.ChoiceField(widget=forms.Select, disabled=True)
         else:
             self.fields['assign_shift'] = forms.ModelChoiceField(widget=forms.Select, queryset=Shift.objects.all())
+            
+class AssignShortTermRequireStaffForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        initial_arguments = kwargs.get('initial', None)
+        updated_initial = {}
+        selected_st_date_as_string = initial_arguments.get('selected_st_require_date', None)
+        selected_st_date_as_dt_obj = datetime.strptime(selected_st_date_as_string, "%Y-%m-%d")
+        selected_st_require_date = dt.date(selected_st_date_as_dt_obj.year, selected_st_date_as_dt_obj.month, selected_st_date_as_dt_obj.day)
+        updated_initial['selected_st_require_date'] = selected_st_require_date
+        kwargs.update(initial=updated_initial)
+        super(AssignShortTermRequireStaffForm, self).__init__(*args, **kwargs)
+        
+        self.fields['selected_st_require_date'] = forms.DateField(disabled=True)
+        
+        officers_that_can_be_required = Roster.objects.filter(roster_shift_date__contains=selected_st_require_date).filter(roster_due_on=False)
+        off_to_require_query_choices = [('', 'select staff member to require')] + [(id.roster_officer_id, id.roster_officer_id) for id in officers_that_can_be_required]
+        self.fields['officers_for_require'] = forms.ChoiceField(widget=forms.Select, choices=off_to_require_query_choices)
+        
+        self.fields['assign_require_shift'] = forms.ModelChoiceField(widget=forms.Select, queryset=Shift.objects.all())
