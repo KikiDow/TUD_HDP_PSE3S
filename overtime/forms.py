@@ -221,3 +221,33 @@ class ShortTermAvailabilityForm(forms.ModelForm):
         
 class AssignShortTermOTDateForm(forms.Form):
     date_for_st_assignment = forms.DateField(required=True, widget=forms.DateInput(attrs={'type': 'date'}))
+    
+class AssignShortTermRecallStaffForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        initial_arguments = kwargs.get('initial', None)
+        updated_initial = {}
+        selected_st_dat = initial_arguments.get('selected_st_date', None)
+        selected_st_date_1 = datetime.strptime(selected_st_dat, "%Y-%m-%d")
+        selected_st_date = dt.date(selected_st_date_1.year, selected_st_date_1.month, selected_st_date_1.day)
+        updated_initial['selected_st_date'] = selected_st_date
+        kwargs.update(initial=updated_initial)
+        
+        super(AssignShortTermRecallStaffForm, self).__init__(*args, **kwargs)
+        qtr = getQtrDateIn(selected_st_date)
+        no_staff_available_for_selected_date = False
+        
+        self.fields['selected_st_date'] = forms.DateField(disabled=True)
+        
+        st_query = ShortTermAvailabilty.objects.filter(st_availability_date=selected_st_date)
+        length_st_query = len(st_query)
+        if length_st_query == 0:
+            no_staff_available_for_selected_date = True
+            self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, disabled=True, help_text="No staff have made themselves available for " + str(selected_st_date) + ".")
+        else:
+            st_off_query_choices = [('', 'select available staff member')] + [(id.st_availability_off_id, id.st_availability_off_id) for id in st_query]
+            self.fields['officers_available'] = forms.ChoiceField(widget=forms.Select, choices=st_off_query_choices)
+            
+        if no_staff_available_for_selected_date == True:
+            self.fields['assign_shift'] = forms.ChoiceField(widget=forms.Select, disabled=True)
+        else:
+            self.fields['assign_shift'] = forms.ModelChoiceField(widget=forms.Select, queryset=Shift.objects.all())

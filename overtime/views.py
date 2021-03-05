@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.conf import settings
 from .models import AllowancesRequest, NonScheduledOvertimeRequest, ShortOvertime, OvertimePerQtr, AvailabilitySheet, ShortTermAvailabilty, Overtime
-from .forms import AllowancesRequestForm, NonScheduledOvertimeRequestForm, RejectAllowanceRequestForm, RejectNSOTForm, AvailabilitySheetForm, AssignOvertimeDateForm, AssignRecallStaffForm, AssignRequireStaffForm, ShortTermAvailabilityForm, AssignShortTermOTDateForm
+from .forms import AllowancesRequestForm, NonScheduledOvertimeRequestForm, RejectAllowanceRequestForm, RejectNSOTForm, AvailabilitySheetForm, AssignOvertimeDateForm, AssignRecallStaffForm, AssignRequireStaffForm, ShortTermAvailabilityForm, AssignShortTermOTDateForm, AssignShortTermRecallStaffForm
 import datetime as dt
 from annual_leave.utils import getLeaveAmount
 from .utils import getQtrDateIn, getNextQtr, getOfficerInstance
@@ -550,3 +550,26 @@ def assign_st_ot_date(request):
     else:
         assign_st_ot_date_form = AssignShortTermOTDateForm()
     return render(request, "assign_st_ot_date.html", {'assign_st_ot_date_form': assign_st_ot_date_form})
+    
+@login_required()
+def assign_st_ot_recall(request, chosen_st_date):
+    st_date_selected = chosen_st_date
+    if request.method == "POST":
+        assign_st_recall_form = AssignShortTermRecallStaffForm(request.POST, request.FILES, initial={'selected_st_date': st_date_selected})
+        officers_available = request.POST.get('officers_available')
+        #len_available_officers = available_officers.count()
+        assign_st_recall_form.fields['officers_available'].choices = [(officers_available, officers_available)]
+        if assign_st_recall_form.is_valid():
+            officer = assign_st_recall_form.cleaned_data.get("officers_available")
+            officer_instance = getOfficerInstance(officer)
+            date = assign_st_recall_form.cleaned_data.get("selected_st_date")
+            quarter = getQtrDateIn(date)
+            shift = assign_st_recall_form.cleaned_data.get("assign_shift")
+            new_overtime = Overtime(ot_officer_id=officer_instance, ot_qtr_id=quarter, ot_date=date, ot_shift_id=shift, ot_recall=True)
+            new_overtime.save()
+            #NOTIFICATION TO STAFF MEMBER OF SHORT TERM RECALL
+            messages.success(request, "Staff successfully recalled in the short-term.")
+            return redirect(overtime_page)
+    else:
+        assign_st_recall_form = AssignShortTermRecallStaffForm(initial = {'selected_st_date': st_date_selected})
+    return render(request, "assign_st_ot_recall.html", {'assign_st_recall_form': assign_st_recall_form, 'st_date_selected': st_date_selected})

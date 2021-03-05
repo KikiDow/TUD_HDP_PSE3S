@@ -1,5 +1,5 @@
 from django.conf.urls import url, include
-from .views import overtime_page, allowances_page, submit_allowance_request, view_allowance_request, edit_allowance_request, delete_allowance_request, view_staff_allowance_requests, accept_allowance_request, reject_allowance_request, non_scheduled_ot_page, submit_nsot_request, view_non_scheduled_overtime_request, delete_nsot_request, edit_nsot_request, view_staff_nsot_requests, accept_nsot_request, reject_nsot_request, availability_page, submit_availability_sheet, view_availability_sheet, delete_availability_sheet, assign_ot_date, assign_ot_recall, assign_ot_require, search_allowances, search_nsot, search_previous_ot, submit_st_availability, delete_st_availability_submission, assign_st_ot_date
+from .views import overtime_page, allowances_page, submit_allowance_request, view_allowance_request, edit_allowance_request, delete_allowance_request, view_staff_allowance_requests, accept_allowance_request, reject_allowance_request, non_scheduled_ot_page, submit_nsot_request, view_non_scheduled_overtime_request, delete_nsot_request, edit_nsot_request, view_staff_nsot_requests, accept_nsot_request, reject_nsot_request, availability_page, submit_availability_sheet, view_availability_sheet, delete_availability_sheet, assign_ot_date, assign_ot_recall, assign_ot_require, search_allowances, search_nsot, search_previous_ot, submit_st_availability, delete_st_availability_submission, assign_st_ot_date, assign_st_ot_recall
 
 urlpatterns = [
     url(r'^overtime_page/$', overtime_page, name='overtime_page'),
@@ -32,4 +32,5 @@ urlpatterns = [
     url(r'^submit_st_availability/$', submit_st_availability, name='submit_st_availability'),
     url(r'^(?P<pk>\d+)/delete_st_availability_submission/$', delete_st_availability_submission, name='delete_st_availability_submission'),
     url(r'^assign_st_ot_date/$', assign_st_ot_date, name='assign_st_ot_date'),
+    url(r'^(?P<chosen_st_date>\d{4}-\d{2}-\d{2})/assign_st_ot_recall/$', assign_st_ot_recall, name='assign_st_ot_recall'),
 ]
