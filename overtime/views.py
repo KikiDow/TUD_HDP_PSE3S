@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.conf import settings
 from .models import AllowancesRequest, NonScheduledOvertimeRequest, ShortOvertime, OvertimePerQtr, AvailabilitySheet, ShortTermAvailabilty, Overtime
-from .forms import AllowancesRequestForm, NonScheduledOvertimeRequestForm, RejectAllowanceRequestForm, RejectNSOTForm, AvailabilitySheetForm, AssignOvertimeDateForm, AssignRecallStaffForm, AssignRequireStaffForm
+from .forms import AllowancesRequestForm, NonScheduledOvertimeRequestForm, RejectAllowanceRequestForm, RejectNSOTForm, AvailabilitySheetForm, AssignOvertimeDateForm, AssignRecallStaffForm, AssignRequireStaffForm, ShortTermAvailabilityForm
 import datetime
 from annual_leave.utils import getLeaveAmount
 from .utils import getQtrDateIn, getNextQtr, getOfficerInstance
@@ -507,3 +507,19 @@ def assign_ot_require(request, date_selected):
     else:
         assign_require_form = AssignRequireStaffForm(initial = {'selected_require_date': date_for_require})
     return render(request, "assign_ot_require.html", {'assign_require_form': assign_require_form})
+    
+@login_required()
+def submit_st_availability(request):
+    if request.method == "POST":
+        short_term_availability_form = ShortTermAvailabilityForm(request.POST, request.FILES)
+        st_availability_date = request.POST.get('st_availability_date')
+        short_term_availability_form.fields['st_availability_date'].choices = [(st_availability_date, st_availability_date)]
+        if short_term_availability_form.is_valid():
+            short_term_availability_form.instance.st_availability_off_id = request.user
+            short_term_availability_form.instance.st_availability_qtr_id = getQtrDateIn(short_term_availability_form.instance.st_availability_date)
+            short_term_availability_submission = short_term_availability_form.save()
+            messages.success(request, "Short Term Availability successfully submitted.")
+            return redirect(availability_page)
+    else:
+        short_term_availability_form = ShortTermAvailabilityForm()
+    return render(request, "submit_st_availability_submission.html", {'short_term_availability_form': short_term_availability_form})

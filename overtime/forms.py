@@ -1,6 +1,6 @@
 from django import forms
 from django.db.models import Q
-from .models import AvailabilitySheet, NonScheduledOvertimeRequest, AllowancesRequest
+from .models import AvailabilitySheet, NonScheduledOvertimeRequest, AllowancesRequest, ShortTermAvailabilty
 from .utils import getNextQtr, getCurrentQtr, getQtrDateIn
 from clocking.models import Roster, Shift
 from account.models import Account
@@ -201,3 +201,20 @@ class AssignRequireStaffForm(forms.Form):
         self.fields['officers_for_require'] = forms.ChoiceField(widget=forms.Select, choices=off_to_require_query_choices)
         
         self.fields['assign_require_shift'] = forms.ModelChoiceField(widget=forms.Select, queryset=Shift.objects.all())
+        
+class ShortTermAvailabilityForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(ShortTermAvailabilityForm, self).__init__(*args, **kwargs)
+        user_as_simpleLazyObject = get_current_user()
+        user = Account.objects.get(pk=user_as_simpleLazyObject.id)
+        todays_date = dt.date.today()
+        thirteen_day_delta = dt.timedelta(days=13)
+        short_term_window_end = todays_date + thirteen_day_delta
+        
+        short_term_days_query = Roster.objects.filter(roster_officer_id=user).filter(roster_due_on=False).filter(roster_shift_date__gt=todays_date).filter(roster_shift_date__lte=short_term_window_end)
+        short_term_availability_choices = [('', 'select date')] + [(id.roster_shift_date.strftime("%Y-%m-%d"), id.roster_shift_date.strftime("%Y-%m-%d")) for id in short_term_days_query]
+        self.fields['st_availability_date'] = forms.ChoiceField(widget=forms.Select, choices=short_term_availability_choices)
+        
+    class Meta:
+        model = ShortTermAvailabilty
+        fields = ('st_availability_date', )
