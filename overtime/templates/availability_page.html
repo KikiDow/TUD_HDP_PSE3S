@@ -61,7 +61,7 @@
                         <tr>
                             <td>{{ st_avail.st_availability_date }}</td>
                             <td>{{ st_avail.st_availability_qtr_id }}</td>
-                            <td><a class="btn btn-info" href=""><i class="fa fa-eye"></i> View</a></td>
+                            <td><a class="btn btn-info" href="{% url 'delete_st_availability_submission' st_avail.id %}"><i class="fa fa-delete"></i> Delete</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>
