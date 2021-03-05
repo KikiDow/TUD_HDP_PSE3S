@@ -218,3 +218,6 @@ class ShortTermAvailabilityForm(forms.ModelForm):
     class Meta:
         model = ShortTermAvailabilty
         fields = ('st_availability_date', )
+        
+class AssignShortTermOTDateForm(forms.Form):
+    date_for_st_assignment = forms.DateField(required=True, widget=forms.DateInput(attrs={'type': 'date'}))

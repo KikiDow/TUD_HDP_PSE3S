@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.conf import settings
 from .models import AllowancesRequest, NonScheduledOvertimeRequest, ShortOvertime, OvertimePerQtr, AvailabilitySheet, ShortTermAvailabilty, Overtime
-from .forms import AllowancesRequestForm, NonScheduledOvertimeRequestForm, RejectAllowanceRequestForm, RejectNSOTForm, AvailabilitySheetForm, AssignOvertimeDateForm, AssignRecallStaffForm, AssignRequireStaffForm, ShortTermAvailabilityForm
+from .forms import AllowancesRequestForm, NonScheduledOvertimeRequestForm, RejectAllowanceRequestForm, RejectNSOTForm, AvailabilitySheetForm, AssignOvertimeDateForm, AssignRecallStaffForm, AssignRequireStaffForm, ShortTermAvailabilityForm, AssignShortTermOTDateForm
 import datetime as dt
 from annual_leave.utils import getLeaveAmount
 from .utils import getQtrDateIn, getNextQtr, getOfficerInstance
@@ -530,3 +530,23 @@ def delete_st_availability_submission(request, pk):
     st_avail_submission_for_deletion.delete()
     messages.success(request, "You have successfully deleted this short-term availability submission.")
     return redirect(availability_page)
+    
+@login_required()
+def assign_st_ot_date(request):
+    if request.method == "POST":
+        assign_st_ot_date_form = AssignShortTermOTDateForm(request.POST, request.FILES)
+        if assign_st_ot_date_form.is_valid():
+            todays_date = dt.date.today()
+            one_day_delta = dt.timedelta(days=1)
+            st_window_start = todays_date + one_day_delta
+            thirteen_day_delta = dt.timedelta(days=13)
+            short_term_window_end = todays_date + thirteen_day_delta
+            chosen_st_date = assign_st_ot_date_form.cleaned_data.get("date_for_st_assignment")
+            if chosen_st_date < st_window_start or chosen_st_date > short_term_window_end:
+                messages.error(request, "The date you have selected is not within the short term recall window.")
+                return render(request, "assign_st_ot_date.html", {'assign_st_ot_date_form': assign_st_ot_date_form})
+            else:
+                return redirect(assign_st_ot_recall, chosen_st_date)
+    else:
+        assign_st_ot_date_form = AssignShortTermOTDateForm()
+    return render(request, "assign_st_ot_date.html", {'assign_st_ot_date_form': assign_st_ot_date_form})
