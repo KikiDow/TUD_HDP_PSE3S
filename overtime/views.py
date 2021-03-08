@@ -16,7 +16,7 @@ from clocking.utils import convertStrToDateObj
 def overtime_page(request):
     user = request.user
     users_overtime = Overtime.objects.filter(ot_officer_id=user)
-    todays_date = datetime.date.today()
+    todays_date = dt.date.today()
     upcoming_overtime = []
     previous_overtime = []
     for ot in users_overtime:

@@ -73,7 +73,7 @@
         <div class="col-md-2"></div>
         <div class="col-md-4 col-sm-12 col-xs-12">
             {% if user == manual_clock.mc_officer_id and manual_clock.checked_by_validator == False %}
-            <a class="btn btn-info" href=""><i class="fa fa-pencil"></i> Edit Clocking </a>
+            <a class="btn btn-info" href="{% url 'edit_manual_clock' manual_clock.id %}"><i class="fa fa-pencil"></i> Edit Clocking </a>
             {% endif %}
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12">

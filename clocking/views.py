@@ -319,3 +319,21 @@ def search_manual_clocks(request):
         my_manual_clocks = paginator.page(paginator.num_pages)
     
     return render(request, "manual_clock_search.html", {'my_manual_clocks': my_manual_clocks})
+    
+@login_required()
+def edit_manual_clock(request, pk):
+    '''
+    View in combination with conditional content on view_manual_clock.html allows a user to edit a previously
+    submitted manual clocking before it is checked by a validator.
+    '''
+    manual_clock_for_editing = get_object_or_404(ManualClocking, pk=pk) if pk else None
+    if request.method == "POST":
+        edit_manual_clock_form = ManualClockingForm(request.POST, request.FILES, instance=manual_clock_for_editing)
+        if edit_manual_clock_form.is_valid():
+            manual_clock_for_editing = edit_manual_clock_form.save()
+            messages.success(request, 'You have successfully made changes to this manual clocking.')
+            return redirect(view_manual_clock, manual_clock_for_editing.pk)
+    else:
+        edit_manual_clock_form = ManualClockingForm(instance=manual_clock_for_editing)
+    return render(request, "edit_manual_clock.html", {'manual_clock_for_editing': manual_clock_for_editing, 'edit_manual_clock_form': edit_manual_clock_form})
+    
