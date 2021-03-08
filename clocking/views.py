@@ -337,3 +337,12 @@ def edit_manual_clock(request, pk):
         edit_manual_clock_form = ManualClockingForm(instance=manual_clock_for_editing)
     return render(request, "edit_manual_clock.html", {'manual_clock_for_editing': manual_clock_for_editing, 'edit_manual_clock_form': edit_manual_clock_form})
     
+@login_required()
+def delete_manual_clock(request, pk):
+    '''
+    View allows user to delete one of their own manual clockings.
+    '''
+    manual_clock__for_deletion = ManualClocking.objects.get(pk=pk)
+    manual_clock__for_deletion.delete()
+    messages.success(request, "You have successfully deleted this Manual Clocking.")
+    return redirect('previous_manual_clockings')
