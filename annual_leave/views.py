@@ -112,9 +112,37 @@ def edit_block_leave_request(request, pk):
     if request.method == "POST":
         edit_bl_request_form = AnnualLeaveRequestForm(request.POST, request.FILES, instance=bl_request_for_editing)
         if edit_bl_request_form.is_valid():
-            bl_request_for_editing = edit_bl_request_form.save()
-            messages.success(request, 'You have successfully made changes to this annual leave request.')
-            return redirect(view_annual_leave_request, bl_request_for_editing.pk)
+            leave_requested_start = edit_bl_request_form.instance.leave_request_start_date
+            leave_requested_end = edit_bl_request_form.instance.leave_request_last_date
+            leave_hours_requested = 0.0
+            one_day_delta = datetime.timedelta(days=1)
+            adjusted_requested_end_date = leave_requested_end + one_day_delta
+            list_of_requested_leave_dates = []
+    
+            for i in range((adjusted_requested_end_date - leave_requested_start).days):
+                a_date = (leave_requested_start + datetime.timedelta(days=i))
+                list_of_requested_leave_dates.append(a_date)
+    
+            for date in list_of_requested_leave_dates:
+                leave_requested_date = Roster.objects.get(roster_shift_date=date, roster_officer_id=edit_bl_request_form.instance.al_request_officer_id)
+                if leave_requested_date.roster_due_on == True:
+                    shift = Shift.objects.get(shift_label=leave_requested_date.roster_shift_label)
+                    shift_hours = shift.shift_duration
+                    leave_hours_requested += shift_hours
+                    
+            officers_leave_remaining = edit_bl_request_form.instance.al_request_officer_id.current_leave_total
+            
+            
+            if edit_bl_request_form.instance.leave_request_start_date > edit_bl_request_form.instance.leave_request_last_date:
+                messages.error(request, "The requested start date must be before the last requested date.")
+                return render(request, "edit_al_request.html", {'bl_request_for_editing': bl_request_for_editing, 'edit_bl_request_form': edit_bl_request_form})
+            elif leave_hours_requested > officers_leave_remaining:
+                messages.error(request, "You do not have enough leave remaining to make this request.")
+                return render(request, "edit_al_request.html", {'bl_request_for_editing': bl_request_for_editing, 'edit_bl_request_form': edit_bl_request_form})
+            else:
+                bl_request_for_editing = edit_bl_request_form.save()
+                messages.success(request, 'You have successfully made changes to this annual leave request.')
+                return redirect(view_annual_leave_request, bl_request_for_editing.pk)
     else:
         edit_bl_request_form = AnnualLeaveRequestForm(instance=bl_request_for_editing)
     return render(request, "edit_al_request.html", {'bl_request_for_editing': bl_request_for_editing, 'edit_bl_request_form': edit_bl_request_form})

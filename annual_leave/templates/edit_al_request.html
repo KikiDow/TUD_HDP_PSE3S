@@ -17,7 +17,7 @@
                     <legend>Make changes to your block leave request below</legend>
                     {% csrf_token %}
                     {{ edit_bl_request_form | as_bootstrap }}
-                    <button type="submit" onclick="return confirm('Are you sure you want to make these changes?')">Change Leave Request</button>
+                    <button class="btn btn-info" type="submit" onclick="return confirm('Are you sure you want to make these changes?')">Change Leave Request</button>
                 </fieldset>
             </form>
         </div>
