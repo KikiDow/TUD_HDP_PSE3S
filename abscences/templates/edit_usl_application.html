@@ -17,7 +17,7 @@
                     <legend>Edit your Un-Certified Sick Leave Application here</legend>
                     {% csrf_token %}
                     {{ edit_usl_form | as_bootstrap }}
-                    <button type="submit" onclick="return confirm('Are you sure you want to make these changes?')">Change USL Details</button>
+                    <button class="btn btn-info" type="submit" onclick="return confirm('Are you sure you want to make these changes?')">Change USL Details</button>
                 </fieldset>
             </form>
         </div>
