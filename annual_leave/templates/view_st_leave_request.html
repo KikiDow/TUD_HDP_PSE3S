@@ -74,7 +74,7 @@
         </div>
         <div class="col-md-6 col-sm-10 col-xs-10">
             {% if user == st_leave_req.st_annual_leave_request_officer_id %}
-            <a class="btn btn-info" href="{% url 'delete_short_term_leave_request' st_leave_req.id %}"><i class="fa fa-trash"></i> Delete Request </a>
+            <a class="btn btn-info" onclick="return confirm('Are you sure you want to delete this short-term leave request?')" href="{% url 'delete_short_term_leave_request' st_leave_req.id %}"><i class="fa fa-trash"></i> Delete Request </a>
             {% endif %}
         </div>
         <div class="col-md-2"></div>

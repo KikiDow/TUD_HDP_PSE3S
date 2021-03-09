@@ -216,9 +216,29 @@ def edit_short_term_leave_request(request, pk):
     if request.method == "POST":
         edit_st_request_form = ShortTermAnnualLeaveRequestForm(request.POST, request.FILES, instance=st_request_for_editing)
         if edit_st_request_form.is_valid():
-            st_request_for_editing = edit_st_request_form.save()
-            messages.success(request, 'You have successfully made changes to this short term leave request.')
-            return redirect(view_st_leave_request, st_request_for_editing.pk)
+            #The next four lines of code instantiates the variables that will be used to check if the officer has enough leave remaining to make the request.  
+            start_time_date_leave_amount_check = datetime.datetime.combine(edit_st_request_form.instance.st_leave_date, edit_st_request_form.instance.st_leave_start_time)
+            finish_time_date_leave_amount_check = datetime.datetime.combine(edit_st_request_form.instance.st_leave_date, edit_st_request_form.instance.st_leave_finish_time)
+            leave_check_difference_as_delta = start_time_date_leave_amount_check - finish_time_date_leave_amount_check
+            leave_amount_requested = getLeaveAmount(leave_check_difference_as_delta)
+            officers_leave_remaining = request.user.current_leave_total
+            #Server side validation to ensure leave request is logical and that officer has enough leave remaining.
+            if edit_st_request_form.instance.st_leave_start_time > edit_st_request_form.instance.st_leave_finish_time:
+                messages.error(request, "The start time must be before the finish time.")
+                return render(request, "edit_st_request.html", {'st_request_for_editing': st_request_for_editing, 'edit_st_request_form': edit_st_request_form})
+            elif leave_amount_requested > officers_leave_remaining:
+                messages.error(request, "You do not have enough leave remaining to request this much leave.")
+                return render(request, "edit_st_request.html", {'st_request_for_editing': st_request_for_editing, 'edit_st_request_form': edit_st_request_form})
+            else:
+                st_request_for_editing = edit_st_request_form.save()
+                start_time_date = datetime.datetime.combine(st_request_for_editing.st_leave_date, st_request_for_editing.st_leave_start_time)
+                finish_time_date = datetime.datetime.combine(st_request_for_editing.st_leave_date, st_request_for_editing.st_leave_finish_time)
+                difference_as_delta = finish_time_date - start_time_date
+                #print(st_leave_request.st_leave_amount)
+                st_request_for_editing.st_leave_amount = getLeaveAmount(difference_as_delta)
+                st_request_for_editing.save() #ISSUE
+                messages.success(request, 'You have successfully made changes to this short term leave request.')
+                return redirect(view_st_leave_request, st_request_for_editing.pk)
     else:
         edit_st_request_form = ShortTermAnnualLeaveRequestForm(instance=st_request_for_editing)
     return render(request, "edit_st_request.html", {'st_request_for_editing': st_request_for_editing, 'edit_st_request_form': edit_st_request_form})
