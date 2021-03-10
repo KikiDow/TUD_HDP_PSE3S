@@ -33,7 +33,7 @@
                     <legend>Fill in the details below to reply to this exchange request.</legend>
                     {% csrf_token %}
                     {{ submit_exchange_replacing_off_form | as_bootstrap }}
-                    <button type="submit" onclick="return confirm('Are you sure?')">Reply to Request</button>
+                    <button class="btn btn-info" type="submit" onclick="return confirm('Are you sure?')">Reply to Request</button>
                 </fieldset>
             </form>
         </div>
@@ -42,7 +42,7 @@
     <div class="row justify-content-center">
         <div class="col-md-4"></div>
         <div class+"col-md-4 col-sm-10 col-xs-10">
-            <a href="{% url 'cancel_exchange' exchange_req_being_replied_to.id %}"> Cancel Request </a>
+            <a class="btn btn-info" href="{% url 'cancel_exchange' exchange_req_being_replied_to.id %}"> Cancel Request </a>
         </div>
         <div class="col-md-4"></div>
     </div>

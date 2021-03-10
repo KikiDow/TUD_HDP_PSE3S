@@ -44,7 +44,7 @@
                         </div>
                     </div>
                     <div class="col-6">
-                        <a class="btn btn-info btn-sm" href="{% url 'delete_post' post.id %}">Delete</a>
+                        <a class="btn btn-info btn-sm" onclick="return confirm('Are you sure you want to delete this post from the noticeboard?')" href="{% url 'delete_post' post.id %}">Delete</a>
                     </div>
                 </div>
                 {% endif %}
