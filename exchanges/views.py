@@ -75,7 +75,7 @@ def previous_exchanges(request):
     user = request.user
     exchange_requests = ExchangeRequest.objects.filter(Q(exchanging_req_officer=user) | Q(replacing_req_officer=user)).filter(swap_cancelled=False)
     #cancelled swaps:
-    exchange_reqs_cancelled = exchange_requests.filter(swap_cancelled=True)
+    exchange_reqs_cancelled = ExchangeRequest.objects.filter(Q(exchanging_req_officer=user) | Q(replacing_req_officer=user)).filter(swap_cancelled=True)
     len_cancelled_exchanges = len(exchange_reqs_cancelled)
     #Previous Exchanges
     todays_date = dt.date.today()
@@ -207,16 +207,21 @@ def cancel_exchange(request, pk):
         cancel_exchange_form = CancelExchangeRequestForm(request.POST, request.FILES, instance=exchange_being_cancelled)
         if cancel_exchange_form.is_valid():
             new_cancel_exchange = cancel_exchange_form.save()
-            if new_cancel_exchange.exchanging_req_officer == request.user:
-                #Notification to replacing offcier that swap is cancelled.
-                notify.send(new_cancel_exchange.exchanging_req_officer, recipient=new_cancel_exchange.replacing_req_officer, verb=" has cancelled an exchange for : " + str(new_cancel_exchange.exchange_req_date))
+            
+            if new_cancel_exchange.swap_cancelled == False:
+                messages.error(request, "You have not selected the confirm option to cancel this exchange request.")
+                return render(request, "cancel_exchange_request.html", {'exchange_being_cancelled': exchange_being_cancelled, 'cancel_exchange_form': cancel_exchange_form})
             else:
-                #Notifiction to exchanging officer that swap is cancelled.
-                notify.send(new_cancel_exchange.replacing_req_officer, recipient=new_cancel_exchange.exchanging_req_officer, verb=" has cancelled an exchange for : " + str(new_cancel_exchange.exchange_req_date))
+                if new_cancel_exchange.exchanging_req_officer == request.user:
+                    #Notification to replacing offcier that swap is cancelled.
+                    notify.send(new_cancel_exchange.exchanging_req_officer, recipient=new_cancel_exchange.replacing_req_officer, verb=" has cancelled an exchange for : " + str(new_cancel_exchange.exchange_req_date))
+                else:
+                    #Notifiction to exchanging officer that swap is cancelled.
+                    notify.send(new_cancel_exchange.replacing_req_officer, recipient=new_cancel_exchange.exchanging_req_officer, verb=" has cancelled an exchange for : " + str(new_cancel_exchange.exchange_req_date))
             
-            messages.success(request, "Exchange Request Cancelled.")
+                messages.success(request, "Exchange Request Cancelled.")
             
-            return redirect(exchanges_page)
+                return redirect(exchanges_page)
     else:
         cancel_exchange_form = CancelExchangeRequestForm(instance=exchange_being_cancelled)
     return render(request, "cancel_exchange_request.html", {'exchange_being_cancelled': exchange_being_cancelled, 'cancel_exchange_form': cancel_exchange_form})
