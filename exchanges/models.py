@@ -42,6 +42,7 @@ class ExchangeRequest(models.Model):
     swap_confirmed = models.BooleanField(default=False)
     swap_cancelled = models.BooleanField(default=False)
     reason_exchange_cancelled = models.CharField(max_length=600, blank=True, null=True)
+    swap_started_from_noticeboard = models.BooleanField(default=False)
     
     def __unicode__(self):
         return self.exchange_req_date
