@@ -104,7 +104,7 @@ def submit_exchange_replacing_off_reply(request, pk):
                 messages.success(request, "You have successfully replied to this exchange request.")
             else:
                 messages.error(request, "You have not confirmed the reply to that exchange.")
-                
+                return render(request, "submit_exchange_replacing_off_reply.html", {'exchange_req_being_replied_to': newly_created_exch_req_reply, 'submit_exchange_replacing_off_form': submit_exchange_replacing_off_form})
             #NOTIFICATION TO EXCHANGING OFFICER THAT REPLY HAS BEEN SENT.
             return redirect(view_all_exchanges)
     else:
@@ -143,6 +143,9 @@ def submit_exchange_exchange_off_confirm(request, pk):
                 notify.send(new_exchange.exchanging_officer, recipient=new_exchange.replacing_officer, verb=" has confirmed your exchange for : " + str(new_exchange.exchange_date) + " and " + str(new_exchange.replacement_date))
                 messages.success(request, "Your exchange with " + str(new_exchange_confirm.replacing_req_officer) + " has been confirmed.")
                 return redirect(exchanges_page)
+            else:
+                messages.success(request, "You have not selected to confirm this exchange.")
+                return render(request, "exchange_off_confirm.html", {'exchange_req_being_confirmed': new_exchange_confirm, 'submit_exchange_req_confirm_form': submit_exchange_req_confirm_form})
     else:
         submit_exchange_req_confirm_form = SubmitExchangeRequestExchangingOfficerCheckForm(instance=exchange_req_being_confirmed)
     return render(request, "exchange_off_confirm.html", {'exchange_req_being_confirmed': exchange_req_being_confirmed, 'submit_exchange_req_confirm_form': submit_exchange_req_confirm_form})
