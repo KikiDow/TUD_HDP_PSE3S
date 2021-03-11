@@ -449,7 +449,7 @@ def view_availability_sheet(request, pk):
 def delete_availability_sheet(request, pk):
     avail_sheet_for_deletion = AvailabilitySheet.objects.get(pk=pk)
     avail_sheet_for_deletion.delete()
-    messages.success(request, "You have successfully deleted this non-scheduled overtime request.")
+    messages.success(request, "You have successfully deleted this availability sheet.")
     return redirect(availability_page)
     
 @login_required()

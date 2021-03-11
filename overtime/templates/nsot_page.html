@@ -58,7 +58,7 @@
                             {% else %}
                                 <td><i class="fa fa-times-circle fa-lg"></i></td>
                             {% endif %}
-                            <td><a class="btn btn-info" href=""><i class="fa fa-eye"></i> View</a></td>
+                            <td><a class="btn btn-info" href="{% url 'view_non_scheduled_overtime_request' nsot_req.id %}"><i class="fa fa-eye"></i> View</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

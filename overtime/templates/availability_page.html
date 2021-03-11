@@ -61,7 +61,7 @@
                         <tr>
                             <td>{{ st_avail.st_availability_date }}</td>
                             <td>{{ st_avail.st_availability_qtr_id }}</td>
-                            <td><a class="btn btn-info" href="{% url 'delete_st_availability_submission' st_avail.id %}"><i class="fa fa-delete"></i> Delete</a></td>
+                            <td><a class="btn btn-info" onclick="return confirm('Are you sure you want to remove your short term availability for this date?')" href="{% url 'delete_st_availability_submission' st_avail.id %}"><i class="fa fa-delete"></i> Delete</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>

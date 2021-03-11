@@ -38,7 +38,7 @@
             <a class="btn btn-info" href=""><i class="fa fa-pencil"></i> Edit Availability Sheet </a>
         </div>
         <div class="col-md-4 col-sm-10 col-xs-10">
-            <a class="btn btn-info" href="{% url 'delete_availability_sheet' avail_sheet_to_view.id %}"><i class="fa fa-trash"></i> Delete Availability Sheet </a>
+            <a class="btn btn-info" onclick="return confirm('Are you sure you wish to delete this availability sheet?')" href="{% url 'delete_availability_sheet' avail_sheet_to_view.id %}"><i class="fa fa-trash"></i> Delete Availability Sheet </a>
         </div>
         <div class="col-md-2"></div>
     </div>
