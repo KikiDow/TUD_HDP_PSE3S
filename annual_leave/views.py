@@ -53,6 +53,18 @@ def block_leave_request(request):
             one_day_delta = datetime.timedelta(days=1)
             adjusted_requested_end_date = leave_requested_end + one_day_delta
             list_of_requested_leave_dates = []
+            #Check that requested start date is fourteen days in the future.
+            todays_date = datetime.date.today()
+            fourteen_day_delta = datetime.timedelta(days=14)
+            allowed_start_date = todays_date + fourteen_day_delta
+            if leave_requested_start < allowed_start_date:
+                messages.error(request, "Block leave requests must be made 14 days in advance. You can make a request with " + str(allowed_start_date) + " as the start date.")
+                return render(request, "submit_block_leave.html", {'block_leave_form': block_leave_form})
+                
+            #Check that requested start date is before requested end date.
+            if block_leave_form.instance.leave_request_start_date > block_leave_form.instance.leave_request_last_date:
+                messages.error(request, "The requested start date must be before the last requested date.")
+                return render(request, "submit_block_leave.html", {'block_leave_form': block_leave_form})
     
             for i in range((adjusted_requested_end_date - leave_requested_start).days):
                 a_date = (leave_requested_start + datetime.timedelta(days=i))
@@ -67,10 +79,7 @@ def block_leave_request(request):
                     
             officers_leave_remaining = block_leave_form.instance.al_request_officer_id.current_leave_total
                     
-            if block_leave_form.instance.leave_request_start_date > block_leave_form.instance.leave_request_last_date:
-                messages.error(request, "The requested start date must be before the last requested date.")
-                return render(request, "submit_block_leave.html", {'block_leave_form': block_leave_form})
-            elif leave_hours_requested > officers_leave_remaining:
+            if leave_hours_requested > officers_leave_remaining:
                 messages.error(request, "You do not have enough leave remaining to make this request.")
                 return render(request, "submit_block_leave.html", {'block_leave_form': block_leave_form})
             else:
@@ -118,7 +127,20 @@ def edit_block_leave_request(request, pk):
             one_day_delta = datetime.timedelta(days=1)
             adjusted_requested_end_date = leave_requested_end + one_day_delta
             list_of_requested_leave_dates = []
+            
+            #Check that requested start date is fourteen days in the future.
+            todays_date = datetime.date.today()
+            fourteen_day_delta = datetime.timedelta(days=14)
+            allowed_start_date = todays_date + fourteen_day_delta
+            if leave_requested_start < allowed_start_date:
+                messages.error(request, "Block leave requests must be made 14 days in advance. You can make a request with " + str(allowed_start_date) + " as the start date.")
+                return render(request, "edit_al_request.html", {'edit_bl_request_form': edit_bl_request_form})
     
+            #Check that edited start date is before end date.
+            if edit_bl_request_form.instance.leave_request_start_date > edit_bl_request_form.instance.leave_request_last_date:
+                messages.error(request, "The requested start date must be before the last requested date.")
+                return render(request, "edit_al_request.html", {'bl_request_for_editing': bl_request_for_editing, 'edit_bl_request_form': edit_bl_request_form})
+            
             for i in range((adjusted_requested_end_date - leave_requested_start).days):
                 a_date = (leave_requested_start + datetime.timedelta(days=i))
                 list_of_requested_leave_dates.append(a_date)
@@ -132,11 +154,7 @@ def edit_block_leave_request(request, pk):
                     
             officers_leave_remaining = edit_bl_request_form.instance.al_request_officer_id.current_leave_total
             
-            
-            if edit_bl_request_form.instance.leave_request_start_date > edit_bl_request_form.instance.leave_request_last_date:
-                messages.error(request, "The requested start date must be before the last requested date.")
-                return render(request, "edit_al_request.html", {'bl_request_for_editing': bl_request_for_editing, 'edit_bl_request_form': edit_bl_request_form})
-            elif leave_hours_requested > officers_leave_remaining:
+            if leave_hours_requested > officers_leave_remaining:
                 messages.error(request, "You do not have enough leave remaining to make this request.")
                 return render(request, "edit_al_request.html", {'bl_request_for_editing': bl_request_for_editing, 'edit_bl_request_form': edit_bl_request_form})
             else:
