@@ -118,7 +118,7 @@
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12">
             {% if user == allow_req_to_view.allow_req_off_id %}
-            <a class="btn btn-info" href="{% url 'delete_allowance_request' allow_req_to_view.id %}"><i class="fa fa-trash"></i> Delete Allowance Request </a>
+            <a class="btn btn-info" onclick="return confirm('Are you sure you wish to delete this Allowance request?')" href="{% url 'delete_allowance_request' allow_req_to_view.id %}"><i class="fa fa-trash"></i> Delete Allowance Request </a>
             {% endif %}
         </div>
         <div class="col-md-2"></div>
