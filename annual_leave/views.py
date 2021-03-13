@@ -174,6 +174,11 @@ def short_term_leave_request(request):
     if request.method == "POST":
         short_term_leave_form = ShortTermAnnualLeaveRequestForm(request.POST, request.FILES)
         if short_term_leave_form.is_valid():
+            #Check that date requested is not in the past.
+            todays_date = datetime.date.today()
+            if short_term_leave_form.instance.st_leave_date < todays_date:
+                messages.error(request, "Please check the date you have selected as it appears to be in the past.")
+                return render(request, "submit_st_leave.html", {'short_term_leave_form': short_term_leave_form})
             #Place the user id into the foreign key field placeholder for the officer requesting leave. 
             short_term_leave_form.instance.st_annual_leave_request_officer_id = request.user
             #The next four lines of code instantiates the variables that will be used to check if the officer has enough leave remaining to make the request.  
