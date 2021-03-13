@@ -217,18 +217,16 @@ def view_my_sick_leave(request):
     len_my_fm = len(my_fm)
     
     #Pagination for CSLs
-    '''
-    csl_page_number = 1
-    csl_page = request.GET.get('csl_page', csl_page_number)
+    page_number = 1
+    page = request.GET.get('page', page_number)
     
-    csl_paginator = Paginator(my_csl, 3)
+    paginator = Paginator(my_csl, 3)
     try:
-        my_csls = csl_paginator.page(csl_page)
+        my_csls = paginator.page(page)
     except PageNotAnInteger:
-        my_csls = csl_paginator.page(1)
+        my_csls = paginator.page(1)
     except EmptyPage:
-        mycsls = csl_paginator.page(csl_paginator.num_pages)
-    '''
+        my_csls = paginator.page(paginator.num_pages)
         
     #Pagination for USLs
     page_number = 1
@@ -242,8 +240,19 @@ def view_my_sick_leave(request):
     except EmptyPage:
         my_usls = paginator.page(paginator.num_pages)
     
+    #Pagination for FMs
+    page_number = 1
+    page = request.GET.get('page', page_number)
+    
+    paginator = Paginator(my_fm, 2)
+    try:
+        my_fms = paginator.page(page)
+    except PageNotAnInteger:
+        my_fms = paginator.page(1)
+    except EmptyPage:
+        my_fms = paginator.page(paginator.num_pages)
     #    
-    return render(request, "my_sick_leave.html", {'my_usls': my_usls, 'my_fm': my_fm, 'len_my_csl': len_my_csl, 'len_my_usl': len_my_usl, 'len_my_fm': len_my_fm})
+    return render(request, "my_sick_leave.html", {'my_usls': my_usls, 'my_fms': my_fms, 'len_my_csl': len_my_csl, 'len_my_usl': len_my_usl, 'len_my_fm': len_my_fm})
     
 @login_required()
 def accept_csl(request, pk):
