@@ -110,6 +110,12 @@ def submit_allowance_request(request):
         allowance_req_form = AllowancesRequestForm(request.POST, request.FILES)
         if allowance_req_form.is_valid():
             allowance_req_form.instance.allow_req_off_id = request.user
+            #Check that user is not accidentally submitting allowance requests in advance.
+            todays_date = dt.date.today()
+            if allowance_req_form.instance.allow_req_date > todays_date:
+                messages.error(request, "You cannot submit allowance requests in advance of todays date.")
+                return render(request, "submit_allowance_request.html", {'allowance_req_form': allowance_req_form})
+            #Check that the user has selected at least one allowance in their claim.
             if allowance_req_form.instance.claiming_breakfast_allowance == False and allowance_req_form.instance.claiming_dinner_allowance == False and allowance_req_form.instance.claiming_tea_allowance == False and allowance_req_form.instance.claiming_plain_clothes_allowance == False and allowance_req_form.instance.claiming_food_for_prisoner_expense == False:
                 messages.error(request, "You must select at least one allowance to make a valid allowance request.")
                 return render(request, "submit_allowance_request.html", {'allowance_req_form': allowance_req_form})
@@ -168,9 +174,15 @@ def edit_allowance_request(request, pk):
     if request.method == "POST":
         edit_allow_req_form = AllowancesRequestForm(request.POST, request.FILES, instance=allow_req_for_editing)
         if edit_allow_req_form.is_valid():
+            #Check that user is not accidentally submitting allowance requests in advance.
+            todays_date = dt.date.today()
+            if edit_allow_req_form.instance.allow_req_date > todays_date:
+                messages.error(request, "You cannot submit allowance requests in advance of todays date.")
+                return render(request, "edit_allowance_request.html", {'edit_allow_req_form': edit_allow_req_form})
+            #Check that the user has selected at least one allowance in their claim.
             if edit_allow_req_form.instance.claiming_breakfast_allowance == False and edit_allow_req_form.instance.claiming_dinner_allowance == False and edit_allow_req_form.instance.claiming_tea_allowance == False and edit_allow_req_form.instance.claiming_plain_clothes_allowance == False and edit_allow_req_form.instance.claiming_food_for_prisoner_expense == False:
                 messages.error(request, "You must select at least one allowance to make a valid allowance request.")
-                return render(request, "submit_allowance_request.html", {'edit_allow_req_form': edit_allow_req_form})
+                return render(request, "edit_allowance_request.html", {'edit_allow_req_form': edit_allow_req_form})
             if edit_allow_req_form.instance.claiming_food_for_prisoner_expense == True:
                 if edit_allow_req_form.instance.food_for_prisoner_amount is None:
                     messages.error(request, "You must include the cost of the prisoner's meal to claim this expense.")
