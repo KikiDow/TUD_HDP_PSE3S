@@ -192,6 +192,12 @@ def submit_post(request):
 @login_required()
 def like_post(request, pk):
     post_being_liked = Post.objects.get(pk=pk)
+    #Check to see if user has already liked this post.
+    has_user_already_liked_post = Like.objects.filter(post_liked=post_being_liked).filter(post_liked_by=request.user)
+    if has_user_already_liked_post.exists():
+        messages.error(request, "You have already liked this Post.")
+        return redirect(exchange_noticeboard)
+        
     post_being_liked.likes += 1
     post_being_liked.save()
     new_like = Like(post_liked=post_being_liked, post_liked_by=request.user)
