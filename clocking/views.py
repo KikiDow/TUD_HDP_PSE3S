@@ -62,12 +62,10 @@ def search_roster(request):
         users_ros = paginator.page(paginator.num_pages)
         
     return render(request, "roster_search_result.html", {'users_ros': users_ros})
-
+'''
 @login_required()
 def generate_quarters(request):
-    '''
-    This view allows the superuser to generate two years worth of quarters.
-    '''
+    #This view allows the superuser to generate two years worth of quarters.
     date_1 = settings.GLOBAL_START_DATE
     one_day_delta = datetime.timedelta(days=1)
     quarter_delta = datetime.timedelta(days=90)
@@ -93,6 +91,7 @@ def generate_quarters(request):
         messages.success(request, "You have successfully generated new quarters.")
     
     return redirect('home_page')
+'''
 
 @login_required()
 def generate_roster(request, pk):
