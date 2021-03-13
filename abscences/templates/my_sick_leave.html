@@ -18,7 +18,7 @@
     {% else %}
     <div class="row justify-content-center">
         <div class="col-md-1"></div>
-        <div class="col-md-10 table-wrapper-scroll-y my-custom-scrollbar">
+        <div class="col-md-10">
             <table class="table table-striped table-dark mb-0">
                 <thead>
                     <th>Cert Start Date</th>
@@ -26,7 +26,7 @@
                     <th><i class="fa fa-folder-open fa-lg"></i></th>
                 </thead>
                 <tbody>
-                    {% for csl_record in my_csl %}
+                    {% for csl_record in my_csls %}
                         <tr>
                             <td>{{ csl_record.first_day_of_cert }}</td>
                             <td>{{ csl_record.first_day_of_cert }}</td>
@@ -38,6 +38,34 @@
         </div>
         <div class="col-md-1"></div>
     </div>
+    <!-- 
+    <div class="row justify-content-center">
+        <div class="col-md-4"></div>
+        <div class="col-md-4 col-sm-10 col-xs-10 justify-content-center">
+            {% if my_csls.has_other_pages %}
+            <ul class="pagination justify-content_center">
+            {% if my_csls.has_previous %}
+                <li class="page-item"><a class="page-link text-dark" href="?csl_page={{ my_csls.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="page-item page-link text-dark disabled"><span>&laquo;</span></li>
+            {% endif %}
+                {% for i in my_csls.csl_paginator.page_range %}
+                    {% if i <= my_csls.number|add:2 and i >= my_csls.number|add:-2 and my_csls.number == i %}
+                        <li class="page-item active"><span class="page-link text-dark">{{ i }}<span class="sr-only bg-info">(current)</span></span></li>
+                    {% elif i <= my_csls.number|add:2 and i >= my_csls.number|add:-2 %}
+                        <li class="page-item"><a class="page-link text-dark" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% if my_csls.has_next %}
+                <li class="page-item"><a class="page-link text-dark" href="?csl_page={{ my_csls.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="page-item page-link disabled"><span>&raquo;</span></li>
+            {% endif %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="col-md-4"></div>
+    </div> -->
     {% endif %}
     <div class="row justify-content-center">
     <h3> Un-Certified Sick: </h3>
@@ -49,14 +77,14 @@
     {% else %}
     <div class="row justify-content-center">
         <div class="col-md-1"></div>
-        <div class="col-md-10 table-wrapper-scroll-y my-custom-scrollbar">
+        <div class="col-md-10">
             <table class="table table-striped table-dark mb-0">
                 <thead>
                     <th>U.S.L. Date</th>
                     <th><i class="fa fa-folder-open fa-lg"></i></th>
                 </thead>
                 <tbody>
-                    {% for usl_record in my_usl %}
+                    {% for usl_record in my_usls %}
                         <tr>
                             <td>{{ usl_record.usl_date }}</td>
                             <td><a class="btn btn-info btn-sm" href="{% url 'view_usl_application' usl_record.id %}"><i class="fa fa-eye"></i> View</a></td>
@@ -64,6 +92,33 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-1"></div>
+        <div class="col-md-10 col-sm-10 col-xs-10 justify-content-center">
+            {% if my_usls.has_other_pages %}
+            <ul class="pagination justify-content_center">
+            {% if my_usls.has_previous %}
+                <li class="page-item"><a class="page-link text-dark" href="?page={{ my_usls.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="page-item page-link text-dark disabled"><span>&laquo;</span></li>
+            {% endif %}
+                {% for i in my_usls.paginator.page_range %}
+                    {% if i <= my_usls.number|add:2 and i >= my_usls.number|add:-2 and my_usls.number == i %}
+                        <li class="page-item active"><span class="page-link text-dark">{{ i }}<span class="sr-only bg-info">(current)</span></span></li>
+                    {% elif i <= my_usls.number|add:2 and i >= my_usls.number|add:-2 %}
+                        <li class="page-item"><a class="page-link text-dark" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% if my_usls.has_next %}
+                <li class="page-item"><a class="page-link text-dark" href="?page={{ my_usls.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="page-item page-link disabled"><span>&raquo;</span></li>
+            {% endif %}
+            </ul>
+            {% endif %}
         </div>
         <div class="col-md-1"></div>
     </div>
@@ -78,8 +133,8 @@
     {% else %}
     <div class="row justify-content-center">
         <div class="col-md-1"></div>
-        <div class="col-md-10 table-wrapper-scroll-y my-custom-scrollbar">
-            <table class="table table-striped table-dark mb-0">
+        <div class="col-md-10">
+            <table class="table table-striped table-dark mb-0" style="padding-bottom:10px;">
                 <thead>
                     <th>F.M. Date</th>
                     <th><i class="fa fa-folder-open fa-lg"></i></th>

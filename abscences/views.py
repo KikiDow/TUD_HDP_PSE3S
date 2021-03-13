@@ -6,6 +6,7 @@ from .models import CertifiedSickLeave, UnCertifiedSickLeave, ForceMajeure, Cert
 from annual_leave.utils import getCurrentYear
 from notifications.signals import notify
 import datetime
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 @login_required()
@@ -214,7 +215,35 @@ def view_my_sick_leave(request):
     len_my_csl = len(my_csl)
     len_my_usl = len(my_usl)
     len_my_fm = len(my_fm)
-    return render(request, "my_sick_leave.html", {'my_csl': my_csl, 'my_usl': my_usl, 'my_fm': my_fm, 'len_my_csl': len_my_csl, 'len_my_usl': len_my_usl, 'len_my_fm': len_my_fm})
+    
+    #Pagination for CSLs
+    '''
+    csl_page_number = 1
+    csl_page = request.GET.get('csl_page', csl_page_number)
+    
+    csl_paginator = Paginator(my_csl, 3)
+    try:
+        my_csls = csl_paginator.page(csl_page)
+    except PageNotAnInteger:
+        my_csls = csl_paginator.page(1)
+    except EmptyPage:
+        mycsls = csl_paginator.page(csl_paginator.num_pages)
+    '''
+        
+    #Pagination for USLs
+    page_number = 1
+    page = request.GET.get('page', page_number)
+    
+    paginator = Paginator(my_usl, 2)
+    try:
+        my_usls = paginator.page(page)
+    except PageNotAnInteger:
+        my_usls = paginator.page(1)
+    except EmptyPage:
+        my_usls = paginator.page(paginator.num_pages)
+    
+    #    
+    return render(request, "my_sick_leave.html", {'my_usls': my_usls, 'my_fm': my_fm, 'len_my_csl': len_my_csl, 'len_my_usl': len_my_usl, 'len_my_fm': len_my_fm})
     
 @login_required()
 def accept_csl(request, pk):
