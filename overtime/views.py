@@ -110,6 +110,9 @@ def submit_allowance_request(request):
         allowance_req_form = AllowancesRequestForm(request.POST, request.FILES)
         if allowance_req_form.is_valid():
             allowance_req_form.instance.allow_req_off_id = request.user
+            if allowance_req_form.instance.claiming_breakfast_allowance == False and allowance_req_form.instance.claiming_dinner_allowance == False and allowance_req_form.instance.claiming_tea_allowance == False and allowance_req_form.instance.claiming_plain_clothes_allowance == False and allowance_req_form.instance.claiming_food_for_prisoner_expense == False:
+                messages.error(request, "You must select at least one allowance to make a valid allowance request.")
+                return render(request, "submit_allowance_request.html", {'allowance_req_form': allowance_req_form})
             if allowance_req_form.instance.claiming_food_for_prisoner_expense == True:
                 if allowance_req_form.instance.food_for_prisoner_amount is None:
                     messages.error(request, "You must include the cost of the prisoner's meal to claim this expense.")
