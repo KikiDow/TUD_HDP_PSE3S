@@ -239,6 +239,11 @@ def edit_short_term_leave_request(request, pk):
     if request.method == "POST":
         edit_st_request_form = ShortTermAnnualLeaveRequestForm(request.POST, request.FILES, instance=st_request_for_editing)
         if edit_st_request_form.is_valid():
+            #Check that date requested is not in the past.
+            todays_date = datetime.date.today()
+            if edit_st_request_form.instance.st_leave_date < todays_date:
+                messages.error(request, "Please check the date you have selected as it appears to be in the past.")
+                return render(request, "edit_st_leave.html", {'edit_st_request_form': edit_st_request_form})
             #The next four lines of code instantiates the variables that will be used to check if the officer has enough leave remaining to make the request.  
             start_time_date_leave_amount_check = datetime.datetime.combine(edit_st_request_form.instance.st_leave_date, edit_st_request_form.instance.st_leave_start_time)
             finish_time_date_leave_amount_check = datetime.datetime.combine(edit_st_request_form.instance.st_leave_date, edit_st_request_form.instance.st_leave_finish_time)
