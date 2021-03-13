@@ -5,7 +5,6 @@ from .forms import CertifiedSickLeaveForm, UnCertifiedSickLeaveForm, ForceMajeur
 from .models import CertifiedSickLeave, UnCertifiedSickLeave, ForceMajeure, CertifiedSickPerYear, UnCertifiedSickPerYear, ForceMajeurePerYear
 from annual_leave.utils import getCurrentYear
 from notifications.signals import notify
-import datetime
 
 # Create your views here.
 @login_required()
@@ -13,20 +12,8 @@ def abscences_page(request):
     '''
     This view renders the main page for the abscences section.
     '''
-    user = request.user
-    todays_date = datetime.date.today()
-    current_yr = todays_date.year
-    #Retrieve number of certified sick leave instances for current year.
-    csl_for_this_year = CertifiedSickPerYear.objects.filter(yearly_csl_officer_id=user.pk).filter(csl_year=current_yr)
-    len_csl_for_this_year = len(csl_for_this_year)
-    #Retrieve number of un-certified sick leave instances for current year.
-    usl_for_this_year = UnCertifiedSickPerYear.objects.filter(yearly_usl_officer_id=user.pk).filter(usl_year=current_yr)
-    len_usl_for_this_year = len(usl_for_this_year)
-    #Retrieve number of force majeure sick leave instances for current year.
-    fm_for_this_year = ForceMajeurePerYear.objects.filter(yearly_fm_officer_id=user.pk).filter(fm_year=current_yr)
-    len_fm_for_this_year = len(fm_for_this_year)
-        
-    return render(request, "abscences_page.html", {'csl_for_this_year': csl_for_this_year, 'len_csl_for_this_year': len_csl_for_this_year, 'usl_for_this_year': usl_for_this_year, 'len_usl_for_this_year': len_usl_for_this_year, 'fm_for_this_year': fm_for_this_year, 'len_fm_for_this_year': len_fm_for_this_year})
+    
+    return render(request, "abscences_page.html")
     
 @login_required()
 def submit_csl(request):
