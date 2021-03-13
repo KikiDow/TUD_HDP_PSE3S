@@ -227,6 +227,11 @@ def manual_clocking(request):
         manual_clock_form = ManualClockingForm(request.POST, request.FILES)
         if manual_clock_form.is_valid():
             manual_clock_form.instance.mc_officer_id = request.user
+            todays_date = datetime.date.today()
+            if manual_clock_form.instance.clocking_date > todays_date:
+                messages.error(request, "You cannot submit manual clocking forms in advance.")
+                return render(request, "submit_manual_clocking_form.html", {'manual_clock_form': manual_clock_form})
+                
             manual_clock = manual_clock_form.save()
             messages.success(request, 'You have successfully submitted a manual clocking form.')
             return redirect(view_manual_clock, manual_clock.pk)
