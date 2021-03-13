@@ -231,7 +231,26 @@ def manual_clocking(request):
             if manual_clock_form.instance.clocking_date > todays_date:
                 messages.error(request, "You cannot submit manual clocking forms in advance.")
                 return render(request, "submit_manual_clocking_form.html", {'manual_clock_form': manual_clock_form})
-                
+            #Combining date and time from form instance to create datetime objects so that they can be compared.
+            clock_in_time_check = datetime.datetime.combine(manual_clock_form.instance.clocking_date, manual_clock_form.instance.clocking_in_time)
+            lunch_out_time_check = datetime.datetime.combine(manual_clock_form.instance.clocking_date, manual_clock_form.instance.lunch_out_time)
+            lunch_in_time_check = datetime.datetime.combine(manual_clock_form.instance.clocking_date, manual_clock_form.instance.lunch_in_time)
+            clock_out_time_check = datetime.datetime.combine(manual_clock_form.instance.clocking_date, manual_clock_form.instance.clocking_out_time)
+            #Compare times input by user to ensure they are in the correct order.
+            if lunch_out_time_check < clock_in_time_check:
+                messages.error(request, "Your clocking times are not in order.")
+                return render(request, "submit_manual_clocking_form.html", {'manual_clock_form': manual_clock_form})
+            if lunch_in_time_check < lunch_out_time_check:
+                messages.error(request, "Your clocking times are not in order.")
+                return render(request, "submit_manual_clocking_form.html", {'manual_clock_form': manual_clock_form})
+            if lunch_in_time_check > clock_out_time_check:
+                messages.error(request, "Your clocking times are not in order.")
+                return render(request, "submit_manual_clocking_form.html", {'manual_clock_form': manual_clock_form})
+            if clock_out_time_check < clock_in_time_check:
+                messages.error(request, "Your clocking times are not in order.")
+                return render(request, "submit_manual_clocking_form.html", {'manual_clock_form': manual_clock_form})
+            
+            
             manual_clock = manual_clock_form.save()
             messages.success(request, 'You have successfully submitted a manual clocking form.')
             return redirect(view_manual_clock, manual_clock.pk)
