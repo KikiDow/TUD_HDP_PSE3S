@@ -39,8 +39,8 @@ footer {
 position: relative;
 height: 300px;
 overflow: auto;
-margin-top: 1vh;
-margin-bottom: 1vh;
+margin-top: 5px;
+margin-bottom: 5px;
 }
 .table-wrapper-scroll-y {
 display: block;
