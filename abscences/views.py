@@ -155,6 +155,12 @@ def submit_fm(request):
     if request.method == "POST":
         fm_form = ForceMajeureForm(request.POST, request.FILES)
         if fm_form.is_valid():
+            #Check that user is not attempting to submit fm for advance dates.
+            todays_date = datetime.date.today()
+            if fm_form.instance.fm_date > todays_date:
+                messages.error(request, "You cannot submit Force Majeure applications in advance of todays date.")
+                return render(request, "submit_fm.html", {'fm_form': fm_form})
+            
             fm_form.instance.fm_officer_id = request.user
             fm_application = fm_form.save()
             messages.success(request, 'You have successfully submitted a Force Majeure application.')
@@ -192,6 +198,12 @@ def edit_fm(request, pk):
     if request.method == "POST":
         edit_fm_form = ForceMajeureForm(request.POST, request.FILES, instance=fm_for_editing)
         if edit_fm_form.is_valid():
+            #Check that user is not attempting to submit fm for advance dates.
+            todays_date = datetime.date.today()
+            if edit_fm_form.instance.fm_date > todays_date:
+                messages.error(request, "You cannot submit Force Majeure applications in advance of todays date.")
+                return render(request, "edit_fm_application.html", {'edit_fm_form': edit_fm_form})
+                
             fm_for_editing = edit_fm_form.save()
             messages.success(request, 'You have successfully made changes to this force majeure application.')
             return redirect(view_fm_application, fm_for_editing.pk)
