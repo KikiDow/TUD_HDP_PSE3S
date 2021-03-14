@@ -311,6 +311,12 @@ def submit_nsot_request(request):
         nsot_req_form = NonScheduledOvertimeRequestForm(request.POST, request.FILES)
         if nsot_req_form.is_valid():
             nsot_req_form.instance.nsot_off_id = request.user
+            #Check that user is not accidentally submitting nsot requests in advance.
+            todays_date = dt.date.today()
+            if nsot_req_form.instance.nsot_date > todays_date:
+                messages.error(request, "You cannot submit Non-Scheduled Overtime requests in advance of todays date.")
+                return render(request, "submit_nsot_request.html", {'nsot_req_form': nsot_req_form})
+            #Check that the end_time is not before the start_time.
             if nsot_req_form.instance.nsot_start_time > nsot_req_form.instance.nsot_end_time:
                 messages.error(request, "The start time must be before the finish time.")
                 return render(request, "submit_nsot_request.html", {'nsot_req_form': nsot_req_form})
@@ -346,12 +352,18 @@ def edit_nsot_request(request, pk):
     if request.method == "POST":
         edit_nsot_form = NonScheduledOvertimeRequestForm(request.POST, request.FILES, instance=nsot_req_for_editing)
         if edit_nsot_form.is_valid():
+            #Check that user is not attempting to edit nsot requests for advance dates.
+            todays_date = dt.date.today()
+            if edit_nsot_form.instance.nsot_date > todays_date:
+                messages.error(request, "You cannot submit Non-Scheduled Overtime requests in advance of todays date.")
+                return render(request, "edit_nsot_request.html", {'edit_nsot_form': edit_nsot_form})
+            #Check that user has not edited the end time to be before the start time.
             if edit_nsot_form.instance.nsot_start_time > edit_nsot_form.instance.nsot_end_time:
                 messages.error(request, "The start date for the non scheduled overtime request must be before the end date.")
                 return render(request, "edit_nsot_request.html", {'edit_nsot_form': edit_nsot_form})
             else:
                 nsot_req_for_editing = edit_nsot_form.save()
-                #Combine date and time data to create datetime objects so that they can be compared.
+                #Combine date and time data to create datetime objects so that they can be used to calculate ot_hours_claimed.
                 date_time_start = dt.datetime.combine(nsot_req_for_editing.nsot_date, nsot_req_for_editing.nsot_start_time)
                 date_time_end = dt.datetime.combine(nsot_req_for_editing.nsot_date, nsot_req_for_editing.nsot_end_time)
                 #Calculate the amount of leave being requested.
