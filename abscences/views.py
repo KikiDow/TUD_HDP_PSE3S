@@ -93,6 +93,11 @@ def submit_usl(request):
     if request.method == "POST":
         usl_form = UnCertifiedSickLeaveForm(request.POST, request.FILES)
         if usl_form.is_valid():
+            #Check that user is not attempting to submit usl for advance dates.
+            todays_date = datetime.date.today()
+            if usl_form.instance.usl_date > todays_date:
+                messages.error(request, "You cannot submit Un-Certified Sick Leave applications in advance of todays date.")
+                return render(request, "submit_usl.html", {'usl_form': usl_form})
             usl_form.instance.usl_officer_id = request.user
             usl_application = usl_form.save()
             messages.success(request, 'You have successfully submitted an uncertified sick leave application.')
@@ -129,6 +134,11 @@ def edit_usl(request, pk):
     if request.method == "POST":
         edit_usl_form = UnCertifiedSickLeaveForm(request.POST, request.FILES, instance=usl_for_editing)
         if edit_usl_form.is_valid():
+            #Check that user is not attempting to edit usl for advance dates.
+            todays_date = datetime.date.today()
+            if edit_usl_form.instance.usl_date > todays_date:
+                messages.error(request, "You cannot submit Un-Certified Sick Leave applications in advance of todays date.")
+                return render(request, "edit_usl_application.html", {'edit_usl_form': edit_usl_form})
             usl_for_editing = edit_usl_form.save()
             messages.success(request, 'You have successfully made changes to this uncertified sick leave application.')
             return redirect(view_usl_application, usl_for_editing.pk)
