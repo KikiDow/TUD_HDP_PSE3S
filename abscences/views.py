@@ -239,40 +239,40 @@ def view_my_sick_leave(request):
     len_my_fm = len(my_fm)
     
     #Pagination for CSLs
-    page_number = 1
-    page = request.GET.get('page', page_number)
+    csl_page_number = 1
+    csl_page = request.GET.get('csl_page', csl_page_number)
     
-    paginator = Paginator(my_csl, 3)
+    csl_paginator = Paginator(my_csl, 3)
     try:
-        my_csls = paginator.page(page)
+        my_csls = csl_paginator.page(csl_page)
     except PageNotAnInteger:
-        my_csls = paginator.page(1)
+        my_csls = csl_paginator.page(1)
     except EmptyPage:
-        my_csls = paginator.page(paginator.num_pages)
+        my_csls = csl_paginator.page(csl_paginator.num_pages)
         
     #Pagination for USLs
-    page_number = 1
-    page = request.GET.get('page', page_number)
+    usl_page_number = 1
+    usl_page = request.GET.get('usl_page', usl_page_number)
     
-    paginator = Paginator(my_usl, 2)
+    usl_paginator = Paginator(my_usl, 2)
     try:
-        my_usls = paginator.page(page)
+        my_usls = usl_paginator.page(usl_page)
     except PageNotAnInteger:
-        my_usls = paginator.page(1)
+        my_usls = usl_paginator.page(1)
     except EmptyPage:
-        my_usls = paginator.page(paginator.num_pages)
+        my_usls = usl_paginator.page(usl_paginator.num_pages)
     
     #Pagination for FMs
-    page_number = 1
-    page = request.GET.get('page', page_number)
+    fm_page_number = 1
+    fm_page = request.GET.get('fm_page', fm_page_number)
     
-    paginator = Paginator(my_fm, 2)
+    fm_paginator = Paginator(my_fm, 2)
     try:
-        my_fms = paginator.page(page)
+        my_fms = fm_paginator.page(fm_page)
     except PageNotAnInteger:
-        my_fms = paginator.page(1)
+        my_fms = fm_paginator.page(1)
     except EmptyPage:
-        my_fms = paginator.page(paginator.num_pages)
+        my_fms = fm_paginator.page(fm_paginator.num_pages)
     #    
     return render(request, "my_sick_leave.html", {'my_usls': my_usls, 'my_fms': my_fms, 'len_my_csl': len_my_csl, 'len_my_usl': len_my_usl, 'len_my_fm': len_my_fm})
     
