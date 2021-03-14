@@ -9,6 +9,7 @@ from account.models import Account
 from itertools import chain
 from clocking.models import Roster, Shift
 from notifications.signals import notify
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 @login_required()
@@ -282,7 +283,31 @@ def view_my_leave_requests(request):
     length_my_al_requests = len(my_annual_leave_requests)
     length_my_st_requests = len(my_short_term_leave_requests)
     
-    return render(request, "my_leave_requests.html", {'my_annual_leave_requests': my_annual_leave_requests, 'my_short_term_leave_requests': my_short_term_leave_requests, 'length_my_al_requests': length_my_al_requests, 'length_my_st_requests': length_my_st_requests})
+    #pagination for annual leave requests
+    al_page_number = 1
+    al_page = request.GET.get('al_page', al_page_number)
+    
+    al_paginator = Paginator(my_annual_leave_requests, 2)
+    try:
+        my_al = al_paginator.page(al_page)
+    except PageNotAnInteger:
+        my_al = al_paginator.page(1)
+    except EmptyPage:
+        my_al = al_paginator.page(al_paginator.num_pages)
+        
+    #pagination for st leave requests
+    stl_page_number = 1
+    stl_page = request.GET.get('stl_page', stl_page_number)
+    
+    stl_paginator = Paginator(my_short_term_leave_requests, 2)
+    try:
+        my_stl = stl_paginator.page(stl_page)
+    except PageNotAnInteger:
+        my_stl = stl_paginator.page(1)
+    except EmptyPage:
+        my_stl = stl_paginator.page(stl_paginator.num_pages)
+    
+    return render(request, "my_leave_requests.html", {'my_al': my_al, 'my_stl': my_stl, 'length_my_al_requests': length_my_al_requests, 'length_my_st_requests': length_my_st_requests})
 
 @login_required()
 def view_staff_leave_submissions(request):

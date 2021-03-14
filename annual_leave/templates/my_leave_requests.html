@@ -26,7 +26,7 @@
                     <th><i class="fa fa-folder-open fa-lg"></i></th>
                 </thead>
                 <tbody>
-                    {% for leave_request in my_annual_leave_requests %}
+                    {% for leave_request in my_al %}
                         <tr>
                             <td>{{ leave_request.leave_request_start_date }}</td>
                             <td>{{ leave_request.leave_request_last_date }}</td>
@@ -37,6 +37,33 @@
             </table>
         </div>
         <div class="col-md-1"></div>
+        <div class="row justify-content-center">
+        <div class="col-md-1"></div>
+        <div class="col-md-10 col-sm-10 col-xs-10 justify-content-center">
+            {% if my_al.has_other_pages %}
+            <ul class="pagination justify-content_center">
+            {% if my_al.has_previous %}
+                <li class="page-item"><a class="page-link text-dark" href="?al_page={{ my_al.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="page-item page-link text-dark disabled"><span>&laquo;</span></li>
+            {% endif %}
+                {% for i in my_al.paginator.page_range %}
+                    {% if i <= my_al.number|add:2 and i >= my_al.number|add:-2 and my_al.number == i %}
+                        <li class="page-item active"><span class="page-link text-dark">{{ i }}<span class="sr-only bg-info">(current)</span></span></li>
+                    {% elif i <= my_al.number|add:2 and i >= my_al.number|add:-2 %}
+                        <li class="page-item"><a class="page-link text-dark" href="?al_page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% if my_al.has_next %}
+                <li class="page-item"><a class="page-link text-dark" href="?al_page={{ my_al.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="page-item page-link disabled"><span>&raquo;</span></li>
+            {% endif %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="col-md-1"></div>
+        </div>
     </div>
     {% endif %}
     <div class="row justify-content-center">
@@ -58,7 +85,7 @@
                     <th><i class="fa fa-folder-open fa-lg"></i></th>
                 </thead>
                 <tbody>
-                    {% for st_leave_request in my_short_term_leave_requests %}
+                    {% for st_leave_request in my_stl %}
                         <tr>
                             <td>{{ st_leave_request.st_leave_date }}</td>
                             <td>{{ st_leave_request.st_leave_start_time }}</td>
@@ -70,6 +97,33 @@
             </table>
         </div>
         <div class="col-md-1"></div>
+        <div class="row justify-content-center">
+        <div class="col-md-1"></div>
+        <div class="col-md-10 col-sm-10 col-xs-10 justify-content-center">
+            {% if my_stl.has_other_pages %}
+            <ul class="pagination justify-content_center">
+            {% if my_stl.has_previous %}
+                <li class="page-item"><a class="page-link text-dark" href="?stl_page={{ my_stl.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="page-item page-link text-dark disabled"><span>&laquo;</span></li>
+            {% endif %}
+                {% for i in my_stl.paginator.page_range %}
+                    {% if i <= my_stl.number|add:2 and i >= my_stl.number|add:-2 and my_stl.number == i %}
+                        <li class="page-item active"><span class="page-link text-dark">{{ i }}<span class="sr-only bg-info">(current)</span></span></li>
+                    {% elif i <= my_stl.number|add:2 and i >= my_stl.number|add:-2 %}
+                        <li class="page-item"><a class="page-link text-dark" href="?stl_page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% if my_stl.has_next %}
+                <li class="page-item"><a class="page-link text-dark" href="?stl_page={{ my_stl.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="page-item page-link disabled"><span>&raquo;</span></li>
+            {% endif %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="col-md-1"></div>
+        </div>
     </div>
     {% endif %}
 </div>
