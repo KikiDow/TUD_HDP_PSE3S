@@ -68,7 +68,55 @@ def view_all_exchanges(request):
     exchanges_req_awaiting_confirmation = exchange_requests.filter(exchanging_req_officer=user).filter(eo_proceed_with_swap=False).filter(ro_proceed_with_swap=True)
     len_exchange_req_waiting_confirm = len(exchanges_req_awaiting_confirmation)
     
-    return render(request, "view_all_exchanges.html", {'exchanges_req_started': exchanges_req_started, 'exchanges_req_awaiting_reply': exchanges_req_awaiting_reply, 'exchange_reqs_awaiting_eo_confirm': exchange_reqs_awaiting_eo_confirm, 'exchanges_req_awaiting_confirmation': exchanges_req_awaiting_confirmation, 'len_exchange_req_started': len_exchange_req_started, 'len_exchange_req_awaiting_reply': len_exchange_req_awaiting_reply, 'len_exchange_req_awaiting_eo_confirm': len_exchange_req_awaiting_eo_confirm, 'len_exchange_req_waiting_confirm': len_exchange_req_waiting_confirm})
+    #Pagination for Exchange Requests Started
+    exchanges_req_started_pag_page_number = 1
+    exchanges_req_started_pag_page = request.GET.get('exchanges_req_started_pag_page', exchanges_req_started_pag_page_number)
+    
+    exchanges_req_started_pag_paginator = Paginator(exchanges_req_started, 2)
+    try:
+        my_exchanges_req_started = exchanges_req_started_pag_paginator.page(exchanges_req_started_pag_page)
+    except PageNotAnInteger:
+        my_exchanges_req_started = exchanges_req_started_pag_paginator.page(1)
+    except EmptyPage:
+        my_exchanges_req_started = exchanges_req_started_pag_paginator.page(exchanges_req_started_pag_paginator.num_pages)
+        
+    #Pagination for Requests started awaiting reply.
+    exchanges_req_awaiting_reply_page_number = 1
+    exchanges_req_awaiting_reply_page = request.GET.get('exchanges_req_awaiting_reply_page', exchanges_req_awaiting_reply_page_number)
+    
+    exchanges_req_awaiting_reply_paginator = Paginator(exchanges_req_awaiting_reply, 3)
+    try:
+        my_exchanges_req_awaiting_reply = exchanges_req_awaiting_reply_paginator.page(exchanges_req_awaiting_reply_page)
+    except PageNotAnInteger:
+        my_exchanges_req_awaiting_reply = exchanges_req_awaiting_reply_paginator.page(1)
+    except EmptyPage:
+        my_exchanges_req_awaiting_reply = exchanges_req_awaiting_reply_paginator.page(exchanges_req_awaiting_reply_paginator.num_pages)
+        
+    #Pagination for Exchanges awaiting Exchanging Officers Confirmation.
+    exchange_reqs_awaiting_eo_confirm_page_number = 1
+    exchange_reqs_awaiting_eo_confirm_page = request.GET.get('exchange_reqs_awaiting_eo_confirm_page', exchange_reqs_awaiting_eo_confirm_page_number)
+    
+    exchange_reqs_awaiting_eo_confirm_paginator = Paginator(exchange_reqs_awaiting_eo_confirm, 3)
+    try:
+        my_exchange_reqs_awaiting_eo_confirm = exchange_reqs_awaiting_eo_confirm_paginator.page(exchange_reqs_awaiting_eo_confirm_page)
+    except PageNotAnInteger:
+        my_exchange_reqs_awaiting_eo_confirm = exchange_reqs_awaiting_eo_confirm_paginator.page(1)
+    except EmptyPage:
+        my_exchange_reqs_awaiting_eo_confirm = exchange_reqs_awaiting_eo_confirm_paginator.page(exchange_reqs_awaiting_eo_confirm_paginator.num_pages)
+        
+    #Pagination for Exchanges awaiting my confirmation
+    exchanges_req_awaiting_confirmation_page_number = 1
+    exchanges_req_awaiting_confirmation_page = request.GET.get('exchanges_req_awaiting_confirmation_page', exchanges_req_awaiting_confirmation_page_number)
+    
+    exchanges_req_awaiting_confirmation_paginator = Paginator(exchanges_req_awaiting_confirmation, 3)
+    try:
+        my_exchanges_req_awaiting_confirmation = exchanges_req_awaiting_confirmation_paginator.page(exchanges_req_awaiting_confirmation_page)
+    except PageNotAnInteger:
+        my_exchanges_req_awaiting_confirmation = exchanges_req_awaiting_confirmation_paginator.page(1)
+    except EmptyPage:
+        my_exchanges_req_awaiting_confirmation = exchanges_req_awaiting_confirmation_paginator.page(exchanges_req_awaiting_confirmation_paginator.num_pages)
+    
+    return render(request, "view_all_exchanges.html", {'my_exchanges_req_started': my_exchanges_req_started, 'my_exchanges_req_awaiting_reply': my_exchanges_req_awaiting_reply, 'my_exchange_reqs_awaiting_eo_confirm': my_exchange_reqs_awaiting_eo_confirm, 'my_exchanges_req_awaiting_confirmation': my_exchanges_req_awaiting_confirmation, 'len_exchange_req_started': len_exchange_req_started, 'len_exchange_req_awaiting_reply': len_exchange_req_awaiting_reply, 'len_exchange_req_awaiting_eo_confirm': len_exchange_req_awaiting_eo_confirm, 'len_exchange_req_waiting_confirm': len_exchange_req_waiting_confirm})
     
 @login_required()
 def previous_exchanges(request):
