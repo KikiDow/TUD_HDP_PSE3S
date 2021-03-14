@@ -425,7 +425,31 @@ def availability_page(request):
     my_short_term_availability = ShortTermAvailabilty.objects.filter(st_availability_off_id=user.pk)
     len_my_st_availability = len(my_short_term_availability)
     
-    return render(request, "availability_page.html", {'my_availability_sheets': my_availability_sheets, 'my_short_term_availability': my_short_term_availability, 'len_my_availability_sheets': len_my_availability_sheets, 'len_my_st_availability': len_my_st_availability})
+    #pagination for availability sheets.
+    avail_sheet_page_number = 1
+    avail_sheet_page = request.GET.get('avail_sheet_page', avail_sheet_page_number)
+    
+    avail_sheet_paginator = Paginator(my_availability_sheets, 2)
+    try:
+        my_avail_sheets = avail_sheet_paginator.page(avail_sheet_page)
+    except PageNotAnInteger:
+        my_avail_sheets = avail_sheet_paginator.page(1)
+    except EmptyPage:
+        my_avail_sheets = avail_sheet_paginator.page(avail_sheet_paginator.num_pages)
+        
+     #pagination for availability sheets.
+    st_avail_page_number = 1
+    st_avail_page = request.GET.get('st_avail_page', st_avail_page_number)
+    
+    st_avail_paginator = Paginator(my_short_term_availability, 2)
+    try:
+        my_st_avails = st_avail_paginator.page(st_avail_page)
+    except PageNotAnInteger:
+        my_st_avails = st_avail_paginator.page(1)
+    except EmptyPage:
+        my_st_avails = st_avail_paginator.page(st_avail_paginator.num_pages)
+    
+    return render(request, "availability_page.html", {'my_avail_sheets': my_avail_sheets, 'my_st_avails': my_st_avails, 'len_my_availability_sheets': len_my_availability_sheets, 'len_my_st_availability': len_my_st_availability})
     
 @login_required()
 def submit_availability_sheet(request):
