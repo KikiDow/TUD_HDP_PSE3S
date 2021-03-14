@@ -66,29 +66,25 @@
         <div class="col-md-2"></div>
     </div>
     <div class="row justify-content-center">
-        <div class="col-md-2"></div>
-        <div class="col-md-4 col-sm-10 col-xs-10">
+        <div class="col-md-6 col-sm-12 col-xs-12 row justify-content-center">
             {% if user == st_leave_req.st_annual_leave_request_officer_id and st_leave_req.st_leave_request_checked_by_validator == False %}
-            <a class="btn btn-info" href="{% url 'edit_short_term_leave_request' st_leave_req.id %}"><i class="fa fa-pencil"></i> Edit Request </a>
+            <a class="btn btn-info basic-button" href="{% url 'edit_short_term_leave_request' st_leave_req.id %}"><i class="fa fa-pencil"></i> Edit Request </a>
             {% endif %} 
         </div>
-        <div class="col-md-6 col-sm-10 col-xs-10">
+        <div class="col-md-6 col-sm-12 col-xs-12 row justify-content-center">
             {% if user == st_leave_req.st_annual_leave_request_officer_id %}
-            <a class="btn btn-info" onclick="return confirm('Are you sure you want to delete this short-term leave request?')" href="{% url 'delete_short_term_leave_request' st_leave_req.id %}"><i class="fa fa-trash"></i> Delete Request </a>
+            <a class="btn btn-info basic-button" onclick="return confirm('Are you sure you want to delete this short-term leave request?')" href="{% url 'delete_short_term_leave_request' st_leave_req.id %}"><i class="fa fa-trash"></i> Delete Request </a>
             {% endif %}
         </div>
-        <div class="col-md-2"></div>
     </div>
     {% if user.is_staff %}
     <div class="row justify-content-center">
-        <div class="col-md-2"></div>
-        <div class="col-md-4 col-sm-10 col-xs-10">
-            <a class="btn btn-info" href="{% url 'accept_short_term_leave' st_leave_req.id %}"><i class="fa fa-thumbs-up"></i> Grant Request </a>
+        <div class="col-md-6 col-sm-12 col-xs-12 row justify-content-center">
+            <a class="btn btn-info basic-button" href="{% url 'accept_short_term_leave' st_leave_req.id %}"><i class="fa fa-thumbs-up"></i> Grant Request </a>
         </div>
-        <div class="col-md-4 col-sm-10 col-xs-10">
-            <a class="btn btn-info" href="{% url 'reject_short_term_leave' st_leave_req.id %}"><i class="fa fa-thumbs-down"></i> Reject Request </a>
+        <div class="col-md-6 col-sm-12 col-xs-12 row justify-content-center">
+            <a class="btn btn-info basic-button" href="{% url 'reject_short_term_leave' st_leave_req.id %}"><i class="fa fa-thumbs-down"></i> Reject Request </a>
         </div>
-        <div class="col-md-2"></div>
     </div>
     {% endif %}
 </div>
