@@ -31,7 +31,7 @@
                         <tr>
                             <td>{{ exch_req_started.exchanging_req_officer }}</td>
                             <td>{{ exch_req_started.exchange_req_date }}</td>
-                            <td>{{ exch_req_started.exchange_req_shift_label }}</td>
+                            <td>{{ exch_req_started.exchanging_req_shift }}</td>
                             <td>{{ exch_req_started.replacing_req_officer }}</td>
                         </tr>
                     {% endfor %}
@@ -92,7 +92,7 @@
                         <tr>
                             <td>{{ exch_req_awaiting_your_reply.exchanging_req_officer }}</td>
                             <td>{{ exch_req_awaiting_your_reply.exchange_req_date }}</td>
-                            <td>{{ exch_req_awaiting_your_reply.exchange_req_shift_label }}</td>
+                            <td>{{ exch_req_awaiting_your_reply.exchanging_req_shift }}</td>
                             <td>{{ exch_req_awaiting_your_reply.replacing_req_officer }}</td>
                             <td><a class="btn btn-info" href="{% url 'submit_exchange_replacing_off_reply' exch_req_awaiting_your_reply.id %}">Reply</a></td>
                         </tr>
@@ -155,7 +155,7 @@
                         <tr>
                             <td>{{ exch_req_awaiting_eo_confirm.exchanging_req_officer }}</td>
                             <td>{{ exch_req_awaiting_eo_confirm.exchange_req_date }}</td>
-                            <td>{{ exch_req_awaiting_eo_confirm.exchange_req_shift_label }}</td>
+                            <td>{{ exch_req_awaiting_eo_confirm.exchanging_req_shift }}</td>
                             <td>{{ exch_req_awaiting_eo_confirm.replacing_req_officer }}</td>
                             <td>{{ exch_req_awaiting_eo_confirm.replacing_req_date }}</td>
                             <td>{{ exch_req_awaiting_eo_confirm.replacing_req_shift }}</td>
@@ -220,7 +220,7 @@
                         <tr>
                             <td>{{ exch_req_awaiting_your_confirm.exchanging_req_officer }}</td>
                             <td>{{ exch_req_awaiting_your_confirm.exchange_req_date }}</td>
-                            <td>{{ exch_req_awaiting_your_confirm.exchange_req_shift_label }}</td>
+                            <td>{{ exch_req_awaiting_your_confirm.exchanging_req_shift }}</td>
                             <td>{{ exch_req_awaiting_your_confirm.replacing_req_officer }}</td>
                             <td>{{ exch_req_awaiting_your_confirm.replacing_req_date }}</td>
                             <td>{{ exch_req_awaiting_your_confirm.replacing_req_shift }}</td>

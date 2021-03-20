@@ -41,6 +41,8 @@ def submit_exchange_exchange_off(request):
             roster_day = Roster.objects.get(roster_officer_id=new_exchange_req.exchanging_req_officer, roster_shift_date__contains=exch_date)
             newly_created_exch_req = ExchangeRequest.objects.get(pk=new_exchange_req.id)
             newly_created_exch_req.exchange_req_shift_label = roster_day.roster_shift_label
+            exch_shift = Shift.objects.get(shift_label=roster_day.roster_shift_label)
+            newly_created_exch_req.exchanging_req_shift = exch_shift
             newly_created_exch_req.save()
             #NOTIFICATION TO REPLACING OFFICER THAT EXCHANGE HAS BEEN STARTED.
             notify.send(newly_created_exch_req.exchanging_req_officer, recipient=newly_created_exch_req.replacing_req_officer, verb=" has begun an exchange request for : " + str(newly_created_exch_req.exchange_req_date))
@@ -145,7 +147,9 @@ def submit_exchange_replacing_off_reply(request, pk):
             replace_date = new_exchange_req_replace_reply.replacing_req_date
             roster_day = Roster.objects.get(roster_officer_id=new_exchange_req_replace_reply.replacing_req_officer, roster_shift_date__contains=replace_date)
             newly_created_exch_req_reply = ExchangeRequest.objects.get(pk=new_exchange_req_replace_reply.id)
-            newly_created_exch_req_reply.replacing_req_shift = roster_day.roster_shift_label
+            newly_created_exch_req_reply.replacing_req_shift_label = roster_day.roster_shift_label
+            replace_shift = Shift.objects.get(shift_label=roster_day.roster_shift_label)
+            newly_created_exch_req_reply.replacing_req_shift = replace_shift
             newly_created_exch_req_reply.save()
             if newly_created_exch_req_reply.ro_proceed_with_swap == True:
                 notify.send(newly_created_exch_req_reply.replacing_req_officer, recipient=newly_created_exch_req_reply.exchanging_req_officer, verb=" has replied to your exchange request : " + str(newly_created_exch_req_reply.exchange_req_date))
@@ -295,7 +299,8 @@ def create_exch_req_from_like(request, pk):
     post_for_exchange = Post.objects.get(pk=like_for_exchange.post_liked.id)
     shift_conversion = Shift.objects.get(pk=post_for_exchange.possible_exchange_shift_id.id)
     shft_label = shift_conversion.shift_label
-    new_exchange_req = ExchangeRequest(exchanging_req_officer=post_for_exchange.postee_id, exchange_req_date=post_for_exchange.possible_exchange_date, exchange_req_shift_label=shft_label, exchanging_req_officer_notes=post_for_exchange.post_content, replacing_req_officer=like_for_exchange.post_liked_by, swap_started_from_noticeboard=True)
+    
+    new_exchange_req = ExchangeRequest(exchanging_req_officer=post_for_exchange.postee_id, exchange_req_date=post_for_exchange.possible_exchange_date, exchange_req_shift_label=shft_label, exchanging_req_shift=shift_conversion, exchanging_req_officer_notes=post_for_exchange.post_content, replacing_req_officer=like_for_exchange.post_liked_by, swap_started_from_noticeboard=True)
     new_exchange_req.save()
     #Notification to replacing officer that exchange request has been started.
     notify.send(new_exchange_req.exchanging_req_officer, recipient=new_exchange_req.replacing_req_officer, verb=" has begun an exchange with you from the noticeboard : " + str(new_exchange_req.exchange_req_date))
