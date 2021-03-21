@@ -3,6 +3,7 @@ from account.models import Account
 from account.utils import ChoiceEnum
 from datetime import datetime
 from django.contrib import messages
+from .utils import checkForLateClocking
 
 # Create your models here.
 class Quarter(models.Model):
@@ -87,6 +88,8 @@ class Roster(models.Model):
             t = datetime.now().time()
             self.clocking_in_time = t.replace(microsecond=0)
             #print("Clock In: " + str(self.clocking_in_time))
+            officer = self.roster_officer_id
+            checkForLateClocking(t, officer)
             messages.success(request, "Clock In completed.")
         elif self.number_of_clockings == 1:
             t = datetime.now().time()

@@ -325,8 +325,10 @@ def accept_usl(request, pk):
     if usl_for_current_year_check.exist():
         usl_for_current_year_check = UnCertifiedSickPerYear.objects.get(yearly_usl_officer_id=usl_being_accepted.usl_officer_id, usl_year=current_year)
         usl_for_current_year_check.number_usl_for_year += 1
+        usl_for_current_year_check.save()
     else:
         new_uncert_sick_per_year = UnCertifiedSickPerYear(yearly_usl_officer_id=usl_being_accepted.usl_officer_id, usl_year=current_year, number_usl_for_year=1)
+        new_uncert_sick_per_year.save()
         
     #NOTIFICATION TO APPLICANT THAT UN-CERT HAS BEEN ACCEPTED.
     notify.send(request.user, recipient=usl_being_accepted.usl_officer_id, verb=" has accepted your Un-Certified Sick Leave application: " + str(usl_being_accepted))
