@@ -160,3 +160,27 @@ class ManualClocking(models.Model):
 		
 	def __str__(self):
 		return str(self.mc_officer_id) + " manual clock for " + str(self.clocking_date)
+		
+class Lates(models.Model):
+    lates_officer_id = models.ForeignKey(Account,related_name='lates_officer_id', on_delete=models.CASCADE)
+    date_of_late = models.DateField(blank=False, null=False)
+    late_clocking_time = models.TimeField(blank=False, null=False)
+    duration_of_late = models.DurationField(blank=False, null=False)
+    
+    def __unicode__(self):
+        return self.date_of_late
+    
+    def __str__(self):
+	    return str(self.lates_officer_id) + " was late on " + str(self.date_of_late) + " by " + str(self.duration_of_late)
+	    
+class LatesPerYear(models.Model):
+    yearly_lates_officer_id = models.ForeignKey(Account, related_name='yearly_lates_officer_id', on_delete=models.CASCADE)
+    lates_year = models.IntegerField(blank=False, null=False)
+    number_lates_for_year = models.IntegerField(blank=False, null=False)
+    
+    def __unicode__(self):
+        return self.lates_year
+        
+    def __str__(self):
+        return str(self.yearly_lates_officer_id) + " has had " + str(self.number_lates_for_year) + " lates in " + str(self.lates_year)
+        
