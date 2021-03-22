@@ -126,12 +126,38 @@
     <div class="row justify-content-center">
         <div class="col-md-2"></div>
         <div class="row justify-content-center col-md-4">
-            <a class="btn btn-info basic-button" href="{% url 'submit_availability_sheet' %}"> Submit New Availability Sheet </a>
+            {% if avail_sheet_already_submitted_for_next_qtr == True %}
+                <button type="button" class="btn btn-info basic-button" data-toggle="modal" data-target="#availSheetAlreadySubmitted"> Submit New Availability Sheet </button>
+            {% else %}
+                <a class="btn btn-info basic-button" href="{% url 'submit_availability_sheet' %}"> Submit New Availability Sheet </a>
+            {% endif %}
         </div>
         <div class="row justify-content-center col-md-4">
             <a class="btn btn-info basic-button" href="{% url 'submit_st_availability' %}"> Submit Short Term Availability </a>
         </div>
         <div class="col-md-2"></div>
     </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="availSheetAlreadySubmitted" tabindex="-1" aria-labelledby="availSheetAlreadySubmittedModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="availSheetAlreadySubmittedModalLabel">Availability Sheet Already Submitted</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        You have already submitted an Availability Sheet for the Next Quarter.
+      </div>
+      <!--
+      <div class="modal-footer">
+            <div class="row">
+            </div>
+      </div> -->
+    </div>
+  </div>
 </div>
 {% endblock %}

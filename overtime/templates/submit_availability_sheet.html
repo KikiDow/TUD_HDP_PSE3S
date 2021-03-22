@@ -17,7 +17,7 @@
                     <legend>Please select the days you are available to work overtime from the options provided.</legend>
                     {% csrf_token %}
                     {{ availability_sheet_form | as_bootstrap }}
-                    <button class="btn btn-info" type="submit">Submit Availability Sheet</button>
+                    <button class="btn btn-info" type="submit" onclick="return confirm('Are you sure these are the dates you wish to make yourself available?')">Submit Availability Sheet</button>
                 </fieldset>
             </form>
         </div>
