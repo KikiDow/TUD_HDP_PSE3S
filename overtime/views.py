@@ -494,34 +494,52 @@ def submit_availability_sheet(request):
         if availability_sheet_form.is_valid():
             availability_sheet_form.instance.avail_sheet_off_id = request.user
             availability_sheet_form.instance.avail_sheet_qtr_id = getNextQtr()
+            #initial choices dictionary to store initial dates selected if enters duplicate dates.
+            initial_choices = [
+                availability_sheet_form.instance.mon_one,
+                availability_sheet_form.instance.mon_two,
+                availability_sheet_form.instance.tue_one,
+                availability_sheet_form.instance.tue_two,
+                availability_sheet_form.instance.wed_one,
+                availability_sheet_form.instance.wed_two,
+                availability_sheet_form.instance.thurs_one,
+                availability_sheet_form.instance.thurs_two,
+                availability_sheet_form.instance.fri_one,
+                availability_sheet_form.instance.fri_two,
+                availability_sheet_form.instance.sat_one,
+                availability_sheet_form.instance.sat_two,
+                availability_sheet_form.instance.sun_one,
+                availability_sheet_form.instance.sun_two
+            ]
+            
             if availability_sheet_form.instance.mon_one == availability_sheet_form.instance.mon_two:
-                messages.error(request, "The two mondays you selected were the same date - " + str(availability_sheet_form.instance.mon_one))
+                messages.error(request, "The two mondays you selected were the same date: " + str(availability_sheet_form.instance.mon_one))
                 availability_sheet_form = AvailabilitySheetForm()
-                return render(request, "submit_availability_sheet.html", {'availability_sheet_form': availability_sheet_form})
+                return render(request, "submit_avail_sheet_amend.html", {'availability_sheet_form': availability_sheet_form, 'initial_choices': initial_choices})
             elif availability_sheet_form.instance.tue_one == availability_sheet_form.instance.tue_two:
-                messages.error(request, "The two tuesdays you selected were the same date - " + str(availability_sheet_form.instance.tue_one))
+                messages.error(request, "The two tuesdays you selected were the same date: " + str(availability_sheet_form.instance.tue_one))
                 availability_sheet_form = AvailabilitySheetForm()
-                return render(request, "submit_availability_sheet.html", {'availability_sheet_form': availability_sheet_form})
+                return render(request, "submit_avail_sheet_amend.html", {'availability_sheet_form': availability_sheet_form, 'initial_choices': initial_choices})
             elif availability_sheet_form.instance.wed_one == availability_sheet_form.instance.wed_two:
-                messages.error(request, "The two wednesdays you selected were the same date - " + str(availability_sheet_form.instance.wed_one))
+                messages.error(request, "The two wednesdays you selected were the same date: " + str(availability_sheet_form.instance.wed_one))
                 availability_sheet_form = AvailabilitySheetForm()
-                return render(request, "submit_availability_sheet.html", {'availability_sheet_form': availability_sheet_form})
+                return render(request, "submit_avail_sheet_amend.html", {'availability_sheet_form': availability_sheet_form, 'initial_choices': initial_choices})
             elif availability_sheet_form.instance.thurs_one == availability_sheet_form.instance.thurs_two:
-                messages.error(request, "The two thursdays you selected were the same date - " + str(availability_sheet_form.instance.thurs_one))
+                messages.error(request, "The two thursdays you selected were the same date: " + str(availability_sheet_form.instance.thurs_one))
                 availability_sheet_form = AvailabilitySheetForm()
-                return render(request, "submit_availability_sheet.html", {'availability_sheet_form': availability_sheet_form})
+                return render(request, "submit_avail_sheet_amend.html", {'availability_sheet_form': availability_sheet_form, 'initial_choices': initial_choices})
             elif availability_sheet_form.instance.fri_one == availability_sheet_form.instance.fri_two:
-                messages.error(request, "The two fridays you selected were the same date - " + str(availability_sheet_form.instance.fri_one))
+                messages.error(request, "The two fridays you selected were the same date: " + str(availability_sheet_form.instance.fri_one))
                 availability_sheet_form = AvailabilitySheetForm()
-                return render(request, "submit_availability_sheet.html", {'availability_sheet_form': availability_sheet_form})
+                return render(request, "submit_avail_sheet_amend.html", {'availability_sheet_form': availability_sheet_form, 'initial_choices': initial_choices})
             elif availability_sheet_form.instance.sat_one == availability_sheet_form.instance.sat_two:
-                messages.error(request, "The two Saturdays you selected were the same date - " + str(availability_sheet_form.instance.sat_one))
+                messages.error(request, "The two Saturdays you selected were the same date: " + str(availability_sheet_form.instance.sat_one))
                 availability_sheet_form = AvailabilitySheetForm()
-                return render(request, "submit_availability_sheet.html", {'availability_sheet_form': availability_sheet_form})
+                return render(request, "submit_avail_sheet_amend.html", {'availability_sheet_form': availability_sheet_form, 'initial_choices': initial_choices})
             elif availability_sheet_form.instance.sun_one == availability_sheet_form.instance.sun_two:
-                messages.error(request, "The two Sundays you selected were the same date - " + str(availability_sheet_form.instance.sun_one))
+                messages.error(request, "The two Sundays you selected were the same date: " + str(availability_sheet_form.instance.sun_one))
                 availability_sheet_form = AvailabilitySheetForm()
-                return render(request, "submit_availability_sheet.html", {'availability_sheet_form': availability_sheet_form})
+                return render(request, "submit_avail_sheet_amend.html", {'availability_sheet_form': availability_sheet_form, 'initial_choices': initial_choices})
             else:
                 availability_sheet = availability_sheet_form.save()
                 messages.success(request, "Availability Sheet successfully submitted.")

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load bootstrap_tags %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid bg-info text-white">
+  <div class="container">
+      <div class="row justify-content-center">
+        <h1 class="display-4">Submit Availability Sheet</h1>
+      </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <p>You must compete the form again. Select "Show Initial Choices" to display the dates you initially entered. </p>
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#showInitialChoices"> Show Initial Choices </button>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <form method="POST" enctype="multipart/form-data">
+                <fieldset class="form-group">
+                    <legend>Please select the days you are available to work overtime from the options provided.</legend>
+                    {% csrf_token %}
+                    {{ availability_sheet_form | as_bootstrap }}
+                    <button class="btn btn-info" type="submit" onclick="return confirm('Are you sure these are the dates you wish to make yourself available?')">Submit Availability Sheet</button>
+                </fieldset>
+            </form>
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+</div>
+<!-- Modal -->
+        <div class="modal fade" id="showInitialChoices" tabindex="-1" aria-labelledby="showInitialChoicesModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="showInitialChoicesModalLabel">Initial Dates Selected</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                </div>
+            <div class="modal-body">
+                <div class="row justify-content-center">
+                    <table>
+                        <tbody>
+                            <tr><td><strong>First Monday: </strong></td><td>{{ initial_choices.0 }}</td><td><strong>Second Monday: </strong></td><td>{{ initial_choices.1 }}</td></tr>
+                            <tr><td><strong>First Tuesday: </strong></td><td>{{ initial_choices.2 }}</td><td><strong>Second Tuesday: </strong></td><td>{{ initial_choices.3 }}</td></tr>
+                            <tr><td><strong>First Wednesday: </strong></td><td>{{ initial_choices.4 }}</td><td><strong>Second Wednesday: </strong></td><td>{{ initial_choices.5 }}</td></tr>
+                            <tr><td><strong>First Thursday: </strong></td><td>{{ initial_choices.6 }}</td><td><strong>Second Thursday: </strong></td><td>{{ initial_choices.7 }}</td></tr>
+                            <tr><td><strong>First Friday: </strong></td><td>{{ initial_choices.8 }}</td><td><strong>Second Friday: </strong></td><td>{{ initial_choices.9 }}</td></tr>
+                            <tr><td><strong>First Saturday: </strong></td><td>{{ initial_choices.10 }}</td><td><strong>Second Saturday: </strong></td><td>{{ initial_choices.11 }}</td></tr>
+                            <tr><td><strong>First Sunday: </strong></td><td>{{ initial_choices.12 }}</td><td><strong>Second Sunday: </strong></td><td>{{ initial_choices.13 }}</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!--
+            <div class="modal-footer">
+                <div class="row">
+                </div>
+            </div> -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
