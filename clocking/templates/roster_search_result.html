@@ -7,12 +7,12 @@
     </div>
 </div>
 <div class="container">
-  <div class="row">
+  <!-- <div class="row">
     {% if user.is_superuser %}
     <hr/>
     <a class="btn btn-danger" href="{% url 'generate_quarters' %}"> Generate Quarters </a>
     {% endif %}
-  </div>
+  </div> -->
   <div class="row justify-content-center">
         <div class="col-md-1"></div>
         <div class="col-md-3 justify-content-center">
@@ -66,7 +66,7 @@
     <div class="row justify-content-center">
         <a class="btn btn-info basic-button col-md-3 col-sm-10 col-xs-10" href="{% url 'manual_clocking' %}">Submit Manual Clock</a>
         <a class="btn btn-info basic-button col-md-3 col-sm-10 col-xs-10" href="">Clock Remotely</a>
-        <a class="btn btn-info basic-button col-md-3 col-sm-10 col-xs-10" href="">Previous Manual Clockings</a>
+        <a class="btn btn-info basic-button col-md-3 col-sm-10 col-xs-10" href="{% url 'previous_manual_clockings' %}">Previous Manual Clockings</a>
     </div>
     {% if user.is_staff %}
     <div class="row justify-content-center">

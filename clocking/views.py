@@ -296,13 +296,15 @@ def reject_manual_clock(request, pk):
     if request.method == "POST":
         manual_clock_reject_form = RejectManualClockingForm(request.POST, request.FILES, instance=manual_clock_being_rejected)
         if manual_clock_reject_form.is_valid:
-            manual_clock_being_rejected = manual_clock_being_rejected.save()
+            #manual_clock_being_rejected = manual_clock_being_rejected.save()
+            manual_clock_being_rejected.reason_manual_clock_rejected = manual_clock_reject_form.instance.reason_manual_clock_rejected
             manual_clock_being_rejected.accept_reject_clock = False
             manual_clock_being_rejected.checked_by_validator = True
             manual_clock_being_rejected.validator_id = request.user
             manual_clock_being_rejected.save()
             notify.send(request.user, recipient=manual_clock_being_rejected.mc_officer_id, verb=" rejected your manual clocking entry for " + str(manual_clock_being_rejected.clocking_date))
             messages.success(request, 'Manual Clock Rejected')
+            return redirect("view_submitted_manual_clockings")
     else:
         manual_clock_reject_form = RejectManualClockingForm(instance=manual_clock_being_rejected)
     return render(request, "reject_manual_clock.html", {'manual_clock_being_rejected': manual_clock_being_rejected, 'manual_clock_reject_form': manual_clock_reject_form})
