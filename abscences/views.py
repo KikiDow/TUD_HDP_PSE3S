@@ -22,16 +22,22 @@ def abscences_page(request):
     len_csl_for_this_year = len(csl_for_this_year)
     if len_csl_for_this_year > 0:
         csl_for_year = CertifiedSickPerYear.objects.get(yearly_csl_officer_id=user.pk, csl_year=current_yr)
+    else:
+        csl_for_year = 0
     #Retrieve number of un-certified sick leave instances for current year.
     usl_for_this_year = UnCertifiedSickPerYear.objects.filter(yearly_usl_officer_id=user.pk).filter(usl_year=current_yr)
     len_usl_for_this_year = len(usl_for_this_year)
     if len_usl_for_this_year > 0:
         usl_for_year = UnCertifiedSickPerYear.objects.get(yearly_usl_officer_id=user.pk, usl_year=current_yr)
+    else:
+        usl_for_year = 0
     #Retrieve number of force majeure sick leave instances for current year.
     fm_for_this_year = ForceMajeurePerYear.objects.filter(yearly_fm_officer_id=user.pk).filter(fm_year=current_yr)
     len_fm_for_this_year = len(fm_for_this_year)
     if len_fm_for_this_year > 0:
         fm_for_year = ForceMajeurePerYear.objects.get(yearly_fm_officer_id=user.pk, fm_year=current_yr)
+    else:
+        fm_for_year = 0
         
     return render(request, "abscences_page.html", {'csl_for_year': csl_for_year, 'len_csl_for_this_year': len_csl_for_this_year, 'usl_for_year': usl_for_year, 'len_usl_for_this_year': len_usl_for_this_year, 'fm_for_year': fm_for_year, 'len_fm_for_this_year': len_fm_for_this_year})
     
