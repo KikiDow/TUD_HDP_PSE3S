@@ -16,6 +16,7 @@
                 <tbody>
                     <tr><td><strong>Officer: </strong></td><td>{{ usl_being_rejected.usl_officer_id }}</td></tr> 
                     <tr><td><strong>Date: </strong></td><td>{{ usl_being_rejected.usl_date }}</td></tr>
+                    <tr><td><strong>Reason U.S.L. Taken: </strong></td><td>{{ usl_being_rejected.reason_for_usl }}</td></tr>
                 </tbody>
             </table>
         </div>
@@ -30,7 +31,7 @@
                     <legend>Please provide a reason as to why application is being rejected</legend>
                     {% csrf_token %}
                     {{ usl_reject_form | as_bootstrap }}
-                    <button type="submit" onclick="return confirm('Are you sure you want to reject this application?')">Reject USL</button>
+                    <button class="btn btn-info" type="submit" onclick="return confirm('Are you sure you want to reject this application?')">Reject USL</button>
                 </fieldset>
             </form>
         </div>
