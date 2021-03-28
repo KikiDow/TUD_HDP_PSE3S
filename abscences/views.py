@@ -322,7 +322,7 @@ def accept_usl(request, pk):
     usl_being_accepted.save()
     current_year = getCurrentYear()
     usl_for_current_year_check = UnCertifiedSickPerYear.objects.filter(yearly_usl_officer_id=usl_being_accepted.usl_officer_id).filter(usl_year=current_year)
-    if usl_for_current_year_check.exist():
+    if usl_for_current_year_check.exists():
         usl_for_current_year_check = UnCertifiedSickPerYear.objects.get(yearly_usl_officer_id=usl_being_accepted.usl_officer_id, usl_year=current_year)
         usl_for_current_year_check.number_usl_for_year += 1
         usl_for_current_year_check.save()
