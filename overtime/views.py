@@ -393,9 +393,9 @@ def accept_nsot_request(request, pk):
     nsot_req_being_accepted.nsot_accepted = True
     nsot_req_being_accepted.save()
     qtr_application_date_in = getQtrDateIn(nsot_req_being_accepted.nsot_date)
-    new_short_overtime_record = ShortOvertime(short_ot_officer_id=nsot_req_being_accepted.nsot_off_id, short_ot_qtr_id=qtr_application_date_in.id, short_ot_date=nsot_req_being_accepted.nsot_date, short_ot_start_time=nsot_req_being_accepted.nsot_start_time, short_ot_end_time=nsot_req_being_accepted.nsot_end_time, overtime_hours=nsot_req_being_accepted.ot_hours_claimed)
+    new_short_overtime_record = ShortOvertime(short_ot_officer_id=nsot_req_being_accepted.nsot_off_id, short_ot_qtr_id=qtr_application_date_in, short_ot_date=nsot_req_being_accepted.nsot_date, short_ot_start_time=nsot_req_being_accepted.nsot_start_time, short_ot_end_time=nsot_req_being_accepted.nsot_end_time, overtime_hours=nsot_req_being_accepted.ot_hours_claimed)
     new_short_overtime_record.save()
-    officers_ot_per_qtr = OvertimePerQtr.objects.get(ot_per_qtr_off_id=nsot_req_being_accepted.nsot_off_id, ot_per_qtr_qtr_id=qtr_application_date_in.id)
+    officers_ot_per_qtr = OvertimePerQtr.objects.get(ot_per_qtr_off_id=nsot_req_being_accepted.nsot_off_id, ot_per_qtr_qtr_id=qtr_application_date_in)
     officers_ot_per_qtr.ot_hours_completed += nsot_req_being_accepted.ot_hours_claimed
     officers_ot_per_qtr.save()
     #NOTIFICATION TO APPLICANT THAT NSOT REQUEST HAS BEEN ACCEPTED.
