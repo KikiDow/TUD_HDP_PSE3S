@@ -321,7 +321,7 @@ def reject_csl(request, pk):
             #NOTIFICATION TO APPLICANY THAT CERT HAS BEEN REJECTED.
             notify.send(request.user, recipient=csl_being_rejected.csl_officer_id, verb=" has rejected your Certified Sick Leave application: " + str(csl_being_rejected))
             messages.success(request, 'Cert Successfully Rejected.')
-            return redirect('view_staff_sick_leave_submissions')
+            return redirect('view_staff_sick_leave_applications')
     else:
         csl_reject_form = RejectCertifiedSickLeaveForm(instance=csl_being_rejected)
     return render(request, "reject_csl.html", {'csl_being_rejected': csl_being_rejected, 'csl_reject_form': csl_reject_form})
@@ -397,7 +397,7 @@ def reject_fm(request, pk):
             #NOTIFICATION TO APPLICANY THAT UN-CERT HAS BEEN REJECTED.
             notify.send(request.user, recipient=fm_being_rejected.fm_officer_id, verb=" has rejected your Force Majeure application: " + str(fm_being_rejected))
             messages.success(request, 'Force Majeure Application Rejected.')
-            return redirect('view_staff_sick_leave_submissions')
+            return redirect('view_staff_sick_leave_applications')
     else:
         fm_reject_form = RejectForceMajeureForm(instance=fm_being_rejected)
     return render(request, "reject_fm.html", {'fm_being_rejected': fm_being_rejected, 'fm_reject_form': fm_reject_form})
