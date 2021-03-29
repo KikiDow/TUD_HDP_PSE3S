@@ -58,7 +58,7 @@
                     {% for st_req in staff_submitted_st_requests %}
                         <tr>
                             <td>{{ st_req.st_annual_leave_request_officer_id }}</td>
-                            <td><a class="btn btn-info btn-sm" href="{% url 'view_st_leave_request' st_req.id %}"><i class="fa fa-eye"></i> View Request </a></td>
+                            <td><a class="btn btn-info" href="{% url 'view_st_leave_request' st_req.id %}"><i class="fa fa-eye"></i> View Request </a></td>
                         </tr>
                     {% endfor %}
                 </tbody>
