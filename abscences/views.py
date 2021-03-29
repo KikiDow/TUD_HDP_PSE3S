@@ -361,7 +361,7 @@ def reject_usl(request, pk):
             #NOTIFUCATION TO APPLICANY THAT UN-CERT HAS BEEN REJECTED.
             notify.send(request.user, recipient=usl_being_rejected.usl_officer_id, verb=" has rejected your Un-Certified Sick Leave application: " + str(usl_being_rejected))
             messages.success(request, 'USL Application Rejected.')
-            return redirect('view_staff_sick_leave_submissions')
+            return redirect('view_staff_sick_leave_applications')
     else:
         usl_reject_form = RejectUnCertifiedSickLeaveForm(instance=usl_being_rejected)
     return render(request, "reject_usl.html", {'usl_being_rejected': usl_being_rejected, 'usl_reject_form': usl_reject_form})
