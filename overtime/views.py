@@ -266,6 +266,7 @@ def reject_allowance_request(request, pk):
             #NOTIFICATION TO APPLCANT THAT ALLOWANCE REQUEST HAS BEEN REJECTED.
             notify.send(request.user, recipient=allow_req_being_rejected.allow_req_off_id, verb=" has rejected your allowance request : " + str(allow_req_being_rejected.allow_req_date))
             messages.success(request, "You have rejected this allowance request.")
+            return redirect('view_staff_allowance_requests')
     else:
         allow_req_reject_form = RejectAllowanceRequestForm(instance=allow_req_being_rejected)
     return render(request, "reject_allow_request.html", {'allow_req_being_rejected': allow_req_being_rejected, 'allow_req_reject_form': allow_req_reject_form})
