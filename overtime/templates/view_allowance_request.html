@@ -127,7 +127,7 @@
     <div class="row justify-content-center">
         <div class="col-md-2"></div>
         <div class="col-md-4 col-sm-12 col-xs-12">
-            <a class="btn btn-info" href="{% url 'accept_allowance_request' allow_req_to_view.id %}"><i class="fa fa-thumbs-up"></i> Accept Request </a>
+            <a class="btn btn-info" onclick="return confirm('Are you sure you wish to accept this Allowance request?')" href="{% url 'accept_allowance_request' allow_req_to_view.id %}"><i class="fa fa-thumbs-up"></i> Accept Request </a>
         </div>
         <div class="col-md-4 col-sm-12 col-xs-12">
             <a class="btn btn-info" href="{% url 'reject_allowance_request' allow_req_to_view.id %}"><i class="fa fa-thumbs-down"></i> Reject Request </a>

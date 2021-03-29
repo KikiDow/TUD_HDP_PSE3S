@@ -141,6 +141,7 @@ def submit_allowance_request(request):
                         total_claim_amount += allowance_request.food_for_prisoner_amount
                     allowance_request.claim_total = total_claim_amount
                     allowance_request.save()
+                    messages.success(request, "You have submitted an allowance request for €" + str(allowance_request.claim_total))
                     return redirect(view_allowance_request, allowance_request.pk)
             else:
                 allowance_request = allowance_req_form.save()
@@ -157,6 +158,7 @@ def submit_allowance_request(request):
                     total_claim_amount += allowance_request.food_for_prisoner_amount
                 allowance_request.claim_total = total_claim_amount
                 allowance_request.save()
+                messages.success(request, "You have submitted an allowance request for €" + str(allowance_request.claim_total))
                 return redirect(view_allowance_request, allowance_request.pk)
     else:
         allowance_req_form = AllowancesRequestForm()
