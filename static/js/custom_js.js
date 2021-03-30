@@ -1,3 +1,6 @@
+/*global navigator*/
+/*global $*/
+
 function validateDate(inputText) {
     if( inputText.value == "" ) {
             alert( "No date entered !!" );
@@ -39,4 +42,46 @@ function validateDate(inputText) {
         //document.rosterSearchForm.q.focus();
         return false;
     }
+}
+
+let options = {
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 300000
+    }
+    
+function showLocationOnMap() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showCurrentLocationOnMap, handleErrors, options);
+    } else {
+        x.innerHTML("Gelocation is not supported by this browser.")
+    }
+}
+
+function handleErrors(error) {
+    switch (error.code) {
+        case error.PERMISSION_DENIED:
+          alert("You must share your position if you wish to clock remotely.");
+          break;
+        case error.POSITION_UNAVAILABLE:
+          alert("Unable to determine your current position.");
+          break;
+        case error.TIMEOUT:
+          alert("The request for geolocation information timed out.");
+          break;
+        case error.UNKNOWN_ERROR:
+          alert("An unknown error occurred. Unable to find your location at this time.");
+          break;
+    }
+}
+
+function showCurrentLocationOnMap(position) {
+    //var crd = position.coords;
+    //console.log("Here 1");
+    var current_lat = position.coords.latitude;
+    //console.log(current_lat)
+    var current_lon = position.coords.longitude;
+    var coords = current_lat + ', ' + current_lon;
+    document.getElementById(id='google_map').setAttribute('src', 'https://maps.google.co.uk?q=' + coords + '&zoom=20&output=embed');
+    alert("Your position is now on the map.")
 }
