@@ -1,5 +1,5 @@
 from django.conf.urls import url, include
-from .views import landing_page, clocking_page, generate_roster, view_personal_details, create_personal_details, edit_personal_details, my_notifications, clock, manual_clocking, view_manual_clock, view_submitted_manual_clockings, accept_manual_clock, reject_manual_clock, search_roster, previous_manual_clockings, search_manual_clocks, edit_manual_clock, delete_manual_clock
+from .views import landing_page, clocking_page, generate_roster, view_personal_details, create_personal_details, edit_personal_details, my_notifications, clock, manual_clocking, view_manual_clock, view_submitted_manual_clockings, accept_manual_clock, reject_manual_clock, search_roster, previous_manual_clockings, search_manual_clocks, edit_manual_clock, delete_manual_clock, remote_clocking_page
 
 urlpatterns = [
     url(r'^$', landing_page, name='index'),
@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^search_manual_clocks/$', search_manual_clocks, name='search_manual_clocks'),
     url(r'^(?P<pk>\d+)/edit_manual_clock/$', edit_manual_clock, name='edit_manual_clock'),
     url(r'^(?P<pk>\d+)/delete_manual_clock/$', delete_manual_clock, name='delete_manual_clock'),
-] 
+    url(r'^remote_clocking_page/$', remote_clocking_page, name='remote_clocking_page')
+]

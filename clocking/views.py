@@ -395,3 +395,7 @@ def delete_manual_clock(request, pk):
     manual_clock__for_deletion.delete()
     messages.success(request, "You have successfully deleted this Manual Clocking.")
     return redirect('previous_manual_clockings')
+    
+@login_required()
+def remote_clocking_page(request):
+    return render(request, "remote_clocking_page.html")
