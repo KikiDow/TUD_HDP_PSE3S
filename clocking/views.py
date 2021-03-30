@@ -11,6 +11,7 @@ from notifications.signals import notify
 from notifications.models import Notification
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
+from geopy.geocoders import Nominatim
 # Create your views here.
 
 def landing_page(request):
@@ -407,3 +408,41 @@ def view_remote_clockings(request):
     len_remote_clockings = len(my_remote_clockings)
     
     return render(request, "view_remote_clockings.html", {'my_remote_clockings': my_remote_clockings, 'len_remote_clockings': len_remote_clockings})
+    
+def get_user_coords(request):
+    print("Made it to get_user_coords in view.")
+    if request.method == "POST":
+        users_current_lat = request.POST.get('users_lat')
+        users_current_lon = request.POST.get('users_lon')
+        
+    print(users_current_lat)
+    print(users_current_lon)
+    #print(type(users_current_lat))
+    #Convert the co-ordinates to floating point numbers.
+    convert_lat_to_float = float(users_current_lat)
+    convert_lon_to_float = float(users_current_lon)
+    print("Converted coords to floats.")
+    
+    geolocator = Nominatim(user_agent='clockings')
+    print("Created geolocator")
+    #Attain the address of the location of where the user clocked.
+    current_address = geolocator.reverse(users_current_lat + ", " + users_current_lon)
+    print(current_address)
+    
+    user = request.user
+    todaysDate = datetime.datetime.now()
+    #Check if Remote cloking record exists for todays date.
+    remote_clock_for_todaysDate_check = RemoteClock.objects.filter(remote_clock_officer_id=user).filter(remote_clocking_date=todaysDate)
+    if remote_clock_for_todaysDate_check.exists():
+        print("Clocking exists.")
+        remote_clock_for_today = RemoteClock.objects.get(remote_clock_officer_id=user, remote_clocking_date=todaysDate)
+        remote_clock_for_today.updateCorrectRemoteClocking(request, convert_lat_to_float, convert_lon_to_float, current_address)
+        print("After updateCorrectClocking function call.")
+        messages.success(request, "Remote Clocking Successful")
+    else:
+        remote_clock_for_today = RemoteClock(remote_clock_officer_id=user, remote_clocking_date=todaysDate)
+        remote_clock_for_today.updateCorrectRemoteClocking(request, convert_lat_to_float, convert_lon_to_float, current_address)
+        print("After update call on new remote clocking instance instanciated.")
+        messages.success(request, "Remote Clocking Successful")
+    #return render(request, "view_coords.html")
+    return render(request, "view_coords.html")

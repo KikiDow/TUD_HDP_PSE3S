@@ -85,3 +85,35 @@ function showCurrentLocationOnMap(position) {
     document.getElementById(id='google_map').setAttribute('src', 'https://maps.google.co.uk?q=' + coords + '&zoom=20&output=embed');
     alert("Your position is now on the map.")
 }
+
+function getLocationToClock() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(clockRemotely);
+    } else { 
+        x.innerHTML = "Geolocation is not supported by this browser.";
+    }
+}
+
+function clockRemotely(position) {
+    var csrf = $("input[name=csrfmiddlewaretoken]").val()
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
+    $.ajax({
+        url: "/clockings/get_user_coords/",
+        type: "POST",
+        dataType: "json",
+        data : {
+          'users_lat': latitude,
+          'users_lon': longitude,
+          csrfmiddlewaretoken: csrf
+        },
+        success : function(json) {
+          //alert("Successfully sent the co-ordinates to Django");
+          console.log("Success");
+        },
+        error : function(xhr,errmsg,err) {
+          //alert("Could not send URL to Django. Error: " + xhr.status + ": " + xhr.responseText;
+          console.log("Error " + xhr.status);
+        }
+     });
+}
