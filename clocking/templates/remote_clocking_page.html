@@ -17,7 +17,7 @@
     <div class="row justify-content-center">
         <button id="show_location" value="show_location" name="show_location" onclick="showLocationOnMap()" class="btn btn-info basic-button col-md-3 col-sm-10 col-xs-10">Show My Position</button>
         <a class="btn btn-info basic-button col-md-3 col-sm-10 col-xs-10" href="">Clock Remotely</a>
-        <a class="btn btn-info basic-button col-md-3 col-sm-10 col-xs-10" href="">Previous Remote Clockings</a>
+        <a class="btn btn-info basic-button col-md-3 col-sm-10 col-xs-10" href="{% url 'view_remote_clockings' %}">Previous Remote Clockings</a>
     </div>
 </div>
 {% endblock %}

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 import datetime
-from .models import Quarter, Shift, RosterSideA, RosterSideB, Roster, PersonalDetails, ManualClocking
+from .models import Quarter, Shift, RosterSideA, RosterSideB, Roster, PersonalDetails, ManualClocking, RemoteClock
 from .forms import PersonalDetailsForm, ManualClockingForm, RejectManualClockingForm
 from django.contrib import messages
 from.utils import findRosterStartPoint, rosterPointerCheck, getStartPageForPagination, getSearchResultPaginationStartPage, convertStrToDateObj
@@ -399,3 +399,11 @@ def delete_manual_clock(request, pk):
 @login_required()
 def remote_clocking_page(request):
     return render(request, "remote_clocking_page.html")
+    
+@login_required()
+def view_remote_clockings(request):
+    user = request.user
+    my_remote_clockings = RemoteClock.objects.filter(remote_clock_officer_id=user.pk)
+    len_remote_clockings = len(my_remote_clockings)
+    
+    return render(request, "view_remote_clockings.html", {'my_remote_clockings': my_remote_clockings, 'len_remote_clockings': len_remote_clockings})
