@@ -187,3 +187,63 @@ class LatesPerYear(models.Model):
     def __str__(self):
         return str(self.yearly_lates_officer_id) + " has had " + str(self.number_lates_for_year) + " lates in " + str(self.lates_year)
         
+class RemoteClock(models.Model):
+	remote_clock_officer_id = models.ForeignKey(Account,related_name='remote_clock_officer_id', on_delete=models.CASCADE)
+	remote_number_of_clockings = models.IntegerField(default=0)
+	#Remote Clocking In
+	remote_clock_in_address = models.CharField(max_length=2000, blank=True, null=True)
+	remote_clock_in_latitude = models.FloatField(blank=True, null=True)
+	remote_clock_in_longitude = models.FloatField(blank=True, null=True)
+	remote_clocking_in_time = models.TimeField(blank=True, null=True)
+	#Remote Lunch Out
+	remote_lunch_out_address = models.CharField(max_length=2000, blank=True, null=True)
+	remote_lunch_out_latitude = models.FloatField(blank=True, null=True)
+	remote_lunch_out_longitude = models.FloatField(blank=True, null=True)
+	remote_lunch_out_time = models.TimeField(blank=True, null=True)
+	#Remote Lunch In
+	remote_lunch_in_address = models.CharField(max_length=2000, blank=True, null=True)
+	remote_lunch_in_latitude = models.FloatField(blank=True, null=True)
+	remote_lunch_in_longitude = models.FloatField(blank=True, null=True)
+	remote_lunch_in_time = models.TimeField(blank=True, null=True)
+	#Remote Clocking Out
+	remote_clock_out_address = models.CharField(max_length=2000, blank=True, null=True)
+	remote_clock_out_latitude = models.FloatField(blank=True, null=True)
+	remote_clock_out_longitude = models.FloatField(blank=True, null=True)
+	remote_clocking_out_time = models.TimeField(blank=True, null=True)
+	
+	remote_clocking_date = models.DateField(blank=True, null=True)
+	
+	def __str__(self):
+		return f"User clocked in at {self.remote_clock_in_address} on {self.remote_clocking_date}."
+		
+	def updateCorrectRemoteClocking(self, request, lat, lon, address):
+		if self.remote_number_of_clockings == 0:
+			self.remote_clocking_in_time = datetime.now().time().replace(microsecond=0)
+			self.remote_clock_in_address = address
+			self.remote_clock_in_latitude = lat
+			self.remote_clock_in_longitude = lon
+			messages.success(request, "Remote Clock In completed.")
+		elif self.remote_number_of_clockings == 1:
+			self.remote_lunch_out_time = datetime.now().time().replace(microsecond=0)
+			self.remote_lunch_out_address = address
+			self.remote_lunch_out_latitude = lat
+			self.remote_lunch_out_longitude = lon
+			messages.success(request, "Remote Lunch Out Clock completed.")
+		elif self.remote_number_of_clockings == 2:
+			self.remote_lunch_in_time = datetime.now().time().replace(microsecond=0)
+			self.remote_lunch_in_address = address
+			self.remote_lunch_in_latitude = lat
+			self.remote_lunch_in_longitude = lon
+			messages.success(request, "Remote Lunch In Clock completed.")
+		elif self.remote_number_of_clockings == 3:
+			self.remote_clocking_out_time = datetime.now().time().replace(microsecond=0)
+			self.remote_clock_out_address = address
+			self.remote_clock_out_latitude = lat
+			self.remote_clock_out_longitude = lon
+			messages.success(request, "Remote Clock Out completed.")
+		else:
+			messages.success(request, "You have completed all clockings for this date.")
+			#self.remote_clock_out_location = ???
+		self.remote_number_of_clockings += 1
+		return self.save()
+        
