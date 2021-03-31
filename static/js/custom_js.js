@@ -99,7 +99,7 @@ function clockRemotely(position) {
     var latitude = position.coords.latitude;
     var longitude = position.coords.longitude;
     $.ajax({
-        url: "/clockings/get_user_coords/",
+        url: "/clocking/get_user_coords/",
         type: "POST",
         dataType: "json",
         data : {

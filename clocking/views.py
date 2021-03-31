@@ -12,6 +12,8 @@ from notifications.models import Notification
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
 from geopy.geocoders import Nominatim
+import folium
+from IPython.core.display import HTML
 # Create your views here.
 
 def landing_page(request):
@@ -445,4 +447,32 @@ def get_user_coords(request):
         print("After update call on new remote clocking instance instanciated.")
         messages.success(request, "Remote Clocking Successful")
     #return render(request, "view_coords.html")
-    return render(request, "view_coords.html")
+    return redirect('remote_clocking_page')
+    
+@login_required()
+def view_individual_remote_clocking(request, pk):
+    remote_clocking_to_view = get_object_or_404(RemoteClock, pk=pk)
+    
+    geolocator = Nominatim(user_agent='clockings')
+    
+    clocking_in_spot = (remote_clocking_to_view.remote_clock_in_latitude, remote_clocking_to_view.remote_clock_in_longitude)
+    
+    m = folium.Map(width=600, height=600, location=clocking_in_spot, zoom_start=16)
+    if remote_clocking_to_view.remote_number_of_clockings == 1:
+        folium.Marker([remote_clocking_to_view.remote_clock_in_latitude, remote_clocking_to_view.remote_clock_in_longitude], popup="Clocking In Icon", icon=folium.Icon(color='blue')).add_to(m)
+    elif remote_clocking_to_view.remote_number_of_clockings == 2:
+        folium.Marker([remote_clocking_to_view.remote_clock_in_latitude, remote_clocking_to_view.remote_clock_in_longitude], popup="Clocking In Icon", icon=folium.Icon(color='blue')).add_to(m)
+        folium.Marker([remote_clocking_to_view.remote_lunch_out_latitude, remote_clocking_to_view.remote_lunch_out_longitude], popup="Lunch Out Icon", icon=folium.Icon(color='purple')).add_to(m)
+    elif remote_clocking_to_view.remote_number_of_clockings == 3:
+        folium.Marker([remote_clocking_to_view.remote_clock_in_latitude, remote_clocking_to_view.remote_clock_in_longitude], popup="Clocking In Icon", icon=folium.Icon(color='blue')).add_to(m)
+        folium.Marker([remote_clocking_to_view.remote_lunch_out_latitude, remote_clocking_to_view.remote_lunch_out_longitude], popup="Lunch Out Icon", icon=folium.Icon(color='purple')).add_to(m)
+        folium.Marker([remote_clocking_to_view.remote_lunch_in_latitude, remote_clocking_to_view.remote_lunch_in_longitude], popup="Lunch In Icon", icon=folium.Icon(color='orange')).add_to(m)
+    else:
+        folium.Marker([remote_clocking_to_view.remote_clock_in_latitude, remote_clocking_to_view.remote_clock_in_longitude], popup="Clocking In Icon", icon=folium.Icon(color='blue')).add_to(m)
+        folium.Marker([remote_clocking_to_view.remote_lunch_out_latitude, remote_clocking_to_view.remote_lunch_out_longitude], popup="Lunch Out Icon", icon=folium.Icon(color='purple')).add_to(m)
+        folium.Marker([remote_clocking_to_view.remote_lunch_in_latitude, remote_clocking_to_view.remote_lunch_in_longitude], popup="Lunch In Icon", icon=folium.Icon(color='orange')).add_to(m)
+        folium.Marker([remote_clocking_to_view.remote_clock_out_latitude, remote_clocking_to_view.remote_clock_out_longitude], popup="Clocking Out Icon", icon=folium.Icon(color='green')).add_to(m)
+    
+    m = m._repr_html_()
+    
+    return render(request, "view_individual_remote_clocking.html", {'remote_clocking_to_view': remote_clocking_to_view, 'clockings_map': m})

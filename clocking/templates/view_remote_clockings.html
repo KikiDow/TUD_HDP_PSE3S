@@ -28,7 +28,7 @@
                     {% for remote_clock in my_remote_clockings %}
                         <tr>
                             <td>{{ remote_clock.remote_clocking_date }}</td>
-                            <td><a class="btn btn-info" href=""><i class="fa fa-eye"></i> View</a></td>
+                            <td><a class="btn btn-info" href="{% url 'view_individual_remote_clocking' remote_clock.id %}"><i class="fa fa-eye"></i> View</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>
