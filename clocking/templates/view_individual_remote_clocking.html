@@ -10,7 +10,9 @@
 </div>
 <div class="container">
     <div class="row justify-content-center">
-        <table class="justify-content-center">
+        <div class="col-md-2"></div>
+        <div class="col-md-7 justify-content-center">
+        <table class="table table-secondary table-bordered">
             <tbody>
                 <tr>
                     <td><strong>Date: </strong></td>
@@ -33,15 +35,22 @@
                     <td>{{ remote_clocking_to_view.remote_clocking_out_time }}</td>
                 </tr>
                 <tr>
-                    <td colspan="2">{{ clockings_map|safe }}</td>
+                    <td colspan="2">
+                        {{ clockings_map|safe }}
+                    </td>
                 </tr>
             </tbody>
         </table>
+        </div>
+        <div class="col-md-2"></div>
     </div>
+    <!--<div class="row justify-content-center">
+        {{ clockings_map|safe }}
+    </div>-->
     <hr>
     <div class="row justify-content-center">
-        This product includes GeoLite2 data created by MaxMind, available from
-        <a href="https://www.maxmind.com">https://www.maxmind.com</a>.
+        This product includes GeoLite2 data created by MaxMind, available from 
+        <a href="https://www.maxmind.com"> https://www.maxmind.com</a>.
     </div>
 </div>
 {% endblock %}
