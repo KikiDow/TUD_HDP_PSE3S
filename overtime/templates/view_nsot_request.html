@@ -72,29 +72,25 @@
             <div class="col-md-2"></div>
     </div>
     <div class="row justify-content-center">
-        <div class="col-md-2"></div>
-        <div class="col-md-4 col-sm-12 col-xs-12">
+        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-1">
             {% if user == nsot_req_to_view.nsot_off_id and nsot_req_to_view.nsot_checked_by_validator == False %}
-            <a class="btn btn-info" href="{% url 'edit_nsot_request' nsot_req_to_view.id %}"><i class="fa fa-pencil"></i> Edit NSOT Request </a>
+            <a class="btn btn-info absence-buttons basic-button" href="{% url 'edit_nsot_request' nsot_req_to_view.id %}"><i class="fa fa-pencil"></i> Edit NSOT Request </a>
             {% endif %}
         </div>
-        <div class="col-md-4 col-sm-12 col-xs-12">
+        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-1">
             {% if user == nsot_req_to_view.nsot_off_id %}
-            <a class="btn btn-info" onclick="return confirm('Are you sure you wish to delete this Non Scheduled Overtime Request?')" href="{% url 'delete_nsot_request' nsot_req_to_view.id %}"><i class="fa fa-trash"></i> Delete NSOT Request </a>
+            <a class="btn btn-info absence-buttons basic-button" onclick="return confirm('Are you sure you wish to delete this Non Scheduled Overtime Request?')" href="{% url 'delete_nsot_request' nsot_req_to_view.id %}"><i class="fa fa-trash"></i> Delete NSOT Request </a>
             {% endif %}
         </div>
-        <div class="col-md-2"></div>
     </div>
     <div class="row justify-content-center">
         {% if user.is_staff and user != nsot_req_to_view.nsot_off_id %}
-        <div class="col-md-2"></div>
-        <div class="col-md-4 col-sm-12 col-xs-12">
-            <a class="btn btn-info" onclick="return confirm('Are you sure you wish to accept this Non Scheduled Overtime Request?')" href="{% url 'accept_nsot_request' nsot_req_to_view.id %}"><i class="fa fa-thumbs-up"></i> Accept Request </a>
+        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-1">
+            <a class="btn btn-info absence-buttons basic-button" onclick="return confirm('Are you sure you wish to accept this Non Scheduled Overtime Request?')" href="{% url 'accept_nsot_request' nsot_req_to_view.id %}"><i class="fa fa-thumbs-up"></i> Accept Request </a>
         </div>
-        <div class="col-md-4 col-sm-12 col-xs-12">
-            <a class="btn btn-info" href="{% url 'reject_nsot_request' nsot_req_to_view.id %}"><i class="fa fa-thumbs-down"></i> Reject Request </a>
+        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-1">
+            <a class="btn btn-info absence-buttons basic-button" href="{% url 'reject_nsot_request' nsot_req_to_view.id %}"><i class="fa fa-thumbs-down"></i> Reject Request </a>
         </div>
-        <div class="col-md-2"></div>
         {% endif %}
     </div>
 </div>

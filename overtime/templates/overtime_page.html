@@ -163,23 +163,30 @@
     </div>
         {% endif %}
     <div class="row justify-content-center">
-        <a class="btn btn-info basic-button col-xl-4 col-lg-4 col-md-4 col-sm-10 col-xs-10" href="{% url 'availability_page' %}"> Availability </a>
-        <a class="btn btn-info basic-button col-xl-4 col-lg-4 col-md-4 col-sm-10 col-xs-10" href="{% url 'non_scheduled_ot_page' %}"> Non Scheduled Overtime </a>
-        <a class="btn btn-info basic-button col-xl-4 col-lg-4 col-md-4 col-sm-10 col-xs-10" href="{% url 'allowances_page' %}"> Allowances </a>
+        <div class="row justify-content-center col-md-3 col-sm-10 col-xs-10">
+            <a class="btn btn-info basic-button" href="{% url 'availability_page' %}"> Availability </a>
+        </div>
+        <div class="row justify-content-center col-md-3 col-sm-10 col-xs-10">
+            <a class="btn btn-info basic-button" href="{% url 'non_scheduled_ot_page' %}"> Non Scheduled Overtime </a>
+        </div>
+        <div class="row justify-content-center col-md-3 col-sm-10 col-xs-10">
+            <a class="btn btn-info basic-button" href="{% url 'allowances_page' %}"> Allowances </a>
+        </div>
     </div>
+    <hr/>
     {% if user.is_staff %}
     <div class="row justify-content-center">
-        <div class="row justify-content-center col-md-4 col-sm-10 col-xs-10">
-             <a class="btn btn-info" href="{% url 'view_staff_nsot_requests' %}">View Staff NSOT Requests </a>
+        <div class="row justify-content-center col-md-3 col-sm-10 col-xs-10">
+             <a class="btn btn-info basic-button" href="{% url 'view_staff_nsot_requests' %}">View Staff NSOT Requests </a>
         </div>
-        <div class="row justify-content-center col-md-4 col-sm-10 col-xs-10">
-             <a class="btn btn-info" href="{% url 'view_staff_allowance_requests' %}">View Staff Allowance Requests</a>
+        <div class="row justify-content-center col-md-3 col-sm-10 col-xs-10">
+             <a class="btn btn-info basic-button" href="{% url 'view_staff_allowance_requests' %}">View Staff Allowance Requests</a>
         </div>
-        <div class="row justify-content-center col-md-4 col-sm-10 col-xs-10">
-             <a class="btn btn-info" href="{% url 'assign_ot_date' %}"> Assign Overtime </a>
+        <div class="row justify-content-center col-md-3 col-sm-10 col-xs-10">
+             <a class="btn btn-info basic-button" href="{% url 'assign_ot_date' %}"> Assign Overtime </a>
         </div>
-        <div class="row justify-content-center col-md-4 col-sm-10 col-xs-10">
-             <a class="btn btn-info" href="{% url 'assign_st_ot_date' %}"> Assign Short-Term </a>
+        <div class="row justify-content-center col-md-3 col-sm-10 col-xs-10">
+             <a class="btn btn-info basic-button" href="{% url 'assign_st_ot_date' %}"> Assign Short-Term </a>
         </div>
     </div>
     {% endif %}
