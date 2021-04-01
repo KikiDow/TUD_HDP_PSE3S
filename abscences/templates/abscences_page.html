@@ -63,10 +63,11 @@
             <a class="btn btn-info absence-buttons" href="{% url 'view_my_sick_leave' %}"> My Previous Abscences </a>
         </div>
     </div>
+    <hr/>
     {% if user.is_staff %}
     <div class="row justify-content-center">
         <!-- BUTTON FOR STAFF TO VIEW REPORTED ABSCENCES -->
-        <a class="btn btn-info" href="{% url 'view_staff_sick_leave_applications' %}">Staff Sick Leave Submissions</a>
+        <a class="btn btn-info basic-button" href="{% url 'view_staff_sick_leave_applications' %}">Staff Sick Leave Submissions</a>
     </div>
     {% endif %}
 </div>

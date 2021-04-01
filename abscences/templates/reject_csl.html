@@ -32,7 +32,7 @@
                     <legend>Please provide a reason as to why application is being rejected</legend>
                     {% csrf_token %}
                     {{ csl_reject_form | as_bootstrap }}
-                    <button type="submit" onclick="return confirm('Are you sure?')">Reject Cert</button>
+                    <button class="btn btn-info" type="submit" onclick="return confirm('Are you sure?')">Reject Cert</button>
                 </fieldset>
             </form>
         </div>

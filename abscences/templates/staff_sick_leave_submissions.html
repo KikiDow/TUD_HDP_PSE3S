@@ -22,12 +22,14 @@
             <table class="table table-striped table-dark mb-0">
                 <thead>
                     <th>Officer</th>
+                    <th>Date of Return</th>
                     <th><i class="fa fa-folder-open fa-lg"></i></th>
                 </thead>
                 <tbody>
                     {% for csl_req in staff_csl_submissions %}
                         <tr>
                             <td>{{ csl_req.csl_officer_id.firstname }} {{ csl_req.csl_officer_id.lastname }}</td>
+                            <td>{{ csl_req.last_day_of_cert }}</td>
                             <td><a class="btn btn-info" href="{% url 'view_csl_application' csl_req.id %}"><i class="fa fa-eye"></i> View </a></td>
                         </tr>
                     {% endfor %}
@@ -52,13 +54,15 @@
             <table class="table table-striped table-dark mb-0">
                 <thead>
                     <th>Officer</th>
+                    <th>Date</th>
                     <th><i class="fa fa-folder-open fa-lg"></i></th>
                 </thead>
                 <tbody>
                     {% for usl_req in staff_usl_submissions %}
                         <tr>
                             <td>{{ usl_req.usl_officer_id.firstname }} {{ usl_req.usl_officer_id.lastname }}</td>
-                            <td><a class="btn btn-info btn-sm" href="{% url 'view_usl_application' usl_req.id %}"><i class="fa fa-eye"></i> View </a></td>
+                            <td>{{ usl_req.usl_date }}</td>
+                            <td><a class="btn btn-info" href="{% url 'view_usl_application' usl_req.id %}"><i class="fa fa-eye"></i> View </a></td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -67,7 +71,9 @@
         <div class="col-md-3"></div>
     </div>
     {% endif %}
-    <h3> Force Majeure </h3>
+    <hr/>
+    <div class="row justify-content-center">
+        <h3> Force Majeure </h3>
     </div>
     {% if len_staff_fm_submissions == 0 %}
     <div class="row justify-content-center">
@@ -80,13 +86,15 @@
             <table class="table table-striped table-dark mb-0">
                 <thead>
                     <th>Officer</th>
+                    <th>Date</th>
                     <th><i class="fa fa-folder-open fa-lg"></i></th>
                 </thead>
                 <tbody>
                     {% for fm_req in staff_fm_submissions %}
                         <tr>
                             <td>{{ fm_req.fm_officer_id.firstname }} {{ fm_req.fm_officer_id.lastname }}</td>
-                            <td><a class="btn btn-info btn-sm" href="{% url 'view_fm_application' fm_req.id %}"><i class="fa fa-eye"></i> View </a></td>
+                            <td>{{ fm_req.fm_date }}</td>
+                            <td><a class="btn btn-info" href="{% url 'view_fm_application' fm_req.id %}"><i class="fa fa-eye"></i> View </a></td>
                         </tr>
                     {% endfor %}
                 </tbody>
