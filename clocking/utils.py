@@ -65,14 +65,14 @@ def convertStrToDateObj(date_as_string):
     
 def checkForLateClocking(t, officer):
     from .models import Lates, LatesPerYear, Roster, Shift
-    clocking_being_checked = t.replace(microseconds=0)
+    clocking_being_checked = t
     todays_date = dt.date.today()
     clocking_being_checked_as_dt_obj = dt.datetime.combine(todays_date, clocking_being_checked)
     
     person_who_clocked = officer
     todays_roster = Roster.objects.get(roster_officer_id=person_who_clocked, roster_shift_date=todays_date)
     #May add more conditional logic to check clocking for Overtime & Exchanges.
-    todays_shift = get_object_or_404(Shift, pk=todays_roster.pk)
+    todays_shift = get_object_or_404(Shift, pk=todays_roster.roster_shift.id)
     
     start_time_as_dt_obj = dt.datetime.combine(todays_roster.roster_shift_date, todays_shift.shift_start_time)
     

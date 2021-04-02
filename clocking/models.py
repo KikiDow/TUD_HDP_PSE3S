@@ -85,25 +85,25 @@ class Roster(models.Model):
             
     def updateCorrectClocking(self, request):
         if self.number_of_clockings == 0:
-            t = datetime.now().time()
-            self.clocking_in_time = t.replace(microsecond=0)
+            t = datetime.now().time().replace(microsecond=0)
+            self.clocking_in_time = t
             #print("Clock In: " + str(self.clocking_in_time))
             officer = self.roster_officer_id
             checkForLateClocking(t, officer)
             messages.success(request, "Clock In completed.")
         elif self.number_of_clockings == 1:
-            t = datetime.now().time()
-            self.lunch_out_time = t.replace(microsecond=0)
+            t = datetime.now().time().replace(microsecond=0)
+            self.lunch_out_time = t
             #print("Lunch Out: " + str(self.lunch_out_time))
             messages.success(request, "Lunch Out clock completed.")
         elif self.number_of_clockings == 2:
-            t = datetime.now().time()
-            self.lunch_in_time = t.replace(microsecond=0)
+            t = datetime.now().time().replace(microsecond=0)
+            self.lunch_in_time = t
             #print("Lunch In: " + str(self.lunch_in_time))
             messages.success(request, "Lunch In clock completed.")
         else:
-            t = datetime.now().time()
-            self.clocking_out_time = t.replace(microsecond=0)
+            t = datetime.now().time().replace(microsecond=0)
+            self.clocking_out_time = t
             #print("Clock Out: " + str(self.clocking_out_time))
             messages.success(request, "Clock Out completed.")
         self.number_of_clockings += 1
