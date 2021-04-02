@@ -132,7 +132,31 @@ def previous_exchanges(request):
     previous_exchange_reqs = exchange_requests.filter(swap_confirmed=True).filter(Q(exchange_req_date__lt=todays_date) & Q(replacing_req_date__lt=todays_date))
     len_previous_exchange_reqs = len(previous_exchange_reqs)
     
-    return render(request, "view_previous_exchanges.html", {'exchange_reqs_cancelled': exchange_reqs_cancelled, 'previous_exchange_reqs': previous_exchange_reqs,'len_cancelled_exchanges': len_cancelled_exchanges, 'len_previous_exchange_reqs': len_previous_exchange_reqs})
+    #Pagination for previous exchanges.
+    previous_exch_page_number = 1
+    previous_exch_page = request.GET.get('previous_exch_page', previous_exch_page_number)
+    
+    previous_exch_paginator = Paginator(previous_exchange_reqs, 6)
+    try:
+        my_previous_exchanges = previous_exch_paginator.page(previous_exch_page)
+    except PageNotAnInteger:
+        my_previous_exchanges = previous_exch_paginator.page(1)
+    except EmptyPage:
+        my_previous_exchanges = previous_exch_paginator.page(previous_exch_paginator.num_pages)
+        
+    #Pagination for cancelled exchanges.
+    cancelled_exch_page_number = 1
+    cancelled_exch_page = request.GET.get('cancelled_exch_page', cancelled_exch_page_number)
+    
+    cancelled_exch_paginator = Paginator(exchange_reqs_cancelled, 6)
+    try:
+        my_cancelled_exchanges = cancelled_exch_paginator.page(cancelled_exch_page)
+    except PageNotAnInteger:
+        my_cancelled_exchanges = cancelled_exch_paginator.page(1)
+    except EmptyPage:
+        my_cancelled_exchanges = cancelled_exch_paginator.page(cancelled_exch_paginator.num_pages)
+    
+    return render(request, "view_previous_exchanges.html", {'my_cancelled_exchanges': my_cancelled_exchanges, 'my_previous_exchanges': my_previous_exchanges,'len_cancelled_exchanges': len_cancelled_exchanges, 'len_previous_exchange_reqs': len_previous_exchange_reqs})
     
     
 @login_required()

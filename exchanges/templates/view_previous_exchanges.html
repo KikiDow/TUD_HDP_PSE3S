@@ -29,7 +29,7 @@
                     <th>Replacement Request Shift</th>
                 </thead>
                 <tbody>
-                    {% for previous_exch_req in previous_exchange_reqs %}
+                    {% for previous_exch_req in my_previous_exchanges %}
                         <tr>
                             <td>{{ previous_exch_req.exchanging_req_officer }}</td>
                             <td>{{ previous_exch_req.exchange_req_date }}</td>
@@ -43,6 +43,33 @@
             </table>
         </div>
         <div class="col-md-1"></div>
+        <div class="row justify-content-center">
+        <div class="col-md-4"></div>
+        <div class="justify-content-center col-md-4 col-sm-10 col-xs-10">
+            {% if my_previous_exchanges.has_other_pages %}
+            <ul class="pagination justify-content_center">
+            {% if my_previous_exchanges.has_previous %}
+                <li class="page-item"><a class="page-link text-dark" href="?previous_exch_page={{ my_previous_exchanges.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="page-item page-link text-dark disabled"><span>&laquo;</span></li>
+            {% endif %}
+                {% for i in my_previous_exchanges.paginator.page_range %}
+                    {% if i <= my_previous_exchanges.number|add:2 and i >= my_previous_exchanges.number|add:-2 and my_previous_exchanges.number == i %}
+                        <li class="page-item active"><span class="page-link text-dark">{{ i }}<span class="sr-only bg-info">(current)</span></span></li>
+                    {% elif i <= my_previous_exchanges.number|add:2 and i >= my_previous_exchanges.number|add:-2 %}
+                        <li class="page-item"><a class="page-link text-dark" href="?previous_exch_page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% if my_previous_exchanges.has_next %}
+                <li class="page-item"><a class="page-link text-dark" href="?previous_exch_page={{ my_previous_exchanges.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="page-item page-link disabled"><span>&raquo;</span></li>
+            {% endif %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="col-md-4"></div>
+        </div>
     </div>
     {% endif %}
     <div class="row justify-content-center">
@@ -55,7 +82,7 @@
     {% else %}
     <div class="row justify-content-center">
         <div class="col-md-1"></div>
-        <div class="col-md-10 table-wrapper-scroll-y my-custom-scrollbar">
+        <div class="col-md-10">
             <table class="table table-striped table-dark mb-0">
                 <thead>
                     <th>Exchanging Off</th>
@@ -67,7 +94,7 @@
                     <th>Reason Exchange Cancelled</th>
                 </thead>
                 <tbody>
-                    {% for cancelled_exch_req in exchange_reqs_cancelled %}
+                    {% for cancelled_exch_req in my_cancelled_exchanges %}
                         <tr>
                             <td>{{ cancelled_exch_req.exchanging_req_officer }}</td>
                             <td>{{ cancelled_exch_req.exchange_req_date }}</td>
@@ -82,6 +109,33 @@
             </table>
         </div>
         <div class="col-md-1"></div>
+        <div class="row justify-content-center">
+        <div class="col-md-4"></div>
+        <div class="justify-content-center col-md-4 col-sm-10 col-xs-10">
+            {% if my_cancelled_exchanges.has_other_pages %}
+            <ul class="pagination justify-content_center">
+            {% if my_cancelled_exchanges.has_previous %}
+                <li class="page-item"><a class="page-link text-dark" href="?cancelled_exch_page={{ my_cancelled_exchanges.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="page-item page-link text-dark disabled"><span>&laquo;</span></li>
+            {% endif %}
+                {% for i in my_cancelled_exchanges.paginator.page_range %}
+                    {% if i <= my_cancelled_exchanges.number|add:2 and i >= my_cancelled_exchanges.number|add:-2 and my_cancelled_exchanges.number == i %}
+                        <li class="page-item active"><span class="page-link text-dark">{{ i }}<span class="sr-only bg-info">(current)</span></span></li>
+                    {% elif i <= my_cancelled_exchanges.number|add:2 and i >= my_cancelled_exchanges.number|add:-2 %}
+                        <li class="page-item"><a class="page-link text-dark" href="?cancelled_exch_page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% if my_cancelled_exchanges.has_next %}
+                <li class="page-item"><a class="page-link text-dark" href="?cancelled_exch_page={{ my_cancelled_exchanges.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="page-item page-link disabled"><span>&raquo;</span></li>
+            {% endif %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="col-md-4"></div>
+        </div>
     </div>
     {% endif %}
 </div>
