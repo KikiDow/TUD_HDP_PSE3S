@@ -17,7 +17,8 @@
     </div>
     {% else %}
     <div class="row justify-content-center">
-        {% for my_post in my_posts %}
+        <div class="row justify-content-center">
+        {% for my_post in my_posts_noticeboard %}
         <div class="card bg-light mb-3">
             <div class="card-header">{{ my_post.postee_id }} is looking to exchange {{ my_post.possible_exchange_date }} on a {{ my_post.possible_exchange_shift_id }} shift. </div>
             <div class="card-body">
@@ -51,7 +52,35 @@
                 {% endif %}
             </div>
         </div>
+        </div>
         {% endfor %}
+        <div class="row justify-content-center">
+            <div class="col-md-4"></div>
+            <div class="col-md-4 col-sm-10 col-xs-10 justify-content-center">
+                {% if my_posts_noticeboard.has_other_pages %}
+                    <ul class="pagination justify-content_center">
+                    {% if my_posts_noticeboard.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?user_posts_page={{ my_posts_noticeboard.previous_page_number }}">&laquo;</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span>&laquo;</span></li>
+                    {% endif %}
+                    {% for i in my_posts_noticeboard.paginator.page_range %}
+                        {% if i <= my_posts_noticeboard.number|add:2 and i >= my_posts_noticeboard.number|add:-2 and my_posts_noticeboard.number == i %}
+                            <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only bg-info">(current)</span></span></li>
+                        {% elif i <= my_posts_noticeboard.number|add:2 and i >= my_posts_noticeboard.number|add:-2 %}
+                            <li class="page-item"><a class="page-link" href="?user_posts_page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if my_posts_noticeboard.has_next %}
+                        <li class="page-item"><a class="page-link" href="?user_posts_page={{ my_posts_noticeboard.next_page_number }}">&raquo;</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span>&raquo;</span></li>
+                    {% endif %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="col-md-4"></div>
+        </div>
     </div>
     {% endif %}
     <div class="row justify-content-center">
@@ -63,7 +92,8 @@
     </div>
     {% else %}
     <div class="row justify-content-center">
-        {% for pst_liked in list_of_liked_posts %}
+        <div class="row justify-content-center">
+        {% for pst_liked in liked_posts_noticeboard %}
         <div class="card bg-light mb-3">
             <div class="card-header">{{ pst_liked.postee_id }} is looking to exchange {{ pst_liked.possible_exchange_date }} on a {{ pst_liked.possible_exchange_shift_id }} shift. </div>
             <div class="card-body">
@@ -71,7 +101,35 @@
                 <p><strong>Likes: </strong> {{ pst_liked.likes }}</p>
             </div>
         </div>
+        </div>
         {% endfor %}
+        <div class="row justify-content-center">
+            <div class="col-md-4"></div>
+            <div class="col-md-4 col-sm-10 col-xs-10 justify-content-center">
+                {% if liked_posts_noticeboard.has_other_pages %}
+                    <ul class="pagination justify-content_center">
+                    {% if liked_posts_noticeboard.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?posts_user_liked_page={{ liked_posts_noticeboard.previous_page_number }}">&laquo;</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span>&laquo;</span></li>
+                    {% endif %}
+                    {% for i in liked_posts_noticeboard.paginator.page_range %}
+                        {% if i <= liked_posts_noticeboard.number|add:2 and i >= liked_posts_noticeboard.number|add:-2 and liked_posts_noticeboard.number == i %}
+                            <li class="page-item active"><span class="page-link">{{ i }} <span class="sr-only bg-info">(current)</span></span></li>
+                        {% elif i <= liked_posts_noticeboard.number|add:2 and i >= liked_posts_noticeboard.number|add:-2 %}
+                            <li class="page-item"><a class="page-link" href="?posts_user_liked_page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if liked_posts_noticeboard.has_next %}
+                        <li class="page-item"><a class="page-link" href="?posts_user_liked_page={{ liked_posts_noticeboard.next_page_number }}">&raquo;</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span>&raquo;</span></li>
+                    {% endif %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="col-md-4"></div>
+        </div>
     </div>
     {% endif %}
 </div>

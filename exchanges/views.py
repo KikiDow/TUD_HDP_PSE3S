@@ -330,6 +330,30 @@ def show_my_posts(request):
     for i in list_of_liked_posts:
         print(i)
         print(type(i))
-    '''   
+    '''
+    #Pagination for posts user submitted.
+    user_posts_page_number = 1
+    user_posts_page = request.GET.get('user_posts_page', user_posts_page_number)
+    
+    my_posts_paginator = Paginator(my_posts, 2)
+    try:
+        my_posts_noticeboard = my_posts_paginator.page(user_posts_page)
+    except PageNotAnInteger:
+        my_posts_noticeboard = my_posts_paginator.page(1)
+    except EmptyPage:
+        my_posts_noticeboard = my_posts_paginator.page(my_posts_paginator.num_pages)
+        
+    #Pagination for posts user liked.
+    posts_user_liked_page_number = 1
+    posts_user_liked_page = request.GET.get('posts_user_liked_page', posts_user_liked_page_number)
+    
+    posts_user_liked_paginator = Paginator(list_of_liked_posts, 2)
+    try:
+        liked_posts_noticeboard = posts_user_liked_paginator.page(posts_user_liked_page)
+    except PageNotAnInteger:
+        liked_posts_noticeboard = posts_user_liked_paginator.page(1)
+    except EmptyPage:
+        liked_posts_noticeboard = posts_user_liked_paginator.page(posts_user_liked_paginator.num_pages)
+    
     len_liked_posts = len(list_of_liked_posts)
-    return render(request, "my_posts.html", {'my_posts': my_posts, 'list_of_liked_posts': list_of_liked_posts, 'len_my_posts': len_my_posts, 'len_liked_posts': len_liked_posts, 'likes': likes})
+    return render(request, "my_posts.html", {'my_posts_noticeboard': my_posts_noticeboard, 'liked_posts_noticeboard': liked_posts_noticeboard, 'len_my_posts': len_my_posts, 'len_liked_posts': len_liked_posts, 'likes': likes})

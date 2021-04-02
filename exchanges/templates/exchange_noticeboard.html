@@ -59,7 +59,7 @@
                 {% if noticeboard.has_other_pages %}
                     <ul class="pagination justify-content_center">
                     {% if noticeboard.has_previous %}
-                        <li class="page-item"><a class="page-link" href="?page={{ users_ros.previous_page_number }}">&laquo;</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ noticeboard.previous_page_number }}">&laquo;</a></li>
                     {% else %}
                         <li class="page-item disabled"><span>&laquo;</span></li>
                     {% endif %}
