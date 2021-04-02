@@ -236,7 +236,43 @@ def view_staff_sick_leave_applications(request):
     len_staff_usl_submissions = len(staff_usl_submissions)
     len_staff_fm_submissions = len(staff_fm_submissions)
     
-    return render(request, "staff_sick_leave_submissions.html", {'staff_csl_submissions': staff_csl_submissions, 'staff_usl_submissions': staff_usl_submissions, 'staff_fm_submissions': staff_fm_submissions, 'len_staff_csl_submissions': len_staff_csl_submissions, 'len_staff_usl_submissions': len_staff_usl_submissions, 'len_staff_fm_submissions': len_staff_fm_submissions})
+    #Pagination for csls
+    csl_pag_page_number = 1
+    csl_pag_page = request.GET.get('csl_pag_page', csl_pag_page_number)
+    
+    csl_pag_paginator = Paginator(staff_csl_submissions, 3)
+    try:
+        staff_csls = csl_pag_paginator.page(csl_pag_page)
+    except PageNotAnInteger:
+        staff_csls = csl_pag_paginator.page(1)
+    except EmptyPage:
+        staff_csls = csl_pag_paginator.page(csl_pag_paginator.num_pages)
+        
+    #Pagination for usls
+    usl_pag_page_number = 1
+    usl_pag_page = request.GET.get('usl_pag_page', usl_pag_page_number)
+    
+    usl_pag_paginator = Paginator(staff_usl_submissions, 3)
+    try:
+        staff_usls = usl_pag_paginator.page(usl_pag_page)
+    except PageNotAnInteger:
+        staff_usls = usl_pag_paginator.page(1)
+    except EmptyPage:
+        staff_usls = usl_pag_paginator.page(usl_pag_paginator.num_pages)
+        
+    #Pagination for fms
+    fm_pag_page_number = 1
+    fm_pag_page = request.GET.get('fm_pag_page', fm_pag_page_number)
+    
+    fm_pag_paginator = Paginator(staff_fm_submissions, 3)
+    try:
+        staff_fms = fm_pag_paginator.page(fm_pag_page)
+    except PageNotAnInteger:
+        staff_fms = fm_pag_paginator.page(1)
+    except EmptyPage:
+        staff_fms = fm_pag_paginator.page(fm_pag_paginator.num_pages)
+    
+    return render(request, "staff_sick_leave_submissions.html", {'staff_csls': staff_csls, 'staff_usls': staff_usls, 'staff_fms': staff_fms, 'len_staff_csl_submissions': len_staff_csl_submissions, 'len_staff_usl_submissions': len_staff_usl_submissions, 'len_staff_fm_submissions': len_staff_fm_submissions})
     
 def view_my_sick_leave(request):
     '''

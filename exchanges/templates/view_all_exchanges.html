@@ -179,7 +179,7 @@
                     {% if i <= my_exchange_reqs_awaiting_eo_confirm.number|add:2 and i >= my_exchange_reqs_awaiting_eo_confirm.number|add:-2 and my_exchange_reqs_awaiting_eo_confirm.number == i %}
                         <li class="page-item active"><span class="page-link text-dark">{{ i }}<span class="sr-only bg-info">(current)</span></span></li>
                     {% elif i <= my_exchange_reqs_awaiting_eo_confirm.number|add:2 and i >= my_exchange_reqs_awaiting_eo_confirm.number|add:-2 %}
-                        <li class="page-item"><a class="page-link text-dark" href="?exchange_reqs_awaiting_eo_confirm_pagee={{ i }}">{{ i }}</a></li>
+                        <li class="page-item"><a class="page-link text-dark" href="?exchange_reqs_awaiting_eo_confirm_page={{ i }}">{{ i }}</a></li>
                     {% endif %}
                 {% endfor %}
             {% if my_exchange_reqs_awaiting_eo_confirm.has_next %}
