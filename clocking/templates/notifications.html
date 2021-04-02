@@ -17,11 +17,38 @@
             </div>
             <div class="col-md-12">
                 <ul class="list-group justify-content-center">
-                    {% for notification in notifications %}
+                    {% for notification in my_notifications %}
                         <li class="list-group-item list-group-item-dark">{{ notification }}</li>
                     {% endfor %}
                 </ul>
             </div>
     </div>
+    <div class="row justify-content-center" style="margin-top:10px;">
+        <div class="col-md-4"></div>
+        <div class="col-md-4 col-sm-10 col-xs-10 justify-content-center">
+            {% if my_notifications.has_other_pages %}
+            <ul class="pagination justify-content_center">
+            {% if my_notifications.has_previous %}
+                <li class="page-item"><a class="page-link text-dark" href="?page={{ my_notifications.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="page-item page-link text-dark disabled"><span>&laquo;</span></li>
+            {% endif %}
+                {% for i in my_notifications.paginator.page_range %}
+                    {% if i <= my_notifications.number|add:2 and i >= my_notifications.number|add:-2 and my_notifications.number == i %}
+                        <li class="page-item active"><span class="page-link text-dark">{{ i }}<span class="sr-only bg-info">(current)</span></span></li>
+                    {% elif i <= my_notifications.number|add:2 and i >= my_notifications.number|add:-2 %}
+                        <li class="page-item"><a class="page-link text-dark" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% if my_notifications.has_next %}
+                <li class="page-item"><a class="page-link text-dark" href="?page={{ my_notifications.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="page-item page-link disabled"><span>&raquo;</span></li>
+            {% endif %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="col-md-4"></div>
+        </div>
 </div>
 {% endblock %}

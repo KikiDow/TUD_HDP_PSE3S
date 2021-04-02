@@ -213,7 +213,21 @@ def my_notifications(request):
 
     user = request.user.id
     notifications = Notification.objects.unread().filter(recipient=user).order_by('-timestamp')
-    return render(request, "notifications.html", {'notifications': notifications})
+    
+    #Pagination for Notifications
+    page_number = 1
+    page = request.GET.get('page', page_number)
+    
+    paginator = Paginator(notifications, 8)
+    try:
+        my_notifications = paginator.page(page)
+    except PageNotAnInteger:
+        my_notifications = paginator.page(1)
+    except EmptyPage:
+        my_notifications = paginator.page(paginator.num_pages)
+    
+    
+    return render(request, "notifications.html", {'my_notifications': my_notifications})
     
 @login_required()
 def clock(request):
@@ -317,7 +331,9 @@ def previous_manual_clockings(request):
     user = request.user
     user_manual_clocks = ManualClocking.objects.filter(mc_officer_id=user).order_by('-clocking_date')
     len_manual_clocks = len(user_manual_clocks)
-    page = request.GET.get('page', 1)
+    
+    page_number = 1
+    page = request.GET.get('page', page_number)
     
     paginator = Paginator(user_manual_clocks, 8)
     try:
