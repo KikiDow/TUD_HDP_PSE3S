@@ -31,12 +31,12 @@
                 <tbody>
                     {% for previous_exch_req in my_previous_exchanges %}
                         <tr>
-                            <td>{{ previous_exch_req.exchanging_req_officer }}</td>
-                            <td>{{ previous_exch_req.exchange_req_date }}</td>
-                            <td>{{ previous_exch_req.exchanging_req_shift }}</td>
-                            <td>{{ previous_exch_req.replacing_req_officer }}</td>
-                            <td>{{ previous_exch_req.replacing_req_date }}</td>
-                            <td>{{ previous_exch_req.replacing_req_shift }}</td>
+                            <td>{{ previous_exch_req.exchanging_officer }}</td>
+                            <td>{{ previous_exch_req.exchange_date }}</td>
+                            <td>{{ previous_exch_req.exchange_shift }}</td>
+                            <td>{{ previous_exch_req.replacing_officer }}</td>
+                            <td>{{ previous_exch_req.replacement_date }}</td>
+                            <td>{{ previous_exch_req.replacement_shift }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

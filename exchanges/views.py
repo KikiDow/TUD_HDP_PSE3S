@@ -129,14 +129,15 @@ def previous_exchanges(request):
     len_cancelled_exchanges = len(exchange_reqs_cancelled)
     #Previous Exchanges
     todays_date = dt.date.today()
-    previous_exchange_reqs = exchange_requests.filter(swap_confirmed=True).filter(Q(exchange_req_date__lt=todays_date) & Q(replacing_req_date__lt=todays_date))
-    len_previous_exchange_reqs = len(previous_exchange_reqs)
+    #previous_exchange_reqs = exchange_requests.filter(swap_confirmed=True).filter(Q(exchange_req_date__lt=todays_date) & Q(replacing_req_date__lt=todays_date))
+    previous_exchanges = Exchange.objects.filter(Q(exchanging_officer=user) | Q(replacing_officer=user)).filter(Q(exchange_date__lt=todays_date) & Q(replacement_date__lt=todays_date))
+    len_previous_exchange_reqs = len(previous_exchanges)
     
     #Pagination for previous exchanges.
     previous_exch_page_number = 1
     previous_exch_page = request.GET.get('previous_exch_page', previous_exch_page_number)
     
-    previous_exch_paginator = Paginator(previous_exchange_reqs, 6)
+    previous_exch_paginator = Paginator(previous_exchanges, 6)
     try:
         my_previous_exchanges = previous_exch_paginator.page(previous_exch_page)
     except PageNotAnInteger:
