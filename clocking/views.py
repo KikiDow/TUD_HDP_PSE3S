@@ -500,13 +500,14 @@ def view_lates(request):
     This view renders the users lates records for display.
     '''
     user = request.user
-    my_late_clockings = Lates.objects.filter(lates_officer_id=user.pk)
+    my_late_clockings = Lates.objects.filter(lates_officer_id=user.pk).order_by('-date_of_late')
     len_late_clockings = len(my_late_clockings)
     
     current_year = getCurrentYear()
     lates_for_current_year = LatesPerYear.objects.filter(yearly_lates_officer_id=user.pk).filter(lates_year=current_year)
     if lates_for_current_year.exists():
-        number_of_lates = lates_for_current_year.number_lates_for_year
+        users_lates_for_year = LatesPerYear.objects.get(yearly_lates_officer_id=user.pk, lates_year=current_year)
+        number_of_lates = users_lates_for_year.number_lates_for_year
     else:
         number_of_lates = 0
         
@@ -521,6 +522,6 @@ def view_lates(request):
     except EmptyPage:
         my_late_clocks = paginator.page(paginator.num_pages)
         
-    return render(request, "my_late_clockings.html", {'my_late_clocks': my_late_clocks, 'len_late_clockings': len_late_clockings, 'number_of_lates': number_of_lates})
+    return render(request, "my_late_clockings.html", {'my_late_clocks': my_late_clocks, 'len_late_clockings': len_late_clockings, 'number_of_lates': number_of_lates, 'current_year': current_year})
     
     
