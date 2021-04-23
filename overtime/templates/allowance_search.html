@@ -41,7 +41,7 @@
                 <tbody>
                     {% for allow_req in allowance_requests %}
                         <tr>
-                            <td>{{ allow_req.allow_req_date }}</td>
+                            <td>{{ allow_req.allow_req_date|date:"D, dS M Y" }}</td>
                             <td><i class="fa fa-euro"></i> {{ allow_req.claim_total }}</td>
                             {% if allow_req.allow_req_checked_by_validator == True %}
                                 <td><i class="fa fa-check-circle-o fa-lg"></i></td>

@@ -22,7 +22,7 @@
                     {% endif %}
                     <tr>
                         <td><strong>Date: </strong></td>
-                        <td>{{ allow_req_to_view.allow_req_date }}</td>
+                        <td>{{ allow_req_to_view.allow_req_date|date:"D, dS M Y" }}</td>
                     </tr>
                     <tr>
                         <td><strong>Task: </strong></td>

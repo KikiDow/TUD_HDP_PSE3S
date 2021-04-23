@@ -15,7 +15,7 @@
             <table class="table table-striped table-dark">
                 <tbody>
                     <tr><td><strong>Officer: </strong></td><td>{{ st_leave_being_rejected.st_annual_leave_request_officer_id }}</td></tr> 
-                    <tr><td><strong>Request Date: </strong></td><td>{{ st_leave_being_rejected.st_leave_date }}</td></tr>
+                    <tr><td><strong>Request Date: </strong></td><td>{{ st_leave_being_rejected.st_leave_date|date:"D, dS M Y" }}</td></tr>
                     <tr><td><strong>Requested Start Time: </strong></td><td>{{ st_leave_being_rejected.st_leave_start_time }}</td></tr>
                     <tr><td><strong>Requested Finish Time: </strong></td><td>{{ st_leave_being_rejected.st_leave_finish_time }}</td></tr>
                     <tr><td><strong>Requested Leave Amount: </strong></td><td>{{ st_leave_being_rejected.st_leave_amount }}</td></tr>

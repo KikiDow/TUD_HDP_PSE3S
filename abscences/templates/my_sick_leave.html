@@ -28,8 +28,8 @@
                 <tbody>
                     {% for csl_record in my_csls %}
                         <tr>
-                            <td>{{ csl_record.first_day_of_cert }}</td>
-                            <td>{{ csl_record.first_day_of_cert }}</td>
+                            <td>{{ csl_record.first_day_of_cert|date:"D, dS M Y" }}</td>
+                            <td>{{ csl_record.last_day_of_cert|date:"D, dS M Y" }}</td>
                             <td><a class="btn btn-info" href="{% url 'view_csl_application' csl_record.id %}"><i class="fa fa-eye"></i> View</a></td>
                         </tr>
                     {% endfor %}
@@ -85,7 +85,7 @@
                 <tbody>
                     {% for usl_record in my_usls %}
                         <tr>
-                            <td>{{ usl_record.usl_date }}</td>
+                            <td>{{ usl_record.usl_date|date:"D, dS M Y" }}</td>
                             <td><a class="btn btn-info btn-sm" href="{% url 'view_usl_application' usl_record.id %}"><i class="fa fa-eye"></i> View</a></td>
                         </tr>
                     {% endfor %}
@@ -142,7 +142,7 @@
                 <tbody>
                     {% for fm_record in my_fms %}
                         <tr>
-                            <td>{{ fm_record.fm_date }}</td>
+                            <td>{{ fm_record.fm_date|date:"D, dS M Y" }}</td>
                             <td><a class="btn btn-info btn-sm" href="{% url 'view_fm_application' fm_record.id %}"><i class="fa fa-eye"></i> View</a></td>
                         </tr>
                     {% endfor %}

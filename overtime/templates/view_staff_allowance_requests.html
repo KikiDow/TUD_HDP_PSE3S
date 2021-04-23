@@ -26,7 +26,7 @@
                     {% for staff_allow_req in staff_allowance_requests %}
                         <tr>
                             <td>{{ staff_allow_req.allow_req_off_id.firstname }} {{ staff_allow_req.allow_req_off_id.lastname }}</td>
-                            <td>{{ staff_allow_req.allow_req_date }}</td>
+                            <td>{{ staff_allow_req.allow_req_date|date:"D, dS M Y" }}</td>
                             <td><a class="btn btn-info" href="{% url 'view_allowance_request' staff_allow_req.id %}"><i class="fa fa-eye"></i> View Request </a></td>
                         </tr>
                     {% endfor %}

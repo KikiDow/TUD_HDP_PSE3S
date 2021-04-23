@@ -21,7 +21,7 @@
                     {% endif %}
                     <tr>
                         <td><strong>Uncertified Date: </strong></td>
-                        <td>{{ usl_application.usl_date }}</td>
+                        <td>{{ usl_application.usl_date|date:"D, dS M Y" }}</td>
                     </tr>
                     <tr>
                         <td><strong>Reason for U.S.L.: </strong></td>

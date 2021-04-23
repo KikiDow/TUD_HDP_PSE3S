@@ -46,7 +46,7 @@
                 <tbody>
                     {% for nsot_req in my_non_scheduled_ot_requests %}
                         <tr>
-                            <td>{{ nsot_req.nsot_date }}</td>
+                            <td>{{ nsot_req.nsot_date|date:"D, dS M Y" }}</td>
                             <td>{{ nsot_req.ot_hours_claimed }}</td>
                             {% if nsot_req.nsot_checked_by_validator == True %}
                                 <td><i class="fa fa-check-circle-o fa-lg"></i></td>

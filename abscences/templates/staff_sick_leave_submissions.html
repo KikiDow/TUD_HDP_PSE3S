@@ -29,7 +29,7 @@
                     {% for csl_req in staff_csls %}
                         <tr>
                             <td>{{ csl_req.csl_officer_id.firstname }} {{ csl_req.csl_officer_id.lastname }}</td>
-                            <td>{{ csl_req.last_day_of_cert }}</td>
+                            <td>{{ csl_req.last_day_of_cert|date:"D, dS M Y" }}</td>
                             <td><a class="btn btn-info" href="{% url 'view_csl_application' csl_req.id %}"><i class="fa fa-eye"></i> View </a></td>
                         </tr>
                     {% endfor %}
@@ -88,7 +88,7 @@
                     {% for usl_req in staff_usls %}
                         <tr>
                             <td>{{ usl_req.usl_officer_id.firstname }} {{ usl_req.usl_officer_id.lastname }}</td>
-                            <td>{{ usl_req.usl_date }}</td>
+                            <td>{{ usl_req.usl_date|date:"D, dS M Y" }}</td>
                             <td><a class="btn btn-info" href="{% url 'view_usl_application' usl_req.id %}"><i class="fa fa-eye"></i> View </a></td>
                         </tr>
                     {% endfor %}
@@ -147,7 +147,7 @@
                     {% for fm_req in staff_fms %}
                         <tr>
                             <td>{{ fm_req.fm_officer_id.firstname }} {{ fm_req.fm_officer_id.lastname }}</td>
-                            <td>{{ fm_req.fm_date }}</td>
+                            <td>{{ fm_req.fm_date|date:"D, dS M Y" }}</td>
                             <td><a class="btn btn-info" href="{% url 'view_fm_application' fm_req.id %}"><i class="fa fa-eye"></i> View </a></td>
                         </tr>
                     {% endfor %}

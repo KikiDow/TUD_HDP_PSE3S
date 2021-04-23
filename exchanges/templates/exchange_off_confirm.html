@@ -15,11 +15,11 @@
             <table class="table table-striped table-dark">
                 <tbody>
                     <tr><td><strong>Exchanging Officer: </strong></td><td>{{ exchange_req_being_confirmed.exchanging_req_officer }}</td></tr> 
-                    <tr><td><strong>Exchange Request Date: </strong></td><td>{{ exchange_req_being_confirmed.exchange_req_date }}</td></tr>
+                    <tr><td><strong>Exchange Request Date: </strong></td><td>{{ exchange_req_being_confirmed.exchange_req_date|date:"D, dS M Y" }}</td></tr>
                     <tr><td><strong>Exchange Request Shift: </strong></td><td>{{ exchange_req_being_confirmed.exchanging_req_shift }}</td></tr>
                     <tr><td><strong>Exchanging Officer Notes: </strong></td><td>{{ exchange_req_being_confirmed.exchanging_req_officer_notes }}</td></tr>
                     <tr><td><strong>Replacing Officer: </strong></td><td>{{ exchange_req_being_confirmed.replacing_req_officer }}</td></tr>
-                    <tr><td><strong>Replacement Date: </strong></td><td>{{ exchange_req_being_confirmed.replacing_req_date }}</td></tr>
+                    <tr><td><strong>Replacement Date: </strong></td><td>{{ exchange_req_being_confirmed.replacing_req_date|date:"D, dS M Y" }}</td></tr>
                     <tr><td><strong>Replacing Shift: </strong></td><td>{{ exchange_req_being_confirmed.replacing_req_shift }}</td></tr>
                     <tr><td><strong>Replacing Officer Notes: </strong></td><td>{{ exchange_req_being_confirmed.replacing_req_officer_notes }}</td></tr>
                 </tbody>

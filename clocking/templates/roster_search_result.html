@@ -45,16 +45,16 @@
                 <tbody>
                     {% for users_day in users_ros %}
                         <tr>
-                            <td>{{ users_day.roster_shift_date }}</td>
+                            <td>{{ users_day.roster_shift_date|date:"D, dS M Y" }}</td>
                             {% if users_day.roster_shift_label == "Off" %}
                                 <td>{{ users_day.roster_shift_label }}</td>
                             {% else %}
                                 <td>{{ users_day.roster_shift }}</td>
                             {% endif %}
-                            <td>{{ users_day.clocking_in_time }}</td>
-                            <td>{{ users_day.lunch_out_time }}</td>
-                            <td>{{ users_day.lunch_in_time }}</td>
-                            <td>{{ users_day.clocking_out_time }}</td>
+                            <td>{{ users_day.clocking_in_time|default:" - " }}</td>
+                            <td>{{ users_day.lunch_out_time|default:" - " }}</td>
+                            <td>{{ users_day.lunch_in_time|default:" - " }}</td>
+                            <td>{{ users_day.clocking_out_time|default:" - " }}</td>
                             <!--<td><a class="btn btn-info" href=""><i class="fa fa-eye"></i> View Request </a></td>-->
                         </tr>
                     {% endfor %}

@@ -29,7 +29,7 @@
                     {% for avail_sheet in my_avail_sheets %}
                         <tr>
                             <td>{{ avail_sheet.avail_sheet_qtr_id }}</td>
-                            <td>{{ avail_sheet.avail_sheet_date_submitted }}</td>
+                            <td>{{ avail_sheet.avail_sheet_date_submitted|date:"D, dS M Y" }}</td>
                             <td><a class="btn btn-info" href="{% url 'view_availability_sheet' avail_sheet.id %}"><i class="fa fa-eye"></i> View</a></td>
                         </tr>
                     {% endfor %}
@@ -85,7 +85,7 @@
                 <tbody>
                     {% for st_avail in my_st_avails %}
                         <tr>
-                            <td>{{ st_avail.st_availability_date }}</td>
+                            <td>{{ st_avail.st_availability_date|date:"D, dS M Y" }}</td>
                             <td>{{ st_avail.st_availability_qtr_id }}</td>
                             <td><a class="btn btn-info" onclick="return confirm('Are you sure you want to remove your short term availability for this date?')" href="{% url 'delete_st_availability_submission' st_avail.id %}"><i class="fa fa-delete"></i> Delete</a></td>
                         </tr>

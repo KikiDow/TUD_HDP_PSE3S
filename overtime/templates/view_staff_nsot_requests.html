@@ -26,7 +26,7 @@
                     {% for staff_nsot_req in staff_nsot_requests %}
                         <tr>
                             <td>{{ staff_nsot_req.nsot_off_id.firstname }} {{ staff_nsot_req.nsot_off_id.lastname }}</td>
-                            <td>{{ staff_nsot_req.nsot_date }}</td>
+                            <td>{{ staff_nsot_req.nsot_date|date:"D, dS M Y" }}</td>
                             <td><a class="btn btn-info" href="{% url 'view_non_scheduled_overtime_request' staff_nsot_req.id %}"><i class="fa fa-eye"></i> View Request </a></td>
                         </tr>
                     {% endfor %}

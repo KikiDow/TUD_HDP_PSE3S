@@ -15,8 +15,8 @@
             <table class="table table-striped table-dark">
                 <tbody>
                     <tr><td><strong>Officer: </strong></td><td>{{ csl_being_rejected.csl_officer_id }}</td></tr> 
-                    <tr><td><strong>Start Day of Cert: </strong></td><td>{{ csl_being_rejected.first_day_of_cert }}</td></tr>
-                    <tr><td><strong>Last Day of Cert: </strong></td><td>{{ csl_being_rejected.last_day_of_cert }}</td></tr>
+                    <tr><td><strong>Start Day of Cert: </strong></td><td>{{ csl_being_rejected.first_day_of_cert|date:"D, dS M Y" }}</td></tr>
+                    <tr><td><strong>Last Day of Cert: </strong></td><td>{{ csl_being_rejected.last_day_of_cert|date:"D, dS M Y" }}</td></tr>
                     <tr><td colspan="2"><img class="" src="{{ MEDIA_URL }}{{ csl_being_rejected.csl_image }}" alt="Sick Cert Image" style="width:100%;height:400px;"></td></tr>
                 </tbody>
             </table>

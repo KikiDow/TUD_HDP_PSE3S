@@ -22,11 +22,11 @@
                     {% endif %}
                     <tr>
                         <td><strong>Cert Start Date: </strong></td>
-                        <td>{{ csl_application.first_day_of_cert }}</td>
+                        <td>{{ csl_application.first_day_of_cert|date:"D, dS M Y" }}</td>
                     </tr>
                     <tr>
                         <td><strong>Cert Last Date: </strong></td>
-                        <td>{{ csl_application.last_day_of_cert }}</td>
+                        <td>{{ csl_application.last_day_of_cert|date:"D, dS M Y" }}</td>
                     </tr>
                     <tr>
                         <td colspan="2"><img class="" src="{{ MEDIA_URL }}{{ csl_application.csl_image }}" alt="Sick Cert Image" style="width:100%;height:400px;"></td>

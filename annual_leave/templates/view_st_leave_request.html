@@ -25,7 +25,7 @@
                     {% endif %}
                     <tr>
                         <td><strong> Date: </strong></td>
-                        <td>{{ st_leave_req.st_leave_date }}</td>
+                        <td>{{ st_leave_req.st_leave_date|date:"D, dS M Y" }}</td>
                     </tr>
                     <tr>
                         <td><strong> Start Time: </strong></td>

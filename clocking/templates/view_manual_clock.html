@@ -21,7 +21,7 @@
                     {% endif %}
                     <tr>
                         <td>Date: </td>
-                        <td>{{ manual_clock.clocking_date }}</td>
+                        <td>{{ manual_clock.clocking_date|date:"D, dS M Y" }}</td>
                     </tr>
                     <tr>
                         <td>Clock In: </td>

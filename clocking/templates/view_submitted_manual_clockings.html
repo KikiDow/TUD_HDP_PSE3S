@@ -26,7 +26,7 @@
                     {% for manual_clocking_submitted in submitted_manual_clockings %}
                         <tr>
                             <td>{{ manual_clocking_submitted.mc_officer_id }}</td>
-                            <td>{{ manual_clocking_submitted.clocking_date }}</td>
+                            <td>{{ manual_clocking_submitted.clocking_date|date:"D, dS M Y" }}</td>
                             <td><a class="btn btn-info" href="{% url 'view_manual_clock' manual_clocking_submitted.pk %}"><i class="fa fa-eye"></i> View </a></td>
                         </tr>
                     {% endfor %}

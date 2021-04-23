@@ -15,7 +15,7 @@
             <table class="table table-striped table-dark">
                 <tbody>
                     <tr><td><strong>Officer: </strong></td><td>{{ fm_being_rejected.fm_officer_id }}</td></tr> 
-                    <tr><td><strong>Date: </strong></td><td>{{ fm_being_rejected.fm_date }}</td></tr>
+                    <tr><td><strong>Date: </strong></td><td>{{ fm_being_rejected.fm_date|date:"D, dS M Y" }}</td></tr>
                     <tr><td><strong>Reason for taking F.M.: </strong>: </strong></td><td>{{ fm_being_rejected.reason_for_fm }}</td></tr>
                 </tbody>
             </table>

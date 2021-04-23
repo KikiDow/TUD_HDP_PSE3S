@@ -25,11 +25,11 @@
                     {% endif %}
                     <tr>
                         <td><strong>Requested Start Date: </strong></td>
-                        <td>{{ annual_leave_req.leave_request_start_date }}</td>
+                        <td>{{ annual_leave_req.leave_request_start_date|date:"D, dS M Y" }}</td>
                     </tr>
                     <tr>
                         <td><strong>Requested Last Date: </strong></td>
-                        <td>{{ annual_leave_req.leave_request_last_date }}</td>
+                        <td>{{ annual_leave_req.leave_request_last_date|date:"D, dS M Y" }}</td>
                     </tr>
                     <tr>
                         <td><strong>Request Checked: </strong></td>

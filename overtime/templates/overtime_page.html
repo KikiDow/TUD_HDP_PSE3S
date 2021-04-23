@@ -30,7 +30,7 @@
                     <tbody>
                         {% for ot_day in upcoming_ot %}
                             <tr>
-                                <td>{{ ot_day.ot_date }}</td>
+                                <td>{{ ot_day.ot_date|date:"D, dS M Y" }}</td>
                                 <td>{{ ot_day.ot_shift_id }}</td>
                                 {% if ot_day.ot_recall == True %}
                                     <td><i class="fa fa-check-circle-o fa-lg"></i></td>
@@ -115,7 +115,7 @@
                     <tbody>
                         {% for previous_ot_day in previous_ot %}
                             <tr>
-                                <td>{{ previous_ot_day.ot_date }}</td>
+                                <td>{{ previous_ot_day.ot_date|date:"D, dS M Y" }}</td>
                                 <td>{{ previous_ot_day.ot_shift_id }}</td>
                                 {% if previous_ot_day.ot_recall == True %}
                                     <td><i class="fa fa-check-circle-o fa-lg"></i></td>

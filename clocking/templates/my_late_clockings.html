@@ -47,7 +47,7 @@
                 <tbody>
                     {% for late in my_late_clocks %}
                         <tr>
-                            <td>{{ late.date_of_late }}</td>
+                            <td>{{ late.date_of_late|date:"D, dS M Y" }}</td>
                             <td>{{ late.late_clocking_time }}</td>
                             <td>{{ late.duration_of_late }}</td>
                         </tr>

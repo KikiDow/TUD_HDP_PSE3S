@@ -20,7 +20,7 @@
         <div class="row justify-content-center">
         {% for my_post in my_posts_noticeboard %}
         <div class="card bg-light mb-3">
-            <div class="card-header">{{ my_post.postee_id }} is looking to exchange {{ my_post.possible_exchange_date }} on a {{ my_post.possible_exchange_shift_id }} shift. </div>
+            <div class="card-header">{{ my_post.postee_id }} is looking to exchange {{ my_post.possible_exchange_date|date:"D, dS M Y" }} on a {{ my_post.possible_exchange_shift_id }} shift. </div>
             <div class="card-body">
                 <p><strong>Content: </strong>{{ my_post.post_content }}</p>
                 <p><strong>Likes: </strong> {{ my_post.likes }}</p>
@@ -95,7 +95,7 @@
         <div class="row justify-content-center">
         {% for pst_liked in liked_posts_noticeboard %}
         <div class="card bg-light mb-3">
-            <div class="card-header">{{ pst_liked.postee_id }} is looking to exchange {{ pst_liked.possible_exchange_date }} on a {{ pst_liked.possible_exchange_shift_id }} shift. </div>
+            <div class="card-header">{{ pst_liked.postee_id }} is looking to exchange {{ pst_liked.possible_exchange_date|date:"D, dS M Y" }} on a {{ pst_liked.possible_exchange_shift_id }} shift. </div>
             <div class="card-body">
                 <p><strong>Content: </strong>{{ pst_liked.post_content }}</p>
                 <p><strong>Likes: </strong> {{ pst_liked.likes }}</p>

@@ -21,7 +21,7 @@
                     {% endif %}
                     <tr>
                         <td><strong>Force Majeure Date: </strong></td>
-                        <td>{{ fm_application.fm_date }}</td>
+                        <td>{{ fm_application.fm_date|date:"D, dS M Y" }}</td>
                     </tr>
                     <tr>
                         <td><strong>Reason for F.M.: </strong></td>

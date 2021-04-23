@@ -28,8 +28,8 @@
                 <tbody>
                     {% for leave_request in my_al %}
                         <tr>
-                            <td>{{ leave_request.leave_request_start_date }}</td>
-                            <td>{{ leave_request.leave_request_last_date }}</td>
+                            <td>{{ leave_request.leave_request_start_date|date:"D, dS M Y" }}</td>
+                            <td>{{ leave_request.leave_request_last_date|date:"D, dS M Y" }}</td>
                             <td><a class="btn btn-info btn-sm" href="{% url 'view_annual_leave_request' leave_request.id %}"><i class="fa fa-eye"></i> View Request </a></td>
                         </tr>
                     {% endfor %}
@@ -87,7 +87,7 @@
                 <tbody>
                     {% for st_leave_request in my_stl %}
                         <tr>
-                            <td>{{ st_leave_request.st_leave_date }}</td>
+                            <td>{{ st_leave_request.st_leave_date|date:"D, dS M Y" }}</td>
                             <td>{{ st_leave_request.st_leave_start_time }}</td>
                             <td>{{ st_leave_request.st_leave_finish_time }}</td>
                             <td><a class="btn btn-info btn-sm" href="{% url 'view_st_leave_request' st_leave_request.id %}"><i class="fa fa-eye"></i> View Request </a></td>

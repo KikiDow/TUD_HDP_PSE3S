@@ -45,7 +45,7 @@
                 <tbody>
                     {% for manual_clock in my_manual_clocks %}
                         <tr>
-                            <td>{{ manual_clock.clocking_date }}</td>
+                            <td>{{ manual_clock.clocking_date|date:"D, dS M Y" }}</td>
                             {% if manual_clock.checked_by_validator == True %}
                                 <td><i class="fa fa-check-circle-o fa-lg"></i></td>
                             {% else %}

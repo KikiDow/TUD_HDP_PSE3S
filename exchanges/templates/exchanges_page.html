@@ -24,13 +24,13 @@
                                 {% else %} 
                                 <strong>{{ exchange.exchanging_officer }}</strong> has
                                 {% endif %}
-                                an exchange on {{ exchange.exchange_date }} for a {{ exchange.exchange_shift }} shift with
+                                an exchange on {{ exchange.exchange_date|date:"D, dS M Y" }} for a {{ exchange.exchange_shift }} shift with
                                 {% if exchange.replacing_officer == user %}
                                 <strong> you</strong>.
                                 {% else %}
                                 <strong>{{ exchange.replacing_officer }}</strong>.
                                 {% endif %}
-                                The replacement shift takes place on <strong>{{ exchange.replacement_date }}</strong> for a <strong>{{ exchange.replacement_shift }}</strong>.
+                                The replacement shift takes place on <strong>{{ exchange.replacement_date|date:"D, dS M Y" }}</strong> for a <strong>{{ exchange.replacement_shift }}</strong>.
                             </td>
                         </tr>
                     {% endfor %}
