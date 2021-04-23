@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 import datetime
-from .models import Quarter, Shift, RosterSideA, RosterSideB, Roster, PersonalDetails, ManualClocking, RemoteClock
+from .models import Quarter, Shift, RosterSideA, RosterSideB, Roster, PersonalDetails, ManualClocking, RemoteClock, Lates, LatesPerYear
 from .forms import PersonalDetailsForm, ManualClockingForm, RejectManualClockingForm
 from django.contrib import messages
 from.utils import findRosterStartPoint, rosterPointerCheck, getStartPageForPagination, getSearchResultPaginationStartPage, convertStrToDateObj
@@ -14,6 +14,7 @@ from django.db.models import Q
 from geopy.geocoders import Nominatim
 import folium
 from IPython.core.display import HTML
+from annual_leave.utils import getCurrentYear
 # Create your views here.
 
 def landing_page(request):
@@ -492,3 +493,34 @@ def view_individual_remote_clocking(request, pk):
     m = m._repr_html_()
     
     return render(request, "view_individual_remote_clocking.html", {'remote_clocking_to_view': remote_clocking_to_view, 'clockings_map': m})
+    
+@login_required()
+def view_lates(request):
+    '''
+    This view renders the users lates records for display.
+    '''
+    user = request.user
+    my_late_clockings = Lates.objects.filter(lates_officer_id=user.pk)
+    len_late_clockings = len(my_late_clockings)
+    
+    current_year = getCurrentYear()
+    lates_for_current_year = LatesPerYear.objects.filter(yearly_lates_officer_id=user.pk).filter(lates_year=current_year)
+    if lates_for_current_year.exists():
+        number_of_lates = lates_for_current_year.number_lates_for_year
+    else:
+        number_of_lates = 0
+        
+    page_number = 1
+    page = request.GET.get('page', page_number)
+    
+    paginator = Paginator(my_late_clockings, 8)
+    try:
+        my_late_clocks = paginator.page(page)
+    except PageNotAnInteger:
+        my_late_clocks = paginator.page(1)
+    except EmptyPage:
+        my_late_clocks = paginator.page(paginator.num_pages)
+        
+    return render(request, "my_late_clockings.html", {'my_late_clocks': my_late_clocks, 'len_late_clockings': len_late_clockings, 'number_of_lates': number_of_lates})
+    
+    

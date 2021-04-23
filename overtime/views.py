@@ -237,6 +237,9 @@ def delete_allowance_request(request, pk):
     
 @login_required()
 def view_staff_allowance_requests(request):
+    '''
+    View to retrieve all staff allowance requests that have not yet been checked by a validator.
+    '''
     user = request.user
     staff_allowance_requests = AllowancesRequest.objects.filter(allow_req_checked_by_validator=False).exclude(allow_req_off_id=user.pk)
     length_of_staff_allow_req = len(staff_allowance_requests)
