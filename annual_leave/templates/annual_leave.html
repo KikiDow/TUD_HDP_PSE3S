@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_tags %}
 {% block content %}
 <div class="jumbotron jumbotron-fluid bg-info text-white">
   <div class="container">
@@ -8,9 +9,156 @@
     </div>
 </div>
 <div class="container">
-    <div class="row">
-        <!-- UPCOMING LEAVE ETC -->
+  <div class="row justify-content-center col-md-12">
+        <button type="button" class="btn btn-info absence-buttons" data-toggle="modal" data-target="#leaveReportModal">View My Leave Balances</button>
+  </div>
+  <div class="row justify-content-center">
+    <div class="row justify-content-center col-md-6 col-sm-12 col-xs-12">
+        <div class="row justify-content-center col-md-10">
+          <h3>Upcoming Annual Leave</h3>
+        </div>
+        {% if length_upcoming_leave == 0 %}
+        <div class="row justify-content-center">
+            <p>You have no upcoming annual leave.</p>
+        </div>
+        {% else %}
+        <div class="row justify-content-center">
+            <!--<div class="col-md-2"></div>-->
+            <div class="col-md-12" style="margin-bottom:10px;">
+                <table class="table table-striped table-dark mb-0">
+                    <thead>
+                        <th>Date</th>
+                        <th>Leave Used</th>
+                    </thead>
+                    <tbody>
+                        {% for al_instance in upcoming_al %}
+                            <tr>
+                                <td>{{ al_instance.al_date|date:"D, dS M Y" }}</td>
+                                <td>{{ al_instance.leave_amount_used }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!--<div class="col-md-2"></div>-->
+        </div>
+        <div class="row justify-content-center">
+        <div class="col-md-4"></div>
+        <div class="col-md-4 col-sm-10 col-xs-10 justify-content-center">
+            {% if upcoming_al.has_other_pages %}
+            <ul class="pagination justify-content_center">
+            {% if upcoming_al.has_previous %}
+                <li class="page-item"><a class="page-link text-dark" href="?page={{ upcoming_al.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="page-item page-link text-dark disabled"><span>&laquo;</span></li>
+            {% endif %}
+                {% for i in upcoming_al.upcoming_paginator.page_range %}
+                    {% if i <= upcoming_al.number|add:2 and i >= upcoming_al.number|add:-2 and upcoming_al.number == i %}
+                        <li class="page-item active"><span class="page-link text-dark">{{ i }}<span class="sr-only bg-info">(current)</span></span></li>
+                    {% elif i <= upcoming_al.number|add:2 and i >= upcoming_al.number|add:-2 %}
+                        <li class="page-item"><a class="page-link text-dark" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% if upcoming_al.has_next %}
+                <li class="page-item"><a class="page-link text-dark" href="?page={{ upcoming_al.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="page-item page-link disabled"><span>&raquo;</span></li>
+            {% endif %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="col-md-4"></div>
     </div>
+    <div id="upcoming_al_section" class="row justify-content-center">
+            <div class="col-md-10 col-sm-10 col-xs-10 justify-content-center">
+                <a class="btn btn-info btn-sm" href="{% anchor 'annual_leave_page' 'upcoming_al_section' %}">Recent</a>
+            </div>
+            <div class="col-md-10 col-sm-10 col-xs-10 justify-content-center">
+                <form action="#" method="get" name="upcomingALSearchForm" onsubmit = "return(validateDate(document.upcomingALSearchForm.q));">
+                    <fieldset>
+                        <small><em>Enter the date in dd/mm/yyyy format: (e.g. 01/01/2021) </em></small>
+                        <input type="text" name="q">
+                        <button class="btn btn-info btn-sm"  type="submit"><i class="fa fa-search fa-xs"></i> Search</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+    </div>
+    <div class="row justify-content-center col-md-6 col-sm-12 col-xs-12">
+        <div class="row justify-content-center col-md-10">
+          <h3>Previous Annual Leave</h3>
+        </div>
+        {% if length_previous_leave == 0 %}
+        <div class="row justify-content-center">
+            <p>You have no previous annual leave records.</p>
+        </div>
+        {% else %}
+        <div class="row justify-content-center">
+            <!--<div class="col-md-2"></div>-->
+            <div class="col-md-12" style="margin-bottom:10px;">
+                <table class="table table-striped table-dark mb-0">
+                    <thead>
+                        <th>Date</th>
+                        <th>Leave Used</th>
+                    </thead>
+                    <tbody>
+                        {% for al_instance in previous_al %}
+                            <tr>
+                                <td>{{ al_instance.al_date|date:"D, dS M Y" }}</td>
+                                <td>{{ al_instance.leave_amount_used }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!--<div class="col-md-2"></div>-->
+        </div>
+        <div class="row justify-content-center">
+        <div class="col-md-4"></div>
+        <div class="col-md-4 col-sm-10 col-xs-10 justify-content-center">
+            {% if previous_al.has_other_pages %}
+            <ul class="pagination justify-content_center">
+            {% if previous_al.has_previous %}
+                <li class="page-item"><a class="page-link text-dark" href="?page={{ previous_al.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="page-item page-link text-dark disabled"><span>&laquo;</span></li>
+            {% endif %}
+                {% for i in previous_al.previous_paginator.page_range %}
+                    {% if i <= previous_al.number|add:2 and i >= previous_al.number|add:-2 and previous_al.number == i %}
+                        <li class="page-item active"><span class="page-link text-dark">{{ i }}<span class="sr-only bg-info">(current)</span></span></li>
+                    {% elif i <= previous_al.number|add:2 and i >= previous_al.number|add:-2 %}
+                        <li class="page-item"><a class="page-link text-dark" href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+            {% if previous_al.has_next %}
+                <li class="page-item"><a class="page-link text-dark" href="?page={{ previous_al.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="page-item page-link disabled"><span>&raquo;</span></li>
+            {% endif %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+    <div id="previous_al_section" class="row justify-content-center">
+            <div class="col-md-10 col-sm-10 col-xs-10 justify-content-center">
+                <a class="btn btn-info btn-sm" href="{% anchor 'annual_leave_page' 'previous_al_section' %}">Recent</a>
+            </div>
+            <div class="col-md-10 col-sm-10 col-xs-10 justify-content-center">
+                <form action="#" method="get" name="previousALSearchForm" onsubmit = "return(validateDate(document.previousALSearchForm.q));">
+                    <fieldset>
+                        <small><em>Enter the date in dd/mm/yyyy format: (e.g. 01/01/2021) </em></small>
+                        <input type="text" name="q">
+                        <button class="btn btn-info btn-sm"  type="submit"><i class="fa fa-search fa-xs"></i> Search</button>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+    </div>
+    </div>
+    <hr/>
     <div class="row justify-content-center">
         <div class="col-md-6 col-sm-12 col-xs-12 row justify-content-center">
             <button type="button" class="btn btn-info absence-buttons" data-toggle="modal" data-target="#leaveRequestModal">Request Leave</button>
@@ -27,7 +175,7 @@
     </div>
     {% endif %}
 </div>
-<!-- Modal -->
+<!-- Leave Request Modal -->
 <div class="modal fade" id="leaveRequestModal" tabindex="-1" aria-labelledby="leaveRequestModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-sm modal-dialog-centered">
     <div class="modal-content">
@@ -49,6 +197,48 @@
                 <a class="btn btn-info" href="{% url 'short_term_leave_request' %}"> Short Term Leave </a>
                 </div>
             </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Leave Report Modal -->
+<div class="modal fade" id="leaveReportModal" tabindex="-1" aria-labelledby="leaveReportModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Annual Leave Balances</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body justify-content-center">
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td>Leave Allowance: </td><td>{{ yearly_al_entitlement }}</td>
+                </tr>
+                <tr>
+                    <td>Leave Carried Over: </td><td>{{ officers_leave_carried_over }}</td>
+                </tr>
+                <tr>
+                    <td>Year Start Leave Balance: </td><td>{{ year_start_leave_balance }}</td>
+                </tr>
+                <tr>
+                    <td>Leave Taken: </td><td>{{ leave_taken_total }}</td>
+                </tr>    
+                <tr>
+                    <td>Upcoming Leave: </td><td>{{ upcoming_leave_total }}</td>
+                </tr>    
+                <tr>
+                    <td>Total Leave Granted: </td><td>{{ total_leave_granted }}</td>
+                </tr>
+                <tr>
+                    <td>Leave Remaining: </td><td>{{ leave_remaining }}</td>
+                </tr>
+            </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
       </div>
     </div>
   </div>

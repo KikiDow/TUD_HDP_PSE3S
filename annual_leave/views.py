@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .utils import getCurrentYear, getLeaveAmount
-from .models import AnnualLeave, AnnualLeaveRequest, ShortTermAnnualLeaveRequest
+from .models import AnnualLeave, AnnualLeaveRequest, ShortTermAnnualLeaveRequest, AnnualLeaveCarriedOver
 import datetime
 from django.contrib.auth.decorators import login_required
 from .forms import AnnualLeaveRequestForm, ShortTermAnnualLeaveRequestForm, AnnualLeaveRequestRejectForm, ShortTermLeaveRequestRejectForm
@@ -10,6 +10,7 @@ from itertools import chain
 from clocking.models import Roster, Shift
 from notifications.signals import notify
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.conf import settings
 
 # Create your views here.
 @login_required()
@@ -26,16 +27,54 @@ def annual_leave_page(request):
     todays_date = datetime.date.today()
     upcoming_leave = []
     previous_leave = []
+    leave_taken_total = 0
+    upcoming_leave_total = 0
     for leave in officers_leave:
         if leave.al_date <= todays_date:
             previous_leave.append(leave)
+            leave_taken_total += leave.leave_amount_used
+            print(str(leave.leave_amount_used) + " leave used.") 
         else:
             upcoming_leave.append(leave)
+            upcoming_leave_total += leave.leave_amount_used
             
     length_upcoming_leave = len(upcoming_leave)
     length_previous_leave = len(previous_leave)
+    #Pagination for upcoming leave records.
+    upcoming_page = request.GET.get('upcoming_page', 1)
+    upcoming_paginator = Paginator(upcoming_leave, 8)
+    try:
+        upcoming_al = upcoming_paginator.page(upcoming_page)
+    except PageNotAnInteger:
+        upcoming_al = upcoming_paginator.page(1)
+    except EmptyPage:
+        upcoming_al = upcoming_paginator.page(upcoming_paginator.num_pages)
+    #Pagination for previous leave records.
+    previous_page = request.GET.get('previous_page', 1)
+    previous_paginator = Paginator(previous_leave, 8)
+    try:
+        previous_al = previous_paginator.page(previous_page)
+    except PageNotAnInteger:
+        previous_al = previous_paginator.page(1)
+    except EmptyPage:
+        previous_al = previous_paginator.page(previous_paginator.num_pages)
+        
+    #Annual Leave Report
+    yearly_al_entitlement = settings.ANNUAL_LEAVE_YEARLY_ALLOWANCE
+    last_year = current_year - 1
+    leave_carried_over_from_last_year_check = AnnualLeaveCarriedOver.objects.filter(al_carried_over_officer_id=officer_user.pk).filter(year=last_year)
+    if leave_carried_over_from_last_year_check.exists():
+        leave_carried_over_record = AnnualLeaveCarriedOver.objects.get(al_carried_over_officer_id=officer_user.pk, year=last_year)
+        officers_leave_carried_over = leave_carried_over_record.leave_amount_carried_over
+    else:
+        officers_leave_carried_over = 0
+        
+    year_start_leave_balance = yearly_al_entitlement + officers_leave_carried_over
+    total_leave_granted = leave_taken_total + upcoming_leave_total
+    leave_remaining = off_current_leave_total - total_leave_granted
     
-    return render(request, "annual_leave.html", {'upcoming_leave': upcoming_leave, 'previous_leave': previous_leave, 'length_previous_leave': length_previous_leave, 'length_upcoming_leave': length_upcoming_leave, 'off_current_leave_total': off_current_leave_total})
+    
+    return render(request, "annual_leave.html", {'upcoming_al': upcoming_al, 'previous_al': previous_al, 'length_previous_leave': length_previous_leave, 'length_upcoming_leave': length_upcoming_leave, 'off_current_leave_total': off_current_leave_total, 'yearly_al_entitlement': yearly_al_entitlement, 'officers_leave_carried_over': officers_leave_carried_over, 'year_start_leave_balance': year_start_leave_balance, 'leave_taken_total': leave_taken_total, 'upcoming_leave_total': upcoming_leave_total, 'total_leave_granted': total_leave_granted, 'leave_remaining': leave_remaining})
 
 # BLOCK LEAVE
 @login_required()
