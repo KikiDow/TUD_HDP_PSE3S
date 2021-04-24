@@ -5,8 +5,8 @@ from django.contrib.auth import authenticate
 from account.models import Account
 
 class RegistrationForm(UserCreationForm):
-    email = forms.EmailField(max_length=60, help_text='Required. Add a valid email address.')
-    is_staff = forms.BooleanField(required=False, widget=forms.CheckboxInput)
+    email = forms.EmailField(label='Enter email here:', max_length=60, help_text='Required. Add a valid email address.')
+    is_staff = forms.BooleanField(label='Is this user a supervisor?:', required=False, widget=forms.CheckboxInput)
 
     class Meta:
         model = Account
