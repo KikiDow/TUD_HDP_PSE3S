@@ -11,6 +11,7 @@ from clocking.models import Roster, Shift
 from notifications.signals import notify
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.conf import settings
+from clocking.utils import convertStrToDateObj
 
 # Create your views here.
 @login_required()
@@ -73,8 +74,21 @@ def annual_leave_page(request):
     total_leave_granted = leave_taken_total + upcoming_leave_total
     leave_remaining = off_current_leave_total - total_leave_granted
     
-    
     return render(request, "annual_leave.html", {'upcoming_al': upcoming_al, 'previous_al': previous_al, 'length_previous_leave': length_previous_leave, 'length_upcoming_leave': length_upcoming_leave, 'off_current_leave_total': off_current_leave_total, 'yearly_al_entitlement': yearly_al_entitlement, 'officers_leave_carried_over': officers_leave_carried_over, 'year_start_leave_balance': year_start_leave_balance, 'leave_taken_total': leave_taken_total, 'upcoming_leave_total': upcoming_leave_total, 'total_leave_granted': total_leave_granted, 'leave_remaining': leave_remaining})
+
+@login_required()
+def search_annual_leave(request):
+    '''
+    This view allows the user to search through all their annual leave records to retrieve a specific date.
+    '''
+    user = request.user
+    annual_leave_search_date = request.GET['q']
+    date = convertStrToDateObj(annual_leave_search_date)
+    annual_leave_search_result = AnnualLeave.objects.filter(al_officer_id=user.pk, al_date=date)
+    
+    len_annual_leave_search_result = len(annual_leave_search_result)
+    
+    return render(request, "annual_leave_search.html", {'annual_leave_search_result': annual_leave_search_result, 'len_annual_leave_search_result': len_annual_leave_search_result})
 
 # BLOCK LEAVE
 @login_required()
