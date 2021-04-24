@@ -13,8 +13,8 @@ class PostForm(forms.ModelForm):
         todays_date = datetime.date.today()
         exchangers_roster = Roster.objects.filter(roster_officer_id=user).filter(roster_due_on=True).filter(roster_shift_date__gt=todays_date)
         exchangers_roster_choices = [('', 'select date')] + [(id.roster_shift_date.strftime("%Y-%m-%d"), id.roster_shift_date.strftime("%Y-%m-%d")) for id in exchangers_roster]
-        self.fields['possible_exchange_date'] = forms.ChoiceField(widget=forms.Select, choices=exchangers_roster_choices)
-        self.fields['post_content'] = forms.CharField(required=False, widget=forms.Textarea())
+        self.fields['possible_exchange_date'] = forms.ChoiceField(label="Please select the date you are hoping to exchange:", widget=forms.Select, choices=exchangers_roster_choices)
+        self.fields['post_content'] = forms.CharField(label="Enter any content for your posy here:", required=False, widget=forms.Textarea())
         
     class Meta:
         model = Post
@@ -29,13 +29,13 @@ class SubmitExchangeRequestExchangingOfficerForm(forms.ModelForm):
         todays_date = datetime.date.today()
         exchangers_roster = Roster.objects.filter(roster_officer_id=user).filter(roster_due_on=True).filter(roster_shift_date__gt=todays_date)
         exchangers_roster_choices = [('', 'select date')] + [(id.roster_shift_date.strftime("%Y-%m-%d"), id.roster_shift_date.strftime("%Y-%m-%d")) for id in exchangers_roster]
-        self.fields['exchange_req_date'] = forms.ChoiceField(widget=forms.Select, choices=exchangers_roster_choices)
+        self.fields['exchange_req_date'] = forms.ChoiceField(label="Please select the date you wish to exchange:", widget=forms.Select, choices=exchangers_roster_choices)
         if user_roster_side == "A":
-            self.fields['replacing_req_officer'] = forms.ModelChoiceField(widget=forms.Select, queryset=Account.objects.filter(roster_side="B"))
+            self.fields['replacing_req_officer'] = forms.ModelChoiceField(label="Please select the person you are exchanging with:", widget=forms.Select, queryset=Account.objects.filter(roster_side="B"))
         else:
-            self.fields['replacing_req_officer'] = forms.ModelChoiceField(widget=forms.Select, queryset=Account.objects.filter(roster_side="A"))
+            self.fields['replacing_req_officer'] = forms.ModelChoiceField(label="Please select the person you are exchanging with:", widget=forms.Select, queryset=Account.objects.filter(roster_side="A"))
             
-        self.fields['exchanging_req_officer_notes'] = forms.CharField(required=False, widget=forms.Textarea())
+        self.fields['exchanging_req_officer_notes'] = forms.CharField(label="Enter a message to the Replacing Officer if you wish:", required=False, widget=forms.Textarea())
         
     class Meta:
         model = ExchangeRequest
@@ -53,9 +53,9 @@ class SubmitExchangeRequestReplacingOfficerForm(forms.ModelForm):
         #self.fields exchange officer, date, shift, notes, replacing officer?? <all disabled>
         replacers_roster = Roster.objects.filter(roster_officer_id=user).filter(roster_due_on=True).filter(roster_shift_date__gt=todays_date)
         replacers_roster_choices = [('', 'select date')] + [(id.roster_shift_date.strftime("%Y-%m-%d"), id.roster_shift_date.strftime("%Y-%m-%d")) for id in replacers_roster]
-        self.fields['replacing_req_date'] = forms.ChoiceField(widget=forms.Select, choices=replacers_roster_choices)
-        self.fields['replacing_req_officer_notes'] = forms.CharField(required=False, widget=forms.Textarea())
-        self.fields['ro_proceed_with_swap'] = forms.BooleanField(required=False, widget=forms.CheckboxInput)
+        self.fields['replacing_req_date'] = forms.ChoiceField(label="Please select the date you wish to have replaced:", widget=forms.Select, choices=replacers_roster_choices)
+        self.fields['replacing_req_officer_notes'] = forms.CharField(label="Enter a message to the Exchanging Officer if you wish:", required=False, widget=forms.Textarea())
+        self.fields['ro_proceed_with_swap'] = forms.BooleanField(label="Please confirm that you wish to take part in this exchange:", required=False, widget=forms.CheckboxInput)
         
     class Meta:
         model = ExchangeRequest
@@ -63,15 +63,15 @@ class SubmitExchangeRequestReplacingOfficerForm(forms.ModelForm):
         fields = ('replacing_req_date', 'replacing_req_officer_notes', 'ro_proceed_with_swap')
         
 class SubmitExchangeRequestExchangingOfficerCheckForm(forms.ModelForm):
-    eo_proceed_with_swap = forms.BooleanField(required=False, widget=forms.CheckboxInput)
+    eo_proceed_with_swap = forms.BooleanField(label="Please confirm that you wish to take part in this exchange:", required=False, widget=forms.CheckboxInput)
         
     class Meta:
         model = ExchangeRequest
         fields = ('eo_proceed_with_swap', )
         
 class CancelExchangeRequestForm(forms.ModelForm):
-    swap_cancelled = forms.BooleanField(required=False, widget=forms.CheckboxInput)
-    reason_exchange_cancelled = forms.CharField(required=True, widget=forms.Textarea())
+    swap_cancelled = forms.BooleanField(label="Please confirm that you wish to cancel this exchange request:", required=False, widget=forms.CheckboxInput)
+    reason_exchange_cancelled = forms.CharField(label="Please outline why you are cancelling this exchange request:", required=True, widget=forms.Textarea())
     
     class Meta:
         model = ExchangeRequest
