@@ -524,4 +524,31 @@ def view_lates(request):
         
     return render(request, "my_late_clockings.html", {'my_late_clocks': my_late_clocks, 'len_late_clockings': len_late_clockings, 'number_of_lates': number_of_lates, 'current_year': current_year})
     
+@login_required()
+def search_late_clockings(request):
+    '''
+    This view takes in the date entered by the user, then searches for the record containing entered date.
+    '''
+    user = request.user
+    late_clocking_search_date = request.GET['q']
+    date = convertStrToDateObj(late_clocking_search_date)
+    late_clocking_search_result = Lates.objects.filter(lates_officer_id=user, date_of_late=date)
+    
+    len_late_clocking_search_result = len(late_clocking_search_result)
+   
+    page = request.GET.get('page', 1)
+    
+    paginator = Paginator(late_clocking_search_result, 8)
+    try:
+        my_late_clocks = paginator.page(page)
+    except PageNotAnInteger:
+        my_late_clocks = paginator.page(1)
+    except EmptyPage:
+        my_late_clocks = paginator.page(paginator.num_pages)
+    
+    return render(request, "late_clockings_search.html", {'my_late_clocks': my_late_clocks, 'len_late_clocking_search_result': len_late_clocking_search_result})
+
+
+    
+    
     

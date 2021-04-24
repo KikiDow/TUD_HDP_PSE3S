@@ -1,5 +1,5 @@
 from django.conf.urls import url, include
-from .views import landing_page, clocking_page, generate_roster, view_personal_details, create_personal_details, edit_personal_details, my_notifications, clock, manual_clocking, view_manual_clock, view_submitted_manual_clockings, accept_manual_clock, reject_manual_clock, search_roster, previous_manual_clockings, search_manual_clocks, edit_manual_clock, delete_manual_clock, remote_clocking_page, view_remote_clockings, get_user_coords, view_individual_remote_clocking, view_lates
+from .views import landing_page, clocking_page, generate_roster, view_personal_details, create_personal_details, edit_personal_details, my_notifications, clock, manual_clocking, view_manual_clock, view_submitted_manual_clockings, accept_manual_clock, reject_manual_clock, search_roster, previous_manual_clockings, search_manual_clocks, edit_manual_clock, delete_manual_clock, remote_clocking_page, view_remote_clockings, get_user_coords, view_individual_remote_clocking, view_lates, search_late_clockings
 
 urlpatterns = [
     url(r'^$', landing_page, name='index'),
@@ -25,5 +25,6 @@ urlpatterns = [
     url(r'^view_remote_clockings/$', view_remote_clockings, name='view_remote_clockings'),
     url(r'^get_user_coords/$', get_user_coords, name='get_user_coords'),
     url(r'^(?P<pk>\d+)view_individual_remote_clocking/$', view_individual_remote_clocking, name='view_individual_remote_clocking'),
-    url(r'^view_lates/$', view_lates, name='view_lates')
+    url(r'^view_lates/$', view_lates, name='view_lates'),
+    url(r'^search_late_clockings/$', search_late_clockings, name='search_late_clockings')
 ]

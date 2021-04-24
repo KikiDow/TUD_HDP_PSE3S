@@ -9,20 +9,6 @@
 </div>
 <div class="container">
     <div class="row justify-content-center">
-        <p> You have recorded <strong>{{ number_of_lates }}</strong> 
-            {% if number_of_lates == 1 %}
-                late 
-            {% else %}
-                lates
-            {% endif %}
-         for {{ current_year }}. </p>
-    </div>
-    {% if len_late_clockings == 0 %}
-    <div class="row justify-content-center">
-        <p> You do not have any instances of late on your record. </p>
-    </div>
-    {% else %}
-    <div class="row justify-content-center">
         <div class="col-md-1"></div>
         <div class="col-md-3 col-sm-10 col-xs-10 justify-content-center">
             <a class="btn btn-info btn-sm" href="{% url 'view_lates' %}">Most Recent</a>
@@ -38,6 +24,11 @@
         </div>
         <div class="col-md-1"></div>
     </div>
+    {% if len_late_clocking_search_result == 0 %}
+    <div class="row justify-content-center">
+        <h4> No results found for the date you entered. </h4>
+    </div>
+    {% else %}
     <div class="row justify-content-center">
         <div class="col-md-2"></div>
         <div class="col-md-8 table-wrapper-scroll-y my-custom-scrollbar">
