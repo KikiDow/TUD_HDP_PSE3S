@@ -55,12 +55,12 @@
             <div class="col-md-2"></div>
     </div>
     <div class="row justify-content-center">
-        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-1">
+        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-12">
             {% if user == usl_application.usl_officer_id and usl_application.usl_checked_by_validator == False %}
             <a class="btn btn-info absence-buttons basic-button" href="{% url 'edit_usl' usl_application.id %}"><i class="fa fa-pencil"></i> Edit Application </a>
             {% endif %}
         </div>
-        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-1">
+        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-12">
             {% if user == usl_application.usl_officer_id %}
             <a class="btn btn-info absence-buttons basic-button" onclick="return confirm('Are you sure you want to delete this USL application?')" href="{% url 'delete_usl' usl_application.id %}"><i class="fa fa-trash"></i> Delete </a>
             {% endif %}
@@ -68,10 +68,10 @@
     </div>
     {% if user.is_staff %}
     <div class="row justify-content-center">
-        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-1">
+        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-12">
             <a class="btn btn-info absence-buttons basic-button" onclick="return confirm('Are you sure you want to accept this USL application?')" href="{% url 'accept_usl' usl_application.id %}"><i class="fa fa-thumbs-up"></i> Accept Application </a>
         </div>
-        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-1">
+        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-12">
             <a class="btn btn-info absence-buttons basic-button" href="{% url 'reject_usl' usl_application.id %}"><i class="fa fa-thumbs-down"></i> Reject Application </a>
         </div>
     </div>

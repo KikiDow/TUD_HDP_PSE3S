@@ -59,12 +59,12 @@
             <div class="col-md-2"></div>
     </div>
     <div class="row justify-content-center">
-        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-1">
+        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-12">
             {% if user == csl_application.csl_officer_id and csl_application.csl_checked_by_validator == False %}
             <a class="btn btn-info absence-buttons basic-button" href="{% url 'edit_csl' csl_application.id %}"><i class="fa fa-pencil"></i> Edit Application </a>
             {% endif %}
         </div>
-        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-1">
+        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-12">
             {% if user == csl_application.csl_officer_id %}
             <a class="btn btn-info absence-buttons basic-button" href="{% url 'delete_csl' csl_application.id %}"><i class="fa fa-trash"></i> Delete </a>
             {% endif %}
