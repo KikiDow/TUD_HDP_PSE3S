@@ -70,29 +70,25 @@
             <div class="col-md-2"></div>
     </div>
     <div class="row justify-content-center">
-        <div class="col-md-2"></div>
-        <div class="col-md-4 col-sm-12 col-xs-12">
+        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-12">
             {% if user == manual_clock.mc_officer_id and manual_clock.checked_by_validator == False %}
-            <a class="btn btn-info" href="{% url 'edit_manual_clock' manual_clock.id %}"><i class="fa fa-pencil"></i> Edit Clocking </a>
+            <a class="btn btn-info absence-buttons basic-button" href="{% url 'edit_manual_clock' manual_clock.id %}"><i class="fa fa-pencil"></i> Edit Clocking </a>
             {% endif %}
         </div>
-        <div class="col-md-4 col-sm-12 col-xs-12">
+        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-12">
             {% if user == manual_clock.mc_officer_id %}
-            <a class="btn btn-info" onclick="return confirm('Are you sure you want to make these changes?')" href="{% url 'delete_manual_clock' manual_clock.id %}"><i class="fa fa-trash"></i> Delete Clocking </a>
+            <a class="btn btn-info absence-buttons basic-button" onclick="return confirm('Are you sure you want to make these changes?')" href="{% url 'delete_manual_clock' manual_clock.id %}"><i class="fa fa-trash"></i> Delete Clocking </a>
             {% endif %}
         </div>
-        <div class="col-md-2"></div>
     </div>
     {% if user.is_staff and user != manual_clock.mc_officer_id %}
     <div class="row justify-content-center">
-        <div class="col-md-2"></div>
-        <div class="col-md-4 col-sm-12 col-xs-12">
-            <a class="btn btn-info" onclick="return confirm('Are you sure you want to accept this Manual Clocking application?')" href="{% url 'accept_manual_clock' manual_clock.pk %}"><i class="fa fa-thumbs-up"></i> Accept Clocking </a>
+        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-12">
+            <a class="btn btn-info absence-buttons basic-button" onclick="return confirm('Are you sure you want to accept this Manual Clocking application?')" href="{% url 'accept_manual_clock' manual_clock.pk %}"><i class="fa fa-thumbs-up"></i> Accept Clocking </a>
         </div>
-        <div class="col-md-4 col-sm-12 col-xs-12">
-            <a class="btn btn-info" href="{% url 'reject_manual_clock' manual_clock.pk %}"><i class="fa fa-thumbs-down"></i> Reject Clocking </a>
+        <div class="row justify-content-center col-md-6 col-sm-12 col-xs-12">
+            <a class="btn btn-info absence-buttons basic-button" href="{% url 'reject_manual_clock' manual_clock.pk %}"><i class="fa fa-thumbs-down"></i> Reject Clocking </a>
         </div>
-        <div class="col-md-2"></div>
     </div>
     {% endif %}
 </div>
