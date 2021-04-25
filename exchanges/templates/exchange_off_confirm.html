@@ -36,7 +36,7 @@
                     <legend>Fill in the details below to confirm this exchange request.</legend>
                     {% csrf_token %}
                     {{ submit_exchange_req_confirm_form | as_bootstrap }}
-                    <button class="btn btn-info" type="submit" onclick="return confirm('Are you sure?')">Confirm Exchange</button>
+                    <button class="btn btn-info basic-button" type="submit" onclick="return confirm('Are you sure?')">Confirm Exchange</button>
                 </fieldset>
             </form>
         </div>
@@ -44,7 +44,7 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-md-4"></div>
-        <div class+"col-md-4 col-sm-10 col-xs-10">
+        <div class="justify-content-center col-md-4 col-sm-10 col-xs-10">
             <a class="btn btn-info" href="{% url 'cancel_exchange' exchange_req_being_confirmed.id %}"> Cancel Request </a>
         </div>
         <div class="col-md-4"></div>
