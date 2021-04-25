@@ -72,7 +72,7 @@ def annual_leave_page(request):
         
     year_start_leave_balance = yearly_al_entitlement + officers_leave_carried_over
     total_leave_granted = leave_taken_total + upcoming_leave_total
-    leave_remaining = off_current_leave_total - total_leave_granted
+    leave_remaining = off_current_leave_total
     
     return render(request, "annual_leave.html", {'upcoming_al': upcoming_al, 'previous_al': previous_al, 'length_previous_leave': length_previous_leave, 'length_upcoming_leave': length_upcoming_leave, 'off_current_leave_total': off_current_leave_total, 'yearly_al_entitlement': yearly_al_entitlement, 'officers_leave_carried_over': officers_leave_carried_over, 'year_start_leave_balance': year_start_leave_balance, 'leave_taken_total': leave_taken_total, 'upcoming_leave_total': upcoming_leave_total, 'total_leave_granted': total_leave_granted, 'leave_remaining': leave_remaining})
 

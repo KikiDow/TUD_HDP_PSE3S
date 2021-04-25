@@ -314,8 +314,9 @@ def reject_manual_clock(request, pk):
     if request.method == "POST":
         manual_clock_reject_form = RejectManualClockingForm(request.POST, request.FILES, instance=manual_clock_being_rejected)
         if manual_clock_reject_form.is_valid:
+            manual_clock_being_rejected = manual_clock_reject_form.save()
             #manual_clock_being_rejected = manual_clock_being_rejected.save()
-            manual_clock_being_rejected.reason_manual_clock_rejected = manual_clock_reject_form.instance.reason_manual_clock_rejected
+            #manual_clock_being_rejected.reason_manual_clock_rejected = manual_clock_reject_form.instance.reason_manual_clock_rejected
             manual_clock_being_rejected.accept_reject_clock = False
             manual_clock_being_rejected.checked_by_validator = True
             manual_clock_being_rejected.validator_id = request.user

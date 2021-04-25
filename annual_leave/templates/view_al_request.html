@@ -47,7 +47,7 @@
                             <td><i class="fa fa-times-circle fa-lg"></i></td>
                         {% endif %}
                     </tr>
-                    {% if annual_leave_req.leave_checked_by_validator == True and annual_leave_req.leave_request_granted == False %}
+                    {% if annual_leave_req.leave_request_checked_by_validator == True and annual_leave_req.leave_request_granted == False %}
                     <tr>
                         <td><strong>Reason leave rejected: </strong></td>
                         <td>{{ annual_leave_req.reason_leave_rejected }}</td>
