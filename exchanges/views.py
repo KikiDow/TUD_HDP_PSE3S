@@ -13,6 +13,9 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # Create your views here.
 @login_required()
 def exchanges_page(request):
+    '''
+    This view renders the exchanges page.
+    '''
     user = request.user
     todays_date = dt.date.today()
     exchanges = Exchange.objects.filter(Q(exchanging_officer=user) | Q(replacing_officer=user)).filter(Q(exchange_date__gte=todays_date) | Q(replacement_date__gte=todays_date))
@@ -21,6 +24,9 @@ def exchanges_page(request):
     
 @login_required()    
 def submit_exchange_exchange_off(request):
+    '''
+    This view allows a user to start an exchange request process.
+    '''
     if request.method == "POST":
         submit_exchange_exchange_off_form = SubmitExchangeRequestExchangingOfficerForm(request.POST, request.FILES)
         exchange_req_date = request.POST.get('exchange_req_date')
@@ -55,6 +61,9 @@ def submit_exchange_exchange_off(request):
     
 @login_required()
 def view_all_exchanges(request):
+    '''
+    This view allows a user to view all the currently active exchange requests that they are involved in.
+    '''
     user = request.user
     exchange_requests = ExchangeRequest.objects.filter(Q(exchanging_req_officer=user) | Q(replacing_req_officer=user)).filter(swap_cancelled=False)
     #Started: Awaiting Replacement officer reply
@@ -122,6 +131,9 @@ def view_all_exchanges(request):
     
 @login_required()
 def previous_exchanges(request):
+    '''
+    This view allows a user to view the previous exchanges they have been involved in.
+    '''
     user = request.user
     exchange_requests = ExchangeRequest.objects.filter(Q(exchanging_req_officer=user) | Q(replacing_req_officer=user)).filter(swap_cancelled=False)
     #cancelled swaps:
@@ -162,6 +174,9 @@ def previous_exchanges(request):
     
 @login_required()
 def submit_exchange_replacing_off_reply(request, pk):
+    '''
+    This view allows a user who is designated as the replacing officer to confrim their participation in the exchange.
+    '''
     exchange_req_being_replied_to = ExchangeRequest.objects.get(pk=pk)
     if request.method == "POST":
         submit_exchange_replacing_off_form = SubmitExchangeRequestReplacingOfficerForm(request.POST, request.FILES, instance=exchange_req_being_replied_to)
@@ -190,6 +205,9 @@ def submit_exchange_replacing_off_reply(request, pk):
 
 @login_required()
 def submit_exchange_exchange_off_confirm(request, pk):
+    '''
+    This view allows the user designated as the exchanging officer to confirm their participation in the exchange.
+    '''
     exchange_req_being_confirmed = ExchangeRequest.objects.get(pk=pk)
     if request.method == "POST":
         submit_exchange_req_confirm_form = SubmitExchangeRequestExchangingOfficerCheckForm(request.POST, request.FILES, instance=exchange_req_being_confirmed)
@@ -229,6 +247,9 @@ def submit_exchange_exchange_off_confirm(request, pk):
 
 @login_required()
 def exchange_noticeboard(request):
+    '''
+    This view displays the exchange noticeboard.
+    '''
     todays_date = dt.date.today()
     noticeboard_posts = Post.objects.filter(post_led_to_exchange=False).filter(possible_exchange_date__gt=todays_date)
     #
@@ -249,6 +270,9 @@ def exchange_noticeboard(request):
     
 @login_required()
 def submit_post(request):
+    '''
+    This view allows a user to submit a post to the noticeboard.
+    '''
     if request.method == "POST":
         submit_post_form = PostForm(request.POST, request.FILES)
         possible_exchange_date = request.POST.get('possible_exchange_date')
@@ -268,6 +292,9 @@ def submit_post(request):
     
 @login_required()
 def like_post(request, pk):
+    '''
+    This view allows a user to LIKE or show an interest in a post on the noticebaord.
+    '''
     post_being_liked = Post.objects.get(pk=pk)
     #Check to see if user has already liked this post.
     has_user_already_liked_post = Like.objects.filter(post_liked=post_being_liked).filter(post_liked_by=request.user)
@@ -285,6 +312,9 @@ def like_post(request, pk):
     
 @login_required()
 def cancel_exchange(request, pk):
+    '''
+    This view allows a user who is involved in a swap to cancel the exchange..
+    '''
     exchange_being_cancelled = ExchangeRequest.objects.get(pk=pk)
     if request.method == "POST":
         cancel_exchange_form = CancelExchangeRequestForm(request.POST, request.FILES, instance=exchange_being_cancelled)
@@ -311,6 +341,9 @@ def cancel_exchange(request, pk):
     
 @login_required()
 def delete_post(request, pk):
+    '''
+    This view allows a user to remove a post they created from the post.
+    '''
     post_for_deletion = Post.objects.get(pk=pk)
     post_for_deletion.delete()
     messages.success(request, "Post deleted !!")
@@ -318,6 +351,9 @@ def delete_post(request, pk):
     
 @login_required()
 def create_exch_req_from_like(request, pk):
+    '''
+    This view allows a user to start an exchange from the noticeboard with a single click.
+    '''
     like_for_exchange = Like.objects.get(pk=pk)
     like_for_exchange.exchange_started = True
     like_for_exchange.save()
@@ -335,6 +371,9 @@ def create_exch_req_from_like(request, pk):
     
 @login_required()
 def show_my_posts(request):
+    '''
+    This view only displays the posts on the noticeboard that the user has submitted or shown an interest in.
+    '''
     likes = Like.objects.all()
     my_posts = Post.objects.filter(postee_id=request.user)
     len_my_posts = len(my_posts)
