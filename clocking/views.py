@@ -232,6 +232,9 @@ def my_notifications(request):
     
 @login_required()
 def clock(request):
+    '''
+    This view allows a user to register a clocking instance using a single click.
+    '''
     user = request.user
     todays_date = datetime.date.today()
     roster_record_for_today = Roster.objects.get(roster_officer_id=user, roster_shift_date=todays_date)
@@ -241,6 +244,9 @@ def clock(request):
     
 @login_required()
 def manual_clocking(request):
+    '''
+    This view renders the manual clocking application form, validates the form and submits manual clocking application.
+    '''
     if request.method == "POST":
         manual_clock_form = ManualClockingForm(request.POST, request.FILES)
         if manual_clock_form.is_valid():
@@ -278,12 +284,18 @@ def manual_clocking(request):
     
 @login_required()
 def view_manual_clock(request, pk):
+    '''
+    This view displays an individual manual clocking application.
+    '''
     manual_clock = get_object_or_404(ManualClocking, pk=pk)
     manual_clock.save()
     return render(request, "view_manual_clock.html", {'manual_clock': manual_clock})
     
 @login_required()
 def view_submitted_manual_clockings(request):
+    '''
+    This view allows a supervisor to view submitted manual clocking applications.
+    '''
     user = request.user
     submitted_manual_clockings = ManualClocking.objects.filter(checked_by_validator=False).exclude(mc_officer_id=user)
     length_staff_manual_clockings = len(submitted_manual_clockings)
@@ -291,6 +303,9 @@ def view_submitted_manual_clockings(request):
     
 @login_required()
 def accept_manual_clock(request, pk):
+    '''
+    This view allows a supervisor to accept a manual clocking application.
+    '''
     manual_being_accepted = ManualClocking.objects.get(pk=pk)
     manual_being_accepted.accept_reject_clock = True
     manual_being_accepted.checked_by_validator = True
@@ -310,6 +325,9 @@ def accept_manual_clock(request, pk):
     
 @login_required()
 def reject_manual_clock(request, pk):
+    '''
+    This view allows a supervisor to reject a manual clocking application.
+    '''
     manual_clock_being_rejected = ManualClocking.objects.get(pk=pk)
     if request.method == "POST":
         manual_clock_reject_form = RejectManualClockingForm(request.POST, request.FILES, instance=manual_clock_being_rejected)
@@ -330,6 +348,9 @@ def reject_manual_clock(request, pk):
     
 @login_required()
 def previous_manual_clockings(request):
+    '''
+    This view displays a users previous manual clockings.
+    '''
     user = request.user
     user_manual_clocks = ManualClocking.objects.filter(mc_officer_id=user).order_by('-clocking_date')
     len_manual_clocks = len(user_manual_clocks)
@@ -349,6 +370,9 @@ def previous_manual_clockings(request):
     
 @login_required()
 def search_manual_clocks(request):
+    '''
+    This view allows a user to search through their own manual clocks.
+    '''
     user = request.user
     mc_search_date = request.GET['q']
     date = convertStrToDateObj(mc_search_date)
@@ -435,40 +459,48 @@ def get_user_coords(request):
         users_current_lat = request.POST.get('users_lat')
         users_current_lon = request.POST.get('users_lon')
         
-    print(users_current_lat)
-    print(users_current_lon)
+    #print(users_current_lat)
+    #print(users_current_lon)
     #print(type(users_current_lat))
     #Convert the co-ordinates to floating point numbers.
     convert_lat_to_float = float(users_current_lat)
     convert_lon_to_float = float(users_current_lon)
-    print("Converted coords to floats.")
+    #print("Converted coords to floats.")
     
     geolocator = Nominatim(user_agent='clockings')
-    print("Created geolocator")
+    #print("Created geolocator")
     #Attain the address of the location of where the user clocked.
     current_address = geolocator.reverse(users_current_lat + ", " + users_current_lon)
-    print(current_address)
+    #print(current_address)
     
     user = request.user
     todaysDate = datetime.datetime.now()
     #Check if Remote cloking record exists for todays date.
     remote_clock_for_todaysDate_check = RemoteClock.objects.filter(remote_clock_officer_id=user).filter(remote_clocking_date=todaysDate)
     if remote_clock_for_todaysDate_check.exists():
-        print("Clocking exists.")
+        #print("Clocking exists.")
         remote_clock_for_today = RemoteClock.objects.get(remote_clock_officer_id=user, remote_clocking_date=todaysDate)
         remote_clock_for_today.updateCorrectRemoteClocking(request, convert_lat_to_float, convert_lon_to_float, current_address)
-        print("After updateCorrectClocking function call.")
+        #print("After updateCorrectClocking function call.")
         messages.success(request, "Remote Clocking Successful")
     else:
         remote_clock_for_today = RemoteClock(remote_clock_officer_id=user, remote_clocking_date=todaysDate)
         remote_clock_for_today.updateCorrectRemoteClocking(request, convert_lat_to_float, convert_lon_to_float, current_address)
-        print("After update call on new remote clocking instance instanciated.")
+        #print("After update call on new remote clocking instance instanciated.")
         messages.success(request, "Remote Clocking Successful")
     #return render(request, "view_coords.html")
     return redirect('remote_clocking_page')
     
 @login_required()
 def view_individual_remote_clocking(request, pk):
+    '''
+    This view display an individual clocking record.
+    '''
+    #REFERENCE
+    '''
+    Author Unknown. [PyPlane]. (2020, June 18). How to build a GeoDjango app | Learn Django Geolocation with Folium (Part 2/3).
+    Retrieved from https://www.youtube.com/watch?v=MOKEB3EjP3Y
+    '''
     remote_clocking_to_view = get_object_or_404(RemoteClock, pk=pk)
     
     geolocator = Nominatim(user_agent='clockings')

@@ -6,6 +6,9 @@ from django.conf import settings
 from annual_leave.utils import getCurrentYear
 
 def findRosterStartPoint():
+    '''
+    Helper function to identify the current point on the roster cycle that todays date is on.
+    '''
     date1 = settings.GLOBAL_START_DATE
     one_day_delta = dt.timedelta(days=1)
     today = dt.date.today() + one_day_delta
@@ -21,6 +24,9 @@ def findRosterStartPoint():
     return start_point_on_roster
     
 def rosterPointerCheck(n):
+    '''
+    Helper function to identify point in roster cycle of reset when exceeded range of cycle.
+    '''
     if n <= 42:
         return n
     else:
@@ -28,6 +34,9 @@ def rosterPointerCheck(n):
     return n
     
 def getStartPageForPagination(d):
+    '''
+    Helper function to find the start page to display amongst the pagination list.
+    '''
     first_date_on_roster = d
     seven_day_delta = dt.timedelta(days=7)
     x_date = first_date_on_roster + seven_day_delta
@@ -42,6 +51,9 @@ def getStartPageForPagination(d):
     return page_to_begin
     
 def getSearchResultPaginationStartPage(ros_first_day, search_date):
+    '''
+    Helper function to identify the correct page of the roster to display after search on roster.
+    '''
     first_date_on_roster = ros_first_day
     seven_day_delta = dt.timedelta(days=7)
     x_date = first_date_on_roster + seven_day_delta
@@ -56,6 +68,9 @@ def getSearchResultPaginationStartPage(ros_first_day, search_date):
     return page_to_show
 
 def convertStrToDateObj(date_as_string):
+    '''
+    Helper function to convert a string representation of a date to a Date object.
+    '''
     datetime_obj = datetime.strptime(date_as_string, "%d/%m/%Y")
     day = datetime_obj.day
     month = datetime_obj.month
@@ -64,6 +79,9 @@ def convertStrToDateObj(date_as_string):
     return new_date
     
 def checkForLateClocking(t, officer):
+    '''
+    Helper function to check of a clocking is late.
+    '''
     from .models import Lates, LatesPerYear, Roster, Shift
     clocking_being_checked = t
     todays_date = dt.date.today()
