@@ -44,7 +44,7 @@ def abscences_page(request):
 @login_required()
 def submit_csl(request):
     '''
-    This view renders, server side validates and creates newly submitted csl.
+    This view renders csl submission form, server side validates and creates newly submitted csl.
     '''
     if request.method == "POST":
         csl_form = CertifiedSickLeaveForm(request.POST, request.FILES)
@@ -326,6 +326,9 @@ def view_my_sick_leave(request):
     
 @login_required()
 def accept_csl(request, pk):
+    '''
+    This view allows a supervisor to accept a csl application.
+    '''
     csl_being_accepted = CertifiedSickLeave.objects.get(pk=pk)
     csl_being_accepted.csl_checked_by_validator = True
     csl_being_accepted.csl_accepted = True
@@ -346,6 +349,9 @@ def accept_csl(request, pk):
     
 @login_required()
 def reject_csl(request, pk):
+    '''
+    This view allows a supervisor to reject a csl application.
+    '''
     csl_being_rejected = CertifiedSickLeave.objects.get(pk=pk)
     if request.method == "POST":
         csl_reject_form = RejectCertifiedSickLeaveForm(request.POST, request.FILES, instance=csl_being_rejected)
@@ -364,6 +370,9 @@ def reject_csl(request, pk):
     
 @login_required()
 def accept_usl(request, pk):
+    '''
+    This view allows a supervisor to accept a usl application.
+    '''
     usl_being_accepted = UnCertifiedSickLeave.objects.get(pk=pk)
     usl_being_accepted.usl_checked_by_validator = True
     usl_being_accepted.usl_accepted = True
@@ -386,6 +395,9 @@ def accept_usl(request, pk):
     
 @login_required()
 def reject_usl(request, pk):
+    '''
+    This view allows a supervisor to reject a usl application.
+    '''
     usl_being_rejected = UnCertifiedSickLeave.objects.get(pk=pk)
     if request.method == "POST":
         usl_reject_form = RejectUnCertifiedSickLeaveForm(request.POST, request.FILES, instance=usl_being_rejected)
@@ -404,6 +416,9 @@ def reject_usl(request, pk):
     
 @login_required()
 def accept_fm(request, pk):
+    '''
+    This view allows a supervisor to accept a fm application.
+    '''
     fm_being_accepted = ForceMajeure.objects.get(pk=pk)
     fm_being_accepted.fm_checked_by_validator = True
     fm_being_accepted.fm_accepted = True
@@ -422,6 +437,9 @@ def accept_fm(request, pk):
     
 @login_required()
 def reject_fm(request, pk):
+    '''
+    This view allows a supervisor to reject a fm application.
+    '''
     fm_being_rejected = ForceMajeure.objects.get(pk=pk)
     if request.method == "POST":
         fm_reject_form = RejectForceMajeureForm(request.POST, request.FILES, instance=fm_being_rejected)
@@ -430,7 +448,7 @@ def reject_fm(request, pk):
             fm_being_rejected.fm_checked_by_validator = True
             fm_being_rejected.fm_accepted = False
             fm_being_rejected.save()
-            #NOTIFICATION TO APPLICANY THAT UN-CERT HAS BEEN REJECTED.
+            #NOTIFICATION TO APPLICANT THAT UN-CERT HAS BEEN REJECTED.
             notify.send(request.user, recipient=fm_being_rejected.fm_officer_id, verb=" has rejected your Force Majeure application: " + str(fm_being_rejected))
             messages.success(request, 'Force Majeure Application Rejected.')
             return redirect('view_staff_sick_leave_applications')
