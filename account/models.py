@@ -2,6 +2,11 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from .utils import ChoiceEnum
 # Create your models here.
+#Reference
+'''
+Tabian, M. [CodingWithMitch]. (2019, June 20) Creating a Custom User Model (Django). []. 
+Retrieved July, 20, 2020, from https://www.youtube.com/watch?v=eCeRC7E8Z7Y 
+'''
 class MyAccountManager(BaseUserManager):
     def create_user(self, email, username, firstname, lastname, password=None):
         if not email:
@@ -36,7 +41,12 @@ class MyAccountManager(BaseUserManager):
         user.is_superuser = True
         user.save(using=self._db)
         return user
-        
+
+#Reference
+'''
+Tabian, M. [CodingWithMitch]. (2019, June 20) Creating a Custom User Model (Django). []. 
+Retrieved July, 20, 2020, from https://www.youtube.com/watch?v=eCeRC7E8Z7Y 
+'''        
 class Account(AbstractBaseUser):
     email           = models.EmailField(verbose_name="email", max_length=60, unique=True)
     username        = models.CharField(max_length=30, unique=True)
