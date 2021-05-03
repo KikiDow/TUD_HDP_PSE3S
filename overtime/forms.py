@@ -8,6 +8,11 @@ from django_currentuser.middleware import get_current_user, get_current_authenti
 import datetime as dt
 from datetime import datetime
 
+#REFERENCE
+'''
+Spealman, C. (2018). Creating Dynamic Forms with Django. 
+Retrieved from https://www.caktusgroup.com/blog/2018/05/07/creating-dynamic-forms-django/
+'''
 class AvailabilitySheetForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(AvailabilitySheetForm, self).__init__(*args, **kwargs)

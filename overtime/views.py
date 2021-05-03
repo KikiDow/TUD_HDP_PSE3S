@@ -14,6 +14,9 @@ from clocking.utils import convertStrToDateObj
 # Create your views here.
 @login_required()
 def overtime_page(request):
+    '''
+    This view renders the overtime page.
+    '''
     user = request.user
     users_overtime = Overtime.objects.filter(ot_officer_id=user)
     todays_date = dt.date.today()
@@ -50,6 +53,9 @@ def overtime_page(request):
 
 @login_required()
 def search_previous_ot(request):
+    '''
+    This view allows a user to search previous overtime records.
+    '''
     user = request.user
     previous_ot_search_date = request.GET['q']
     date = convertStrToDateObj(previous_ot_search_date)
@@ -69,6 +75,9 @@ def search_previous_ot(request):
 
 @login_required()
 def allowances_page(request):
+    '''
+    This view renders the allowances page.
+    '''
     user = request.user
     user_allowance_requests = AllowancesRequest.objects.filter(allow_req_off_id=user).order_by('-allow_req_date')
     len_allowance_requests = len(user_allowance_requests)
@@ -86,6 +95,9 @@ def allowances_page(request):
     
 @login_required()
 def search_allowances(request):
+    '''
+    This view allows a user to search for previous allowance requests.
+    '''
     user = request.user
     allowance_search_date = request.GET['q']
     date = convertStrToDateObj(allowance_search_date)
@@ -106,6 +118,9 @@ def search_allowances(request):
     
 @login_required()
 def submit_allowance_request(request):
+    '''
+    This view allows a user to submit an allowance request.
+    '''
     if request.method == "POST":
         allowance_req_form = AllowancesRequestForm(request.POST, request.FILES)
         if allowance_req_form.is_valid():
@@ -166,12 +181,18 @@ def submit_allowance_request(request):
     
 @login_required()    
 def view_allowance_request(request, pk):
+    '''
+    This view allows a user or supervisor to view an individual allowance request.
+    '''
     allow_req_to_view = get_object_or_404(AllowancesRequest, pk=pk)
     allow_req_to_view.save()
     return render(request, "view_allowance_request.html", {'allow_req_to_view': allow_req_to_view})
     
 @login_required()
 def edit_allowance_request(request, pk):
+    '''
+    This view allows a user to make changes to a previously submitted allowance request.
+    '''
     allow_req_for_editing = get_object_or_404(AllowancesRequest, pk=pk) if pk else None
     if request.method == "POST":
         edit_allow_req_form = AllowancesRequestForm(request.POST, request.FILES, instance=allow_req_for_editing)
@@ -230,6 +251,9 @@ def edit_allowance_request(request, pk):
     
 @login_required()
 def delete_allowance_request(request, pk):
+    '''
+    This view allows a user to delete a previously submitted allowance request.
+    '''
     allowance_req_for_deletion = AllowancesRequest.objects.get(pk=pk)
     allowance_req_for_deletion.delete()
     messages.success(request, "You have successfully deleted this allowance request.")
@@ -247,6 +271,9 @@ def view_staff_allowance_requests(request):
     
 @login_required()
 def accept_allowance_request(request, pk):
+    '''
+    This view allows a supervisor to accept an allowance request.
+    '''
     allow_req_being_accepted = AllowancesRequest.objects.get(pk=pk)
     allow_req_being_accepted.allow_req_checked_by_validator = True
     allow_req_being_accepted.allow_req_accepted = True
@@ -258,6 +285,9 @@ def accept_allowance_request(request, pk):
     
 @login_required()
 def reject_allowance_request(request, pk):
+    '''
+    This view allows a supervisor to reject an allowance request.
+    '''
     allow_req_being_rejected = AllowancesRequest.objects.get(pk=pk)
     if request.method == "POST":
         allow_req_reject_form = RejectAllowanceRequestForm(request.POST, request.FILES, instance=allow_req_being_rejected)
@@ -276,6 +306,9 @@ def reject_allowance_request(request, pk):
     
 @login_required()
 def non_scheduled_ot_page(request):
+    '''
+    This view renders the nsot page.
+    '''
     user = request.user
     user_non_scheduled_ot_requests = NonScheduledOvertimeRequest.objects.filter(nsot_off_id=user).order_by('-nsot_date')
     len_my_non_scheduled_ot_requests = len(user_non_scheduled_ot_requests)
@@ -294,6 +327,9 @@ def non_scheduled_ot_page(request):
     
 @login_required()
 def search_nsot(request):
+    '''
+    This view allows a user to search through their previous nsot requests.
+    '''
     user = request.user
     nsot_search_date = request.GET['q']
     date = convertStrToDateObj(nsot_search_date)
@@ -313,6 +349,9 @@ def search_nsot(request):
     
 @login_required()
 def submit_nsot_request(request):
+    '''
+    This view allows a user to submit an nsot request.
+    '''
     if request.method == "POST":
         nsot_req_form = NonScheduledOvertimeRequestForm(request.POST, request.FILES)
         if nsot_req_form.is_valid():
@@ -341,12 +380,18 @@ def submit_nsot_request(request):
     
 @login_required()
 def view_non_scheduled_overtime_request(request, pk):
+    '''
+    This view allows a supervisor or user to view an individual nsot request.
+    '''
     nsot_req_to_view = get_object_or_404(NonScheduledOvertimeRequest, pk=pk)
     nsot_req_to_view.save()
     return render(request, "view_nsot_request.html", {'nsot_req_to_view': nsot_req_to_view})
     
 @login_required()
 def delete_nsot_request(request, pk):
+    '''
+    This view allows a user to delete a nsot request that they previously submitted.
+    '''
     nsot_req_for_deletion = NonScheduledOvertimeRequest.objects.get(pk=pk)
     nsot_req_for_deletion.delete()
     messages.success(request, "You have successfully deleted this non-scheduled overtime request.")
@@ -354,6 +399,9 @@ def delete_nsot_request(request, pk):
     
 @login_required()
 def edit_nsot_request(request, pk):
+    '''
+    This view allows a user to edit a previously submitted nsot request.
+    '''
     nsot_req_for_editing = get_object_or_404(NonScheduledOvertimeRequest, pk=pk) if pk else None
     if request.method == "POST":
         edit_nsot_form = NonScheduledOvertimeRequestForm(request.POST, request.FILES, instance=nsot_req_for_editing)
@@ -384,6 +432,9 @@ def edit_nsot_request(request, pk):
     
 @login_required()
 def view_staff_nsot_requests(request):
+    '''
+    This view allows a supervisor to view nsot requests submitted by other users.
+    '''
     user = request.user
     staff_nsot_requests = NonScheduledOvertimeRequest.objects.filter(nsot_checked_by_validator=False).exclude(nsot_off_id=user.pk)
     length_of_staff_nsot_req = len(staff_nsot_requests)
@@ -391,6 +442,9 @@ def view_staff_nsot_requests(request):
     
 @login_required()
 def accept_nsot_request(request, pk):
+    '''
+    This view allows a supervisor to accept an nsot request.
+    '''
     nsot_req_being_accepted = NonScheduledOvertimeRequest.objects.get(pk=pk)
     nsot_req_being_accepted.nsot_checked_by_validator = True
     nsot_req_being_accepted.nsot_accepted = True
@@ -408,6 +462,9 @@ def accept_nsot_request(request, pk):
     
 @login_required()
 def reject_nsot_request(request, pk):
+    '''
+    This view allows a supervisor to reject an nsot request.
+    '''
     nsot_req_being_rejected = NonScheduledOvertimeRequest.objects.get(pk=pk)
     if request.method == "POST":
         nsot_req_reject_form = RejectNSOTForm(request.POST, request.FILES, instance=nsot_req_being_rejected)
@@ -426,6 +483,9 @@ def reject_nsot_request(request, pk):
     
 @login_required()
 def availability_page(request):
+    '''
+    This view renders the availability page.
+    '''
     user = request.user
     my_availability_sheets = AvailabilitySheet.objects.filter(avail_sheet_off_id=user.pk)
     len_my_availability_sheets = len(my_availability_sheets)
@@ -467,6 +527,9 @@ def availability_page(request):
     
 @login_required()
 def submit_availability_sheet(request):
+    '''
+    This view allows a user to submit their availability sheet for the next quarter.
+    '''
     if request.method == "POST":
         availability_sheet_form = AvailabilitySheetForm(request.POST, request.FILES)
         mon_one = request.POST.get('mon_one')
@@ -557,12 +620,18 @@ def submit_availability_sheet(request):
     
 @login_required()
 def view_availability_sheet(request, pk):
+    '''
+    This view allows a user to view an individual availaibility sheet.
+    '''
     avail_sheet_to_view = get_object_or_404(AvailabilitySheet, pk=pk)
     avail_sheet_to_view.save()
     return render(request, "view_availability_sheet.html", {'avail_sheet_to_view': avail_sheet_to_view})
     
 @login_required()
 def delete_availability_sheet(request, pk):
+    '''
+    This view allows a user to delete a previously submitted availability sheet.
+    '''
     avail_sheet_for_deletion = AvailabilitySheet.objects.get(pk=pk)
     avail_sheet_for_deletion.delete()
     messages.success(request, "You have successfully deleted this availability sheet.")
@@ -570,6 +639,9 @@ def delete_availability_sheet(request, pk):
     
 @login_required()
 def assign_ot_date(request):
+    '''
+    This view allows a supervisor to select the date needed to call staff for overtime.
+    '''
     if request.method == "POST":
         assign_ot_date_form = AssignOvertimeDateForm(request.POST, request.FILES)
         if assign_ot_date_form.is_valid():
@@ -582,6 +654,9 @@ def assign_ot_date(request):
     
 @login_required()
 def assign_ot_recall(request, chosen_date):
+    '''
+    This view allows a supervisor to recall a staff member for overtime.
+    '''
     date_selected = chosen_date
     if request.method == "POST":
         assign_recall_form = AssignRecallStaffForm(request.POST, request.FILES, initial={'selected_date': date_selected})
@@ -604,6 +679,9 @@ def assign_ot_recall(request, chosen_date):
     
 @login_required()
 def assign_ot_require(request, date_selected):
+    '''
+    This view allows a supervisor to require a staff member for overtime.
+    '''
     date_for_require = date_selected
     if request.method == "POST":
         assign_require_form = AssignRequireStaffForm(request.POST, request.FILES, initial = {'selected_require_date': date_for_require})
@@ -626,6 +704,9 @@ def assign_ot_require(request, date_selected):
     
 @login_required()
 def submit_st_availability(request):
+    '''
+    This view allows a user to submit a short terrm availability application.
+    '''
     if request.method == "POST":
         short_term_availability_form = ShortTermAvailabilityForm(request.POST, request.FILES)
         st_availability_date = request.POST.get('st_availability_date')
@@ -649,6 +730,9 @@ def delete_st_availability_submission(request, pk):
     
 @login_required()
 def assign_st_ot_date(request):
+    '''
+    This view allows a supervisor to select the date they wish call staff for short term overtime.
+    '''
     if request.method == "POST":
         assign_st_ot_date_form = AssignShortTermOTDateForm(request.POST, request.FILES)
         if assign_st_ot_date_form.is_valid():
@@ -669,6 +753,9 @@ def assign_st_ot_date(request):
     
 @login_required()
 def assign_st_ot_recall(request, chosen_st_date):
+    '''
+    This view allows a supervisor to recall a staff member for short term overtime.
+    '''
     st_date_selected = chosen_st_date
     if request.method == "POST":
         assign_st_recall_form = AssignShortTermRecallStaffForm(request.POST, request.FILES, initial={'selected_st_date': st_date_selected})
@@ -692,6 +779,9 @@ def assign_st_ot_recall(request, chosen_st_date):
     
 @login_required()
 def assign_st_ot_require(request, st_date_selected):
+    '''
+    This view allows a supervisor to require a staff member for short term overtime.
+    '''
     date_for_st_require = st_date_selected
     #print(date_for_require)
     if request.method == "POST":
