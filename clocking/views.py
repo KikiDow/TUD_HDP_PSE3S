@@ -15,6 +15,9 @@ from geopy.geocoders import Nominatim
 import folium
 from IPython.core.display import HTML
 from annual_leave.utils import getCurrentYear
+#Code for password change
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 # Create your views here.
 
 def landing_page(request):
@@ -580,6 +583,29 @@ def search_late_clockings(request):
         my_late_clocks = paginator.page(paginator.num_pages)
     
     return render(request, "late_clockings_search.html", {'my_late_clocks': my_late_clocks, 'len_late_clocking_search_result': len_late_clocking_search_result})
+
+@login_required()
+def password_change(request):
+    '''
+    This view allows a user to change their password.
+    '''
+    #REFERENCE
+    '''
+    Freitas, V. (2016). Django Tips #9 How To Create A Change Password View. 
+    Retrieved September 6, 2020, from https://simpleisbetterthancomplex.com/tips/2016/08/04/django-tip-9-password-change-form.html
+    '''
+    if request.method == 'POST':
+        password_change_form = PasswordChangeForm(request.user, request.POST)
+        if password_change_form.is_valid():
+            user = password_change_form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('view_personal_details')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        password_change_form = PasswordChangeForm(request.user)
+    return render(request, "change_password.html", {'password_change_form': password_change_form})
 
 
     

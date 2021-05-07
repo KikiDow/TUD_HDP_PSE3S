@@ -66,12 +66,13 @@
             <div class="col-md-2"></div>
             {% endif %}
     </div>
-</div>
-{% if personal_details_exist == True %}
-<div class="container" style="padding-bottom:5px;">
+    {% if personal_details_exist == True %}
     <div class="row justify-content-center">
-        <a class="btn btn-info btn-lg" href="{% url 'edit_personal_details' personal_details.id %}"> Update Personal Details </a>
+        <a class="btn btn-info btn-lg basic-button" href="{% url 'edit_personal_details' personal_details.id %}"> Update Personal Details </a>
+    </div>
+    {% endif %}
+    <div class="row justify-content-center">
+        <a class="btn btn-info btn-lg basic-button" href="{% url 'password_change' %}"> Change My Password </a>
     </div>
 </div>
-{% endif %} 
 {% endblock %}
