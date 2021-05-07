@@ -22,6 +22,8 @@ from annual_leave import urls as annual_leave_urls
 from abscences import urls as abscences_urls
 from overtime import urls as overtime_urls
 from exchanges import urls as exchanges_urls
+from django.views.static import serve
+from .settings import MEDIA_ROOT
 import notifications.urls
 
 urlpatterns = [
@@ -34,4 +36,5 @@ urlpatterns = [
     url(r'^abscences/', include(abscences_urls)),
     url(r'^overtime/', include(overtime_urls)),
     url(r'^exchanges/', include(exchanges_urls)),
+    url(r'^media/(?P<path>.*)$', serve, {'document_root': MEDIA_ROOT}),
 ]
