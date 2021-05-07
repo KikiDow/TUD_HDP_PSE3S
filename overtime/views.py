@@ -138,7 +138,7 @@ def submit_allowance_request(request):
                 if allowance_req_form.instance.food_for_prisoner_amount is None:
                     messages.error(request, "You must include the cost of the prisoner's meal to claim this expense.")
                     return render(request, "submit_allowance_request.html", {'allowance_req_form': allowance_req_form})
-                elif allowance_req_form.instance.receipt_for_prisoner_food is False:
+                elif allowance_req_form.instance.receipt_for_prisoner_food.name is None:
                     messages.error(request, "You must provide a photograph of the receipt for the prisoner's meal to claim this expense.")
                     return render(request, "submit_allowance_request.html", {'allowance_req_form': allowance_req_form})
                 else:
