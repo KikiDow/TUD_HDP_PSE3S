@@ -128,7 +128,7 @@ def generate_quarters(request):
     base_label = "Qtr"
     label_qtr_number = 1
     counter = 0
-    while(counter < 10):
+    while(counter < 16):
         qtr_start = date_1
         qtr_end = qtr_start + quarter_delta
         new_qtr_label = base_label + str(label_qtr_number)
@@ -143,7 +143,7 @@ def generate_quarters(request):
         label_qtr_number += 1
         counter = Quarter.objects.count()
         
-    if counter == 9:
+    if counter == 15:
         messages.success(request, "You have successfully generated new quarters.")
     
     return redirect('home_page')
