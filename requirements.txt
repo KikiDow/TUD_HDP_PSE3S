@@ -27,6 +27,7 @@ geographiclib==1.50
 geoip2==4.1.0
 geopy==2.1.0
 git-remote-codecommit==1.15.1
+gunicorn==19.9.0
 idna==2.10
 idna-ssl==1.1.0
 ikp3db==1.4.1
@@ -51,6 +52,7 @@ pexpect==4.8.0
 pickleshare==0.7.5
 Pillow==5.1.0
 prompt-toolkit==3.0.8
+psycopg2==2.7.3.2
 ptyprocess==0.6.0
 pyasn1==0.4.8
 Pygments==2.7.2
