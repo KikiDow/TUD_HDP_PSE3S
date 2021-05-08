@@ -71,7 +71,6 @@ six==1.15.0
 sqlparse==0.4.1
 stevedore==3.2.2
 traitlets==4.3.3
-typed-ast==1.4.0
 typing-extensions==3.7.4.3
 urllib3==1.25.11
 virtualenv==16.2.0
