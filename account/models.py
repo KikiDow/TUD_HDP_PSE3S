@@ -63,7 +63,7 @@ class Account(AbstractBaseUser):
     		A = 'A'
     		B = 'B'
     		
-    roster_side = models.CharField(max_length=2, choices=RosterSide.choices(), default='None')
+    roster_side = models.CharField(max_length=5, choices=RosterSide.choices(), default='None')
     current_leave_total = models.FloatField(default=250.00)
     
     USERNAME_FIELD = 'email'
