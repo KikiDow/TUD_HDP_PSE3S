@@ -36,7 +36,7 @@ else:
     
 DEBUG = development
 
-ALLOWED_HOSTS = ['143d8000095a48dc8f222a6f06d6f0db.vfs.cloud9.us-east-1.amazonaws.com']
+ALLOWED_HOSTS = ['143d8000095a48dc8f222a6f06d6f0db.vfs.cloud9.us-east-1.amazonaws.com', 'project-pse3s.herokuapp.com']
 
 
 # Application definition
