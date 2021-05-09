@@ -1,1 +1,1 @@
-web:gunicorn PSE3S.wsgi.application
+web: gunicorn PSE3S.wsgi.application
